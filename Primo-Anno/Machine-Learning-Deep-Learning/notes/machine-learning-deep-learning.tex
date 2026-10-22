@@ -1060,9 +1060,196 @@ In the case of k-fold cross-validation:
     \item Our cross-validation performance will be the \textbf{average of the perfromance of the} \( k \) \textbf{tests}
 \end{enumerate}
 \textit{Note}. \textbf{Important constraint}: Training set and validation set cannot overlap, but the sum of training and validation 
-data is constatn (the totale dataset size).
-recuperare da slide 32 a slide 38
-
+data is constant (the totale dataset size).
+\subsubsection{Visual Representation of K-Fold Cross Validation}
+\begin{center}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/k-fold.png}
+        \caption{K-Fold Cross Validation: Each row represents on iteration where a different fold serves as validation (blue) while the rest serve as training (gray)}
+    \end{figure}
+\end{center}
+\subsection{Example: 5-Fold Cross Validation}
+Let's examine a concrete example with 5 folds:
+\begin{itemize}
+    \item \textbf{Step 1}: Randomly split the data into 5 folds 
+    \item \textbf{Step 2}: Test on each fold while training on 4 other folds (80\% train, 20\% test)
+    \item \textbf{Step 3}: Average the results over 5 folds
+\end{itemize}
+\begin{center}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/5-fold.png}
+        \caption{5-Fold Cross Validation Example: Each fold serves as validation once, and the final perfromance is the average of all 5 iterations}
+    \end{figure}
+\end{center}
+\subsubsection{The process in Detail}
+For each of the 5 iterations:
+\begin{enumerate}
+    \item \textbf{Iteration 1}: Use fold 1 as validation, folds 2-5 as training \( \rightarrow \) Get Performance 1 
+    \item \textbf{Iteration 2}: Use fold 2 as validation, folds 1,3-5 as training \( \rightarrow \) Get Performance 2
+    \item \textbf{Iteration 3}: Use fold 3 as validation, folds 1-2,4-5 as training  \( \rightarrow \) Get Performance 3 
+    \item \textbf{Iteration 4}: Use fold 4 as validation, folds 1-3,5 as training  \( \rightarrow \) Get Performance 4 
+    \item \textbf{Iteration 5}: Use fold 5 as validation, folds 1-4 as training  \( \rightarrow \) Get Performance 5
+\end{enumerate}
+\textbf{Final Cross-Validation Performance}:
+\[
+  \text{CV Performance } = \frac{1}{5} \sum_{i = 1}^{5} \text{ Performance}_i
+\]
+\subsection{Advantages of Cross Validation}
+\begin{itemize}
+    \item \textbf{Better use of limited data}: Every data point is used for both training and validation 
+    \item \textbf{More reliable performance estimates}: Averaging over multiple folds reduces vairance in the performance estimate 
+    \item \textbf{Reduces bias}: Every sample participates in validation, reducing the risk of biased validation set 
+    \item \textbf{Detects overfitting}: If performance varies significantly across folds, it may indicate overfitting or data quality issues
+\end{itemize}
+\subsection{Disadvantages of Cross Validation}
+\begin{itemize}
+    \item \textbf{Computationally expensive}: Requires training \( k \) models instead of one 
+    \item \textbf{Time-consuming}: Training time is multiplied by the number of folds 
+    \item \textbf{Not suitable for very large datasets}: When a data is abundant, a simple train-validation-test split is more efficient
+\end{itemize}
+\textit{Observation}. The choice of \( k \) (number of folds) involves a tradeoff:
+\begin{itemize}
+    \item \textbf{Larger} \( k \): More accurate performance estimate, but more computationally expensive 
+    \item \textbf{Smaller}: \( k \): Faster computation, but less reliable performance estimate 
+    \item Common choices: \( k = 5 \) or \( k = 10 \).
+    \item Extreme case: \( k = N \) (Leave-One-Out Cross Validation) uses each single sample as validation once
+\end{itemize}
+\section{Leave-One-Out Cross Validation}
+\subsection{What is Leave-One-Out Cross Validation?}
+Leave-One-Out Cross Validation (LOOCV) is an extreme case of k-fold cross validation that is particularly useful when we have 
+very few data points.
+\begin{definition}{Leave-One-Out Cross Validation}
+\centering 
+LOOCV is \( n \)-fold cross validation where \( n \) equals the total number of samples.
+In each iteration, we train on all \( (n - 1) \) samples and test on exactly 1 instance.
+\end{definition}
+\subsection{How LOOCV Works}
+The process involves:
+\begin{enumerate}
+    \item Take the entire dataset of \( n \) samples
+    \item For each sample \( i \) (where \( i = 1,2, \ldots, n) \):
+    \begin{itemize}
+        \item Use sample \( i \) as the validation set (1 sample)
+        \item Use all other samples \( (n - 1) \) as the training set 
+        \item Train the model and evaluate on the single validation sample
+    \end{itemize}
+    \item Repeat this process \( n \) times (once for each sample)
+    \item Average the performance across all \( n \) expriments
+\end{enumerate}
+\begin{center}
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.8\textwidth]{images/leave-one.out.png}
+        \caption{Leave-One-Out Cross Validation: Each experiment uses exactly one sample for validation (gray) and all others for training (white)}
+    \end{figure}
+\end{center}
+\subsection{Pros and Cons of LOOCV}
+\subsubsection{Advantages}
+\begin{itemize}
+    \item \textbf{Best possible classifier}: The model is learned from \( n - 1 \) training examples, which is the maximum possible training data 
+    \item \textbf{Maximizes training data}: Each model uses almost all available data for training 
+    \item \textbf{Unbiased estimate}: Provides a nearly unbiased estimate of model performance 
+    \item \textbf{Deterministic}: No randomness in the splitting process (every sample is used exactly once as validation)
+\end{itemize}
+\subsubsection{Disadvantages}
+\begin{itemize}
+    \item \textbf{High computational cost}: Must re-learn everything for \( n \) times, where \( n \) is the total number of samples 
+    \item \textbf{Time-consuming}: For large datasets, LOOCV becomes impratical 
+    \item \textbf{High variance}: Performance estimates can have high variance, especially with small datasets
+\end{itemize}
+\textit{Note}. LOOCV is most appropriate when:
+\begin{itemize}
+    \item The dataset is very small (e.g., \( n < 50 \)) 
+    \item Computational resources are available 
+    \item You need the most accurate performance estimate possible
+\end{itemize}
+For larger datasets, standard k-fold cross validation (with \( k = 5 \) or \( k = 10 \)) is typically preferred 
+due to its better balance between computation cost and performance estimation accuracy.
+\section{Stratification in Cross Validation}
+\subsection{The problem: Imbalanced Classes}
+In many real-world datasets, class labels are not evenly distributed. For example, in a medica 
+diagnosis dataset, healthy patients might vastly outnumber sick patients. When performing cross validation on such 
+imbalanced datasets, random splitting can lead to folds with very different calss 
+distribution.
+\subsection{What is Stratification?}
+\begin{definition}{Stratification}
+\centering 
+Stratification is a technique to keep class labels \textbf{balanced across training and validation sets} during 
+cross validation. Instead of randomly diving the dataset, we ensure that each fold maintains approximately the same proportion 
+of samples for each class as the complete dataset. 
+\end{definition}
+\subsection{How Stratified K-Fold Works}
+The stratification process works as follows:
+\begin{enumerate}
+    \item \textbf{Divide by class}: Instead of taking the dataset and dividing it randomly into \( K \) parts, take the dataset and divide it into individual classes 
+    \item \textbf{Split each class}: Then for each class, divide the instances into \( K \) parts 
+    \item \textbf{Assemble folds}: Assemble the \( i \)-th part from alla classes to make the \( i \)-th fold 
+    \item \textbf{Important}: It still random! The splitting within each class is random, but the proportions are maintained
+\end{enumerate}
+\subsection{Example: Stratified 5-Fold Cross Validation}
+Let's consider a concrete scenario with an imbalanced dataset containing 300 samples, divided into three classes 
+(A, B, and C), where Class A has more samples than the other two.
+\subsubsection{Imbalanced Dataset}
+\begin{itemize}
+    \item \textbf{Class A}: 200 samples \( (66.7\%) \).
+    \item \textbf{Class B}: 50 samples \( (16.7\%) \).
+    \item \textbf{Class C}: 50 samples \( (16.7\%) \).
+    \item \textbf{Total}: 300 samples
+\end{itemize}
+\subsubsection{Split the Dataset into Five Folds with Stratification}
+Each fold will have 60 samples total, maintaining the class proportions:
+\begin{itemize}
+    \item \textbf{Fold 1}: 60 samples (Class A: 40, Class B: 10, Class C: 10)
+    \item \textbf{Fold 2}: 60 samples (Class A: 40, Class B: 10, Class C: 10)
+    \item \textbf{Fold 3}: 60 samples (Class A: 40, Class B: 10, Class C: 10)
+    \begin{center}
+        \begin{figure}[H]
+            \centering 
+            \includegraphics[width=0.8\textwidth]{images/stratified.png}
+            \caption{Stratified K-Fold: Each fold maintains the same class proportions across all folds}
+        \end{figure}
+    \end{center}
+    \item \textbf{Fold 4}: 60 samples (Class A: 40, Class B: 10, Class C: 10)
+    \item \textbf{Fold 5}: 60 samples (Class A: 40, Class B: 10, Class C: 10)
+\end{itemize}
+Notice that each fold maintains the same \( 66.7\%-16.7\%-16.7\% \) class distribution as the original dataset.
+\subsubsection{Train and Validate}
+The cross-validations proceeds as follows:
+\begin{enumerate}
+    \item \textbf{Iteration 1}: Train on Folds 1, 2, 3, and 4, Validate on Fold 5 
+    \item \textbf{Iteration 2}: Train on Folds 2, 3, 4, and 5, Validate on Fold 1 
+    \item \textbf{Iteration 3}: Train on Folds 1, 3, 4, and 5, Validate on Fold 2
+    \item \textbf{Iteration 4}: Train on Folds 1, 2, 4, and 5, Validate on Fold 3 
+    \item \textbf{Iteration 5}: Train on Folds 1, 2, 3, and 5, Validate on Fold 4
+\end{enumerate}
+\subsubsection{Average the performance Metrics}
+\begin{itemize}
+    \item Calculate performance metrics for each iteration 
+    \item Average these metrics to evaluate the model's performance robustly 
+\end{itemize}
+\subsection{Why Stratification Matters}
+\begin{itemize}
+    \item \textbf{Prevents biased folds}: Without stratification, some folds might have very few (or no) examples of minority classes 
+    \item \textbf{Consistent evaluation}: Each fold represents the overall dataset distribution, leading to more reliable performance estimates 
+    \item \textbf{Better for imbalanced datasets}: Particularly important when dealing with class imbalance 
+    \item \textbf{Reduces variance}: Performance estimates have lower variance across folds
+\end{itemize}
+\textit{Note}. \textbf{When to use stratification}:
+\begin{itemize}
+    \item Always use stratification for classification problems with imabalanced classes 
+    \item It's generally a good practice even for balanced datasets 
+    \item Most machine learning librearies (e.g., scikit-learn) provide stratified cross-validation functions 
+    \item For regression problems, stratification is not applicable (since there are no discrete classes)
+\end{itemize}
+\textbf{Observation}. Stratification ensures that:
+\begin{itemize}
+    \item Each fold is a good representative of the whole dataset
+    \item Minority classes are adequately represented in both training and validation sets 
+    \item Performance metrics are more stable and reliable across folds 
+    \item The model ses a balanced distribution of classes during each training iteration
+\end{itemize}
 \section{Evaluation Measures}
 Once we have trainend out models and performed cross-validation, we need to evaluate their performance.
 Different tasks require different evaluation metrics.
@@ -1108,7 +1295,13 @@ A classification model takes a set of features as input and produces one or more
 The confusion matrix is a fundamental tool for evaluating binary classification models. It provides a complete
 picture of how the model perfrom across different types of predictions 
 \subsubsection{Confusion Matrix for Binary classification}
-inserire immagine matrix 
+\begin{center}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/confusion-matrix.png}
+        \caption{Confusion Matrix for Binary Classification}
+    \end{figure}
+\end{center}
 \subsubsection{Understanding the Confusion Matrix}
 The confusion matrix has four components:
 \begin{itemize}
