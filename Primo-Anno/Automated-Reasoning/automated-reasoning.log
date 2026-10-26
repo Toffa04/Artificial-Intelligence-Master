@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.16)  19 OCT 2026 22:19
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (TeX Live 2026) (preloaded format=pdflatex 2026.4.16)  26 OCT 2026 19:06
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -1198,7 +1198,49 @@ Overfull \hbox (84.23758pt too wide) in paragraph at lines 834--835
  [] 
  []
 
-[16] [17] (./automated-reasoning.aux
+[16] [17] [18]
+Underfull \hbox (badness 1072) in paragraph at lines 959--959
+[]\T1/cmss/bx/n/14.4 Decidability and Se-mi-de-ci-da-bi-li-ty in First-
+ []
+
+
+Underfull \hbox (badness 2173) in paragraph at lines 966--967
+[]\T1/cmss/bx/n/10 Unsatisfiability \T1/cmss/m/n/10 in first-order lo-gic is \T1/cmss/bx/n/10 se-mi-de-ci-da-ble \T1/cmss/m/n/10 (re-cur-si-ve-ly
+ []
+
+[19] [20] [21]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1105.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 1105.
+
+[22]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1133.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 1133.
+
+[23]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 1209.
+
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `subscript' on input line 1209.
+
+[24]
+Overfull \hbox (37.5806pt too wide) in paragraph at lines 1227--1228
+ [] 
+ []
+
+[25] [26] [27] (./automated-reasoning.aux
 ./automated-reasoning.aux:48: Missing \endcsname inserted.
 <to be read again> 
                    \protect 
@@ -1304,6 +1346,201 @@ l.67 ...y contradiction)}{tcb@cnt@theorem.10.1}{}}
                                                   
 I'm ignoring this, since I wasn't doing a \csname.
 
+./automated-reasoning.aux:75: Missing \endcsname inserted.
+<to be read again> 
+                   \protect 
+l.75 ...stential Closure}{tcb@cnt@theorem.11.1}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./automated-reasoning.aux:75: Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.75 ...stential Closure}{tcb@cnt@theorem.11.1}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
+./automated-reasoning.aux:77: Missing \endcsname inserted.
+<to be read again> 
+                   \protect 
+l.77 ...plete Definition}{tcb@cnt@theorem.11.2}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./automated-reasoning.aux:77: Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.77 ...plete Definition}{tcb@cnt@theorem.11.2}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
+./automated-reasoning.aux:78: Missing \endcsname inserted.
+<to be read again> 
+                   \protect 
+l.78 ...stential Closure}{tcb@cnt@theorem.11.3}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./automated-reasoning.aux:78: Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.78 ...stential Closure}{tcb@cnt@theorem.11.3}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
+./automated-reasoning.aux:83: Missing \endcsname inserted.
+<to be read again> 
+                   \protect 
+l.83 ...irst-Order Logic}{tcb@cnt@theorem.12.1}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./automated-reasoning.aux:83: Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.83 ...irst-Order Logic}{tcb@cnt@theorem.12.1}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
+./automated-reasoning.aux:88: Missing \endcsname inserted.
+<to be read again> 
+                   \protect 
+l.88 ...rst-Order Theory}{tcb@cnt@theorem.13.1}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./automated-reasoning.aux:88: Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.88 ...rst-Order Theory}{tcb@cnt@theorem.13.1}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
+./automated-reasoning.aux:92: Missing \endcsname inserted.
+<to be read again> 
+                   \protect 
+l.92 ...cal {T} \)-Model}{tcb@cnt@theorem.13.2}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./automated-reasoning.aux:92: Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.92 ...cal {T} \)-Model}{tcb@cnt@theorem.13.2}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
+./automated-reasoning.aux:94: Missing \endcsname inserted.
+<to be read again> 
+                   \protect 
+l.94 ...)-Satisfiability}{tcb@cnt@theorem.13.3}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./automated-reasoning.aux:94: Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.94 ...)-Satisfiability}{tcb@cnt@theorem.13.3}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
+./automated-reasoning.aux:95: Missing \endcsname inserted.
+<to be read again> 
+                   \protect 
+l.95 ... {T} \)-Validity}{tcb@cnt@theorem.13.4}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./automated-reasoning.aux:95: Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.95 ... {T} \)-Validity}{tcb@cnt@theorem.13.4}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
+./automated-reasoning.aux:99: Missing \endcsname inserted.
+<to be read again> 
+                   \protect 
+l.99 ...er-Free Fragment}{tcb@cnt@theorem.14.1}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./automated-reasoning.aux:99: Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.99 ...er-Free Fragment}{tcb@cnt@theorem.14.1}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
+./automated-reasoning.aux:102: Missing \endcsname inserted.
+<to be read again> 
+                   \protect 
+l.102 ...ion Normal Form}{tcb@cnt@theorem.14.2}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./automated-reasoning.aux:102: Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.102 ...ion Normal Form}{tcb@cnt@theorem.14.2}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
+./automated-reasoning.aux:104: Missing \endcsname inserted.
+<to be read again> 
+                   \protect 
+l.104 ...ive Normal Form}{tcb@cnt@theorem.14.3}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./automated-reasoning.aux:104: Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.104 ...ive Normal Form}{tcb@cnt@theorem.14.3}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
+./automated-reasoning.aux:109: Missing \endcsname inserted.
+<to be read again> 
+                   \protect 
+l.109 ...ate Elimination}{tcb@cnt@theorem.14.4}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./automated-reasoning.aux:109: Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.109 ...ate Elimination}{tcb@cnt@theorem.14.4}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
+./automated-reasoning.aux:111: Missing \endcsname inserted.
+<to be read again> 
+                   \protect 
+l.111 ...ty Preservation}{tcb@cnt@theorem.14.5}{}}
+                                                  
+The control sequence marked <to be read again> should
+not appear between \csname and \endcsname.
+
+./automated-reasoning.aux:111: Extra \endcsname.
+\@newl@bel ... \bbl@tempa \csname #1@#2\endcsname 
+                                                  \def \bbl@tempb {#3}\@safe...
+l.111 ...ty Preservation}{tcb@cnt@theorem.14.5}{}}
+                                                  
+I'm ignoring this, since I wasn't doing a \csname.
+
 )
  ***********
 LaTeX2e <2025-11-01>
@@ -1320,21 +1557,21 @@ Package rerunfilecheck Warning: File `automated-reasoning.out' has changed.
 
 Package rerunfilecheck Info: Checksums for `automated-reasoning.out':
 (rerunfilecheck)             Before: <no file>
-(rerunfilecheck)             After:  425A0B5C155258DFA675F43F79A4E118;10959.
+(rerunfilecheck)             After:  75163395C4AA99F6B8EBBFA11AB6AF94;17278.
  ) 
 Here is how much of TeX's memory you used:
- 72002 strings out of 467525
- 1869887 string characters out of 5418982
- 2702765 words of memory out of 5000000
- 99937 multiletter control sequences out of 15000+600000
+ 72142 strings out of 467525
+ 1871978 string characters out of 5418982
+ 2706765 words of memory out of 5000000
+ 100021 multiletter control sequences out of 15000+600000
  652129 words of font info for 95 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 86i,10n,96p,1690b,1223s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsi1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfss1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfss1728.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsx1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsx1728.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsx2074.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsx2488.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
-Output written on automated-reasoning.pdf (18 pages, 308656 bytes).
+ 86i,14n,96p,1690b,1223s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsi1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfss1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfss1728.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsx1000.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsx1200.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsx1440.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsx1728.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsx2074.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsx2488.pfb></usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sftt1000.pfb>
+Output written on automated-reasoning.pdf (28 pages, 369678 bytes).
 PDF statistics:
- 314 PDF objects out of 1000 (max. 8388607)
- 227 compressed objects within 3 object streams
- 87 named destinations out of 1000 (max. 500000)
+ 428 PDF objects out of 1000 (max. 8388607)
+ 324 compressed objects within 4 object streams
+ 143 named destinations out of 1000 (max. 500000)
  157 words of extra memory for PDF output out of 10000 (max. 10000000)
 

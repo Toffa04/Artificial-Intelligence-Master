@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1792441189.42668 "/Users/andreatoffali/Desktop/Magistrale-AI/Primo-Anno/Automated-Reasoning/automated-reasoning.tex" "automated-reasoning.pdf" "automated-reasoning" 1792441191.20269 2
-  "/Users/andreatoffali/Desktop/Magistrale-AI/Primo-Anno/Automated-Reasoning/automated-reasoning.tex" 1792441182.07214 46304 d0bc3a654f33729dc9684294e961027b ""
+["pdflatex"] 1793037980.96265 "/Users/andreatoffali/Desktop/Magistrale-AI/Primo-Anno/Automated-Reasoning/automated-reasoning.tex" "automated-reasoning.pdf" "automated-reasoning" 1793037982.90655 2
+  "/Users/andreatoffali/Desktop/Magistrale-AI/Primo-Anno/Automated-Reasoning/automated-reasoning.tex" 1793037980.66821 69726 c4c01a798a6c700ac9ec8e2dde4c720f ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -49,9 +49,12 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/tfm/public/cm/cmsy8.tfm" 1136768653 1120 8b7d695260f3cff42e636090a8002094 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb" 1248133631 30251 6afa5cb1d0204815a708a080681d4674 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb" 1248133631 36299 5f9df58c2139e7edcf37c8fca4bd384d ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi5.pfb" 1248133631 37912 77d683123f92148345f3fc36a38d9ab1 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb" 1248133631 36281 c355509802a035cadc5f15869451dcee ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi8.pfb" 1248133631 35469 70d41d2b9ea31d5d813066df7c99281c ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb" 1248133631 35752 024fb6c41858982481f6968b5fc26508 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb" 1248133631 32722 d7379af29a190c3f453aba36302ff5a9 ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb" 1248133631 31809 8670ca339bf94e56da1fc21c80635e2a ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb" 1248133631 32762 224316ccc9ad3ca0423a14971cfa7fc1 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb" 1248133631 32569 5e5ddc8df908dea60932f3c484a54c0d ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb" 1248133631 32716 08e384dc442464e7285e891af9f45947 ""
@@ -353,10 +356,10 @@
   "/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1776342538 5573038 b99aad5e4898a9034e953632f940512b ""
   "/usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1776342450 3636773 4f9043cf88d6f0044fd21c24bfb2b9f1 ""
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
-  "automated-reasoning.aux" 1792441191.04952 8213 17c5da25f2a7c3a75b510b537f4c76c9 "pdflatex"
-  "automated-reasoning.out" 1792441191.05123 10959 425a0b5c155258dfa675f43f79a4e118 "pdflatex"
-  "automated-reasoning.tex" 1792441182.07214 46304 d0bc3a654f33729dc9684294e961027b ""
-  "automated-reasoning.toc" 1792441191.05151 4974 35056da2d618ce5a322e72f459e35e81 "pdflatex"
+  "automated-reasoning.aux" 1793037982.73957 13523 966c5940bc85e00b51fa45ec62a2bda8 "pdflatex"
+  "automated-reasoning.out" 1793037982.74176 17278 75163395c4aa99f6b8ebbfa11ab6af94 "pdflatex"
+  "automated-reasoning.tex" 1793037980.66821 69726 c4c01a798a6c700ac9ec8e2dde4c720f ""
+  "automated-reasoning.toc" 1793037982.74202 7848 ec6da743bf0d747035ca541728587ce4 "pdflatex"
   (generated)
   "automated-reasoning.aux"
   "automated-reasoning.auxlock"

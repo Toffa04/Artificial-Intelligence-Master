@@ -53,3 +53,31 @@
 \contentsline {part}{III\hspace {1em}Free Variables and Satisfiability}{17}{part.3}%
 \contentsline {section}{\numberline {11}Satisfiability of Formulas with Free Variables}{17}{section.11}%
 \contentsline {subsection}{\numberline {11.1}The problem of Free Variables}{17}{subsection.11.1}%
+\contentsline {subsection}{\numberline {11.2}Motivating Example}{17}{subsection.11.2}%
+\contentsline {subsection}{\numberline {11.3}Semantic Evaluation with Free Variables}{18}{subsection.11.3}%
+\contentsline {subsection}{\numberline {11.4}Existential Closure}{18}{subsection.11.4}%
+\contentsline {subsection}{\numberline {11.5}Satisfiability to Open Formulas}{19}{subsection.11.5}%
+\contentsline {subsection}{\numberline {11.6}Universal Closure and Validity}{19}{subsection.11.6}%
+\contentsline {section}{\numberline {12}Decidability and Semidecidability in First-Order Logic}{20}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Computational Complexity of First-Order Logic}{20}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Review: Semi-Decision Procedures}{20}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}The need for Restricted Theories}{21}{subsection.12.3}%
+\contentsline {section}{\numberline {13}First-Order Theories}{21}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Definition of a First-Order Theory}{21}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}The theory of Equality}{21}{subsection.13.2}%
+\contentsline {subsection}{\numberline {13.3}Axioms of Equality}{21}{subsection.13.3}%
+\contentsline {subsection}{\numberline {13.4}Models of a Theory}{22}{subsection.13.4}%
+\contentsline {subsection}{\numberline {13.5}Satisfiability and Validity Relative to a Theory}{22}{subsection.13.5}%
+\contentsline {subsection}{\numberline {13.6}Example: Satisfiability vs. \( \mathcal {T}_{E} \)-Satisfiability}{22}{subsection.13.6}%
+\contentsline {section}{\numberline {14}Quantifiers-Free Fragments and Decidability}{23}{section.14}%
+\contentsline {subsection}{\numberline {14.1}The Quantifier-Free Fragment of \( \mathcal {T}_{E} \)}{23}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Normal Forms}{23}{subsection.14.2}%
+\contentsline {subsubsection}{\numberline {14.2.1}Negation Normal Form (NNF)}{24}{subsubsection.14.2.1}%
+\contentsline {subsubsection}{\numberline {14.2.2}Disjunctive Normal Form (DNF)}{24}{subsubsection.14.2.2}%
+\contentsline {subsection}{\numberline {14.3}Conversion to DNF}{24}{subsection.14.3}%
+\contentsline {subsection}{\numberline {14.4}Decision Procedure for Quantifier-Free \( \mathcal {T}_{E} \)}{25}{subsection.14.4}%
+\contentsline {subsection}{\numberline {14.5}Elimination of Non-Equality Predicates}{25}{subsection.14.5}%
+\contentsline {subsubsection}{\numberline {14.5.1}The Transformation}{25}{subsubsection.14.5.1}%
+\contentsline {subsubsection}{\numberline {14.5.2}Satisfiability Preservation}{26}{subsubsection.14.5.2}%
+\contentsline {subsubsection}{\numberline {14.5.3}Example: The Need for Cardinality Restriction}{26}{subsubsection.14.5.3}%
+\contentsline {subsection}{\numberline {14.6}Treatment of Free Variables}{26}{subsection.14.6}%

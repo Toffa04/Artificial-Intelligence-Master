@@ -843,7 +843,479 @@ to the problem of detecting unsatisfiability.
 \part{Free Variables and Satisfiability}
 \section{Satisfiability of Formulas with Free Variables}
 \subsection{The problem of Free Variables}
-DA RECUPERARE FINO A SLIDE 39!!
+In our previous definition of statisfiability, we considered the semantics of logical connectives and 
+quantifiers, but we did not fully address the tratment of \textbf{free variables}. Recall that a variable can 
+be either:
+\begin{itemize}
+	\item \textbf{Bound}: The variable falls within the scope of a quantifier 
+	\item \textbf{Free}: The variable does not fall within the scope of any quantifier
+\end{itemize}
+The presence of free variables requires careful consideration when determining satisfiability, as their 
+interpretation depends on the variable assignment \( \beta \).
+\subsection{Motivating Example}
+Consider the following formula:
+\[
+  F: \forall x (f(x,x) = x \wedge R(x,y))
+\]
+The formula contains:
+\begin{itemize}
+	\item A bound variable \( x \) (qunatified by \( \forall \))
+	\item A free variable \( y \) (not quantified)
+\end{itemize}
+\subsection{Semantic Evaluation with Free Variables}
+To determine whether an interpretation \( \mathcal{I} = \langle D, \Phi \rangle \) with assignment \( \beta \) satisfies \( F \),
+we write \( \mathcal{I} \models_{\beta} F \) and proceed as follows:
+\vspace{1em}
+\noindent
+\newline
+By semantics of universal quantification, we need to check that for all \( d \in D \):
+\[
+  \mathcal{I} \models_{\beta[x \leftarrow d]} (f(x,x) = x \wedge R(x,y))
+\]
+This requires verifiying both conjuncts under the updated assignment \( \beta[x \leftarrow d] \):
+\vspace{1em}
+\noindent
+\newline
+\textbf{First conjuction}: \( \mathcal{I} \models_{\beta[x \leftarrow d]} f(x,x) = x \)
+\vspace{1em}
+\noindent
+\newline
+This holds if and only if:
+\[
+  (\Phi(f)(d,d),d) \in \Phi(=)
+\]
+where \( \Phi(=) \) represents the identity relation. In other words, we require that \( \Phi(f)(d,d) = d \) for 
+all \( d \in D \).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Second conjunct}: \( \mathcal{I} \models_{\beta[x \leftarrow d] R(x,y)} \)
+\vspace{1em}
+\noindent
+\newline
+This holds if and only if:
+\[
+  (d, \beta(y)) \in \Phi(R)
+\]
+Let \( \beta(y) = d' \) for some \( d' \in D \). Then we require \( (d,d') \in \Phi(R) \) for all \( d \in D \).
+\subsection{Existential Closure}
+The key observation is that the satisfiability of a formula with free variables is intimately connected to its \textbf{existential closure}.
+\begin{definition}{Existential Closure}
+\centering 
+The existential closure of a formula \( F \), denoted \( \exists^* F \), is obtained by adding an existential quantifier for every free 
+variable in \( F \).
+\end{definition}
+For example, if \( F \) contains free variables \( y_1,y_2, \ldots, y_n \) then:
+\[
+  \exists^* F = \exists y_1 \exists y_2 \ldots \exists y_n F
+\]
+Returning to our example, if we consider the existential closure by quantifying the free variable \( y \):
+\[
+  \exists y \forall x (f(x,x) = x \wedge R(x,y))
+\]
+Under this interpretation, we need to verify that there exists some \( d' \in D \) such that for all \( d \in D \).
+\subsection{Satisfiability to Open Formulas}
+We now provide the complete definition of satisfiability that handles both closed and open formulas.
+\begin{definition}{Satisfiability - Complete Definition}
+\centering 
+A formula \( F \) is \textbf{satisfiable} if:
+\begin{itemize}
+	\item \textbf{Case 1 (Closed formula)}: If \( F \) is a sentece (contains no free variables), then \( F \) is satisfiable if there exists an interpretation \( \mathcal{I} \) such that \( \mathcal{I} \models F \).
+	\item \textbf{Case 2 (Open formula)}: If \( F \) contains free variables, then \( F \) is satisfiable if there exists and interpretation \( \mathcal{I} \) and a variable assignment \( \beta \) such that \( \mathcal{I} \models_{\beta} F \).
+\end{itemize}
+\end{definition}
+\begin{theorem}{Satifiability and Existential Closure}
+\centering
+\textit{A formula F with free variables is satisfiable if and only if its existential closure \( \exists^* F \) is satisfiable}
+\vspace{1em}
+\noindent
+\newline
+\textit{Proof}. Let \(F \) be a formula with free variables \( y_1, \ldots, y_n \) and let \( \exists^* F = \exists y_1 \ldots \exists y_n F \).
+\vspace{1em}
+\noindent
+\newline
+\( (\Rightarrow) \) Suppose \( F \) is satisfiable. Then there exists and interpretation \( \mathcal{I} \) and assignment \( \beta \) such that 
+\( \mathcal{I} \models_{\beta} F \). Let \( d_i = \beta(y_i) \) for \( i = 1, \ldots, n \). Then by the semantics of existential quantification applied repeadetly, \( \mathcal{I} \models \exists^* F \).
+\vspace{1em}
+\noindent
+\newline
+\( (\Leftarrow) \) Suppose \( \exists^* F \) is satisfiable. Then there exists an interpretation \( \mathcal{I} \) such that \( \mathcal{I} \models \exists y_1 \ldots \exists y_n F \).
+By the semantics of existential quantification, there exist \( d_1, \ldots, d_2 \in D \) such that \( \mathcal{I} \models_{\beta[y_1 \leftarrow d_1, \ldots, y_n \leftarrow d_n]} \).
+\end{theorem}
+This result demonstrates that when checking satisfiability of formulas with free variables, we can equivalentlòy check the satisfiability of their existential closure, treating free 
+variables as existentailly qunatified.
+\subsection{Universal Closure and Validity}
+Dually, we can consider the \textbf{universal closure} of a formula with free variables.
+\begin{theorem}{Validity and Universal Closure}.
+\centering 
+\textit{A formula F with free variables is valid if and only if its universal closure \( \forall^* F \) is valid}.
+\vspace{1em}
+\noindent
+\newline
+The intuition is straightforwared: if \( F \) contains free variables, then \( F \) is valid if for all interpretations \( \mathcal{I} \) and 
+for all assignments \( \beta \), we have \( \mathcal{I} \models_{\beta} F \). This is precisely the condition for the univesal 
+closure \( \forall^* F \) to be valid.
+\end{theorem}
+\section{Decidability and Semidecidability in First-Order Logic}
+\subsection{Computational Complexity of First-Order Logic}
+While certain restricted fragments of first-order logic admit decision procedures, the general case 
+present fundamental computational limitations:
+\begin{definition}{Decidability in First-Order Logic}
+\centering
+\begin{itemize}
+	\item \textbf{Unsatisfiability} in first-order logic is \textbf{semidecidable} (recursively enumerable)
+	\item \textbf{Satisfiability} in first-order logic is \textbf{not even semidecidable}
+\end{itemize}
+\end{definition}
+\textit{Note}. Recall that if a decision problem \( A \) is semidecidable and its complement \( \lnot A \) is also 
+semidecidable, then \( A \) is decidable. The decision procedure can be obtained by running both 
+semidecision procedures in parallel: if the instance belongs to \( A \), the first procedure will eventually terminate with "yes";
+if the instance belogs to \( \lnot A \), the second procedure will eventually terminate with "yes".
+\subsection{Review: Semi-Decision Procedures}
+Consider the problem of determining whether \( H \models F \) (logical consequence).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Semi-decision procedure for unsatisfiability}:
+\[
+  ? \text{ (may not terminate)}
+\]
+\begin{center}
+	\begin{tikzpicture}[>=stealth, node distance=2cm]
+	
+	  % Input
+	  \node (input) {$H \cup \{\neg F\}$};
+	
+	  % Scatola centrale
+	  \node[draw, right=of input] (box) {Semi-decision for UNSAT};
+	
+	  % Output
+	  \node[below=2cm of box] (output) {\textbf{Yes}: $H \cup \{\neg F\}$ is UNSAT};
+	
+	  % Frecce
+	  \draw[->] (input) -- (box);
+	  \draw[->] (box) -- (output);
+	
+	\end{tikzpicture}
+\end{center}
+If the procedure terminate with "yes", we have proven \( H \models F \) by refutation. However, if \( H \cup \left\{ \lnot F \right\} \) is satisfiable,
+the procedure may run indefinitely.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Semi-decision procedure for satisfiability}
+\[
+  ? \text{ may not terminate}
+\]
+\begin{center}
+	\begin{tikzpicture}
+		\node (input) {$H \cup \{\neg F \}$};
+		\node[draw, right=of input] (box) {Semi-decision for SAT};
+		\node[below=2cm of box] (output) {\textbf{Yes}: model found (counterexample to \( H \models F \))};
 
-
+		\draw[->] (input) -- (box);
+		\draw[->] (box) -- (output);
+	\end{tikzpicture}
+\end{center}
+If this procedure terminates with "yes", we have found a countermodel showing \( H \nVDash F \). However, such a procedure does not exists
+for general first-order logic.
+\subsection{The need for Restricted Theories}
+To obtain decision procedures, we must restrict out attention to \textbf{decidable fragments} of first-order logic. This motivates the study of 
+\textbf{first-order theories} - logical systems with additional structure that enable algorithmic reasoning.
+\section{First-Order Theories}
+\subsection{Definition of a First-Order Theory}
+\begin{definition}{First-Order Theory}
+\centering 
+A \textbf{first-order theory} is a pair \( \mathcal{T} = \langle \sigma, \mathcal{A} \rangle \) where:
+\begin{itemize}
+	\item \( \sigma \) is a \textbf{signature} (defining the vocabulary of the theory)
+	\item \( \mathcal{A} \) is a set of \textbf{axioms} - closed formulas (sentences) that we assume to hold in all models of the theory
+\end{itemize}
+\end{definition}
+The axioms define properties of specific symbols in the signature, giving them fixed interpretations across all models of the theory.
+\subsection{The theory of Equality}
+A fundamental example is the \textbf{theory of equality} \( \mathcal{T}_{E} = \langle \sigma_{E}, \mathcal{A}_{E} \rangle \).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Signature}: The signature of the theory of equality is:
+\[
+  \sigma_{E} = \left\{ = \right\} \cup \mathcal{C} \cup \mathcal{F} \cup \mathcal{P}
+\]
+where:
+\begin{itemize}
+	\item \( = \) is the equality predicate (interpreted symbol)
+	\item \( \mathcal{C} \) is a set of constant symbols (uninterpreted)
+	\item \( \mathcal{F} \) is a set of function symbols (uninterpreted)
+	\item \( \mathcal{P} \) is a set of predicate symbols (uninterpreted)
+\end{itemize}
+\textbf{Example signature}: Consider \( \sigma = \left\{ a,b,f,Q,= \right\} \). The symbols \( a,b,f,Q \) are \textbf{free} (uninterpreted), 
+whereas = (equality) is \textbf{defined} by the axioms of the theory.
+\subsection{Axioms of Equality}
+The axiom set \( \mathcal{A}_{E} \) consists of formulas that characterize equality as a congruence relation.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Equivalence relation axioms}:
+\begin{align*}
+	& \forall x\, (x = x) && \text{(Reflexivity)} \\
+	& \forall x\, \forall y\, (x = y \rightarrow y = x) && \text{(Symmetry)} \\
+	& \forall x\, \forall y\, \forall z\, ((x = y \wedge y = z) \rightarrow x = z) && \text{(Transitivity)}
+\end{align*}
+These three axioms establish that equality is an equivalance relation.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Congruence axioms of function symbols}: For each function symbol \( f \in \mathcal{F} \) of arity \( n \):
+\[
+	\forall \overrightarrow{x}\, \forall \overrightarrow{y}\, (\bigwedge_{i = 1}^{n} x_i = y_i) \rightarrow f(x_1, \ldots, x_n) = f(y_1, \ldots, y_n) 
+\]
+where \( \overrightarrow{x} = (x_1, \ldots, x_n) \) and \( \overrightarrow{y} = (y_1, \ldots, y_n) \).
+\vspace{1em}
+\noindent
+\newline
+This axioms states that \( f \) respects equality: equal inputs produce equal outputs.\vspace{1em}
+\noindent
+\newline
+\textbf{Congruence axioms for predicate sumbols}: For each predicate symbol \( R \in \mathcal{P} \) of arity \( n \):
+\[
+  \forall \overrightarrow{x}\, \forall \overrightarrow{y}\, (\bigwedge_{i = 1}^{n} x_i = y_i) \rightarrow (R(x_1, \ldots, x_n) \leftrightarrow R(y_1, \ldots, y_n))
+\]
+This axiom states that \( R \) resprects equality: the truth value of \( R \) depends only on the equivalence classes of its arguments.
+\subsection{Models of a Theory}
+\begin{definition}{\( \mathcal{T} \)-Model}
+\centering 
+A \( \mathcal{T} \)\textbf{-Model} is an interpretation \( \mathcal{I} \) such that \( \mathcal{I} \models \mathcal{A} \) (i.e., \( \mathcal{I} \) satisfies 
+all axiom in \( \mathcal{A} \)).
+\end{definition}
+\subsection{Satisfiability and Validity Relative to a Theory}
+\begin{definition}{\( \mathcal{T} \)-Satisfiability}
+\centering
+A formula \( G \) is \( \mathcal{T} \)\textbf{-satisfiable} if there exists a \( \mathcal{T} \)-model \( \mathcal{I} \) such that 
+\( \mathcal{I} \models G \).
+\end{definition}
+\begin{definition}{\( \mathcal{T} \)-Validity}
+\centering
+A formula \( G \) is \( \mathcal{T} \)\textbf{-valid} if for all \( \mathcal{T} \)-models \( \mathcal{I} \), we have \( \mathcal{I} \models G \).
+\vspace{1em}
+\noindent
+\newline
+Equivalently, \( G \) is a logical consequence of the axioms: \( \mathcal{A} \models G \).
+\end{definition}
+\subsection{Example: Satisfiability vs. \( \mathcal{T}_{E} \)-Satisfiability}
+Consider the set of formulas:
+\[
+  S = \left\{ P(a), \lnot P(b), a = b \right\}
+\]
+\textbf{Claim}: \( S \) is satisfiable in general first-order logic, but \( S \) is \textbf{not} \( \mathcal{T}_{E} \)\textbf{-satisfiable}.
+\vspace{1em}
+\noindent
+\newline
+\textit{Proof}. \textbf{Satisfiability}: We can construct an interpretation \( \mathcal{I} \) with domain \( D = \left\{ d_1, d_2 \right\} \) where:
+\begin{itemize}
+	\item \( \Phi(a) = d_1, \Phi(b) = d_2 \).
+	\item \( \Phi(P) = \left\{d_1\right\} \).
+	\item \( \Phi(=) = \left\{(d_1,d_1),(d_2,d_2),(d_1,d_2)(d_2,d_1) \right\} \) (universal relation)
+\end{itemize}
+Then \( \mathcal{I} \models P(a), \mathcal{I} \models \lnot P(b), \text{ and } \mathcal{I} \models a = b, \text{ so } \mathcal{I} \models S \).
+\vspace{1em}
+\noindent
+\newline
+\( \mathcal{T}_{E} \)\textbf{-Unsatisfiability}: In any \( \mathcal{T}_{E} \)-model, equality must satisfy the congruence axioms. 
+If \( \mathcal{I} \models a = b, \text{ and } \mathcal{I} \models P(a) \), then by the congruence axiom for \( P \), we must have \( \mathcal{I} \models P(b) \), contradicting 
+\( \mathcal{I} \models \lnot P(b) \). Therefore, no \( \mathcal{T}_{E} \)-model satisfies \( S \).
+\vspace{1em}
+\noindent
+\newline
+This example illustrate that satisfiability relative to a theory is more restrictive than general satisfiability, as models 
+must respect the additional constraints imposed by the theory's axioms.
+\section{Quantifiers-Free Fragments and Decidability}
+\subsection{The Quantifier-Free Fragment of \( \mathcal{T}_{E} \)}
+While the full theory of equality \( \mathcal{T}_{E} \) is undecidable, its \textbf{quantifier-free fragment} admits a decsion procedure.
+\begin{definition}{Quantifier-Free Fragment}
+\centering
+The \textbf{quantifier-free fragment} of first-order logic consists of all formulas that do not contain quantifiers \( (\forall \text{ or } \exists) \).
+\end{definition}
+\vspace{1em}
+\noindent
+\newline
+For a theory \( \mathcal{T} \), the quantifier-free fragment allows quantifiers to appear only in the axioms, not in the 
+input formulas to be checked for satisfiability.
+\vspace{1em}
+\noindent
+\newline
+Our goal is to develop a decision procedure for the quantifier-free fragment of \( \mathcal{T}_{E} \). We will focus 
+initially on deciding satisfiability for sets (or conjunctions) of literals, and then extend this to arbitrary quantifier-free formulas 
+using normal forms.
+\subsection{Normal Forms}
+To handle arbitrary quantifier-free formulas, we introduce two important normal forms that facilitate systematic resoning.
+\subsubsection{Negation Normal Form (NNF)}
+\begin{definition}{Negation Normal Form}
+\centering 
+A formula is in \textbf{Negation Normal Form (NNF)} if:
+\begin{itemize}
+	\item The only logical connectives are \( \wedge, \vee, \text{ and }, \lnot \).
+	\item Negation \( (\lnot) \) applies only to atomic formulas (atoms)
+\end{itemize}  
+\end{definition}
+Any quantifier-free formula can be converted to NNF by applying the following equivalence preserving transformations:
+\begin{align*}
+	& H \leftrightarrow G \equiv (H \rightarrow G) \wedge (G \rightarrow H) && \text{(Eliminate biconditional)} \\
+	& H \rightarrow G \equiv \lnot H \vee G && \text{(Eliminate implication)} \\
+	& \lnot(H \wedge G) \equiv \lnot H \vee \lnot G && \text{(De Morgan's law)} \\
+	& \lnot(H \vee G) \equiv \lnot H \wedge \lnot G && \text{(De Morgan's law)} \\
+	& \lnot \lnot H \equiv H && \text{(Double negation elimination)}
+\end{align*}
+\subsubsection{Disjunctive Normal Form (DNF)}
+\begin{definition}{Disjunctive Normal Form}
+\centering 
+A formula is in \textbf{Disjunctive Normal Form (DNF)} if it is a disjunction of conjunctions of literals:
+\[
+  \bigvee_{i = 1}^{k} (\bigwedge_{j = 1}^{n_i} L_{i,j})
+\]
+where each \( L_{i,j} \) is a literal (an atomic formula or its negation)
+\end{definition}
+Equivalently, a DNF formula has the structure:
+\[
+  (L_{1,1} \wedge L_{1,2} \wedge \ldots L_{1,n_1}) \vee (L_{2,1} \wedge L_{2,2} \wedge \ldots \wedge L_{2,n_2}) \vee \ldots \vee (L_{k,1} \wedge L_{k,2} \wedge \ldots \wedge L_{k,n_k})
+\]
+\subsection{Conversion to DNF}
+Any quantifier-free formula \( F \) can be systematically converted to an equivalent DNF formula throught a two-stage 
+process:
+\begin{center}
+	\begin{tikzpicture}
+		\node (F) {$F$};
+		\node[draw, right=of F] (nnf) {Convert to NNF};
+		\node[right=of nnf] (F1) {$F'$};
+		\node[draw, right=of F1] (dnf) {Convert to DNF};
+		\node[right=of dnf] (F2) {$F''$};
+	
+		\draw[->] (F) -- (nnf);
+		\draw[->] (nnf) -- (F1);
+		\draw[->] (F1) -- (dnf);
+		\draw[->] (dnf) -- (F2);
+	\end{tikzpicture}
+\end{center}
+\textbf{Stage 1}: Convert \( F \) to NNF using the transformations above, obtaining \( F'' \).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Stage 2}: Convert \( F' \) to DNF by repeatedly applying the distributivity law:
+\[
+  H \wedge (G_1 \vee G_2) \equiv (H \wedge G_1) \vee (H \wedge G_2)
+\]
+This transformation pushes conjunctions inward and disjunctions outward,
+resulting in a disjunction of conjunctions.
+\subsection{Decision Procedure for Quantifier-Free \( \mathcal{T}_{E} \)} 
+The decision procedure operates on conjunctions of literals. Given a set (or conjunctions) \( S \) of literals:
+\begin{center}
+	\begin{tikzpicture}[>=stealth]
+	  % Nodo centrale (rettangolo)
+	  \node[draw, rectangle] (dp) {Decision Procedure for $\mathrm{QF}\mathcal{T}_E$};
+	
+	  % Input a sinistra
+	  \node[left=of dp] (in) {$S$ (conjunction of literals)};
+	
+	  % Output
+	  \node[above right=1.5cm and 1.5cm of dp] (sat) {\textbf{Satisfiable}};
+	  \node[below right=1.5cm and 1.5cm of dp] (unsat) {\textbf{Unsatisfiable}};
+	
+	  % Frecce
+	  \draw[->] (in) -- (dp);
+	  \draw[->] (dp.north) -- (sat);
+	  \draw[->] (dp.south) -- (unsat);
+	\end{tikzpicture}
+\end{center}
+\textbf{Extension to arbitrary quantifier-free formulas}: For a general quantifier-free formula \( F \):
+\begin{enumerate}
+	\item Convert \( F \) to NNF, obtaining \( F' \).
+	\item Convert \( F' \) to DNF, otaining \( F'' = \wedge_{i = 1}^{k} \mathcal{C}_i \) where each \( \mathcal{C}_i \) is a conjunction of literals 
+	\item Apply the decision procedure to each conjunction \( \mathcal{C}_i \).
+	\item \( F \) is satisfiable if and onlu if at least one \( \mathcal{C}_i \) is satisfiable
+\end{enumerate}
+This reduction allows us to decide satisfiability for arbitrary quantifier-free formulas by deciding satisfiability 
+for each disjunct independently.
+\subsection{Elimination of Non-Equality Predicates}
+The decision procedure for quantifier-free \( \mathcal{T}_{E} \) assumes that the only predicate symbol in the formula is equality (=). However,
+formulas may contain additional predicate symbols. We now show how to elinate such predicates throught a satisfiability-preserving transformation.
+\subsubsection{The Transformation}
+\begin{definition}{Predicate Elimination}
+\centering
+Given an occurence of a predicate symbol \( P \) of arity \( n \) applied to terms \( t_1, \ldots, t_n \), we eliminate \( P \) by introducing:
+\begin{itemize}
+	\item A fresh function symbol \( f_P \) (one for each predicate symbol \( P \neq = \))
+	\item A fresh constant symbol \( \bullet \) (the same constant for all predicates)
+\end{itemize}
+The transformation replaces predicate applications with equality constraints:
+\[
+  P(t_1, \ldots, t_n) \mapsto f_P(t_1, \ldots, t_n) = \bullet 
+\]
+\[
+  \lnot P(t_1, \ldots, t_n) \mapsto f_P(t_1, \ldots, t_n) \neq \bullet
+\]
+\end{definition}
+\textbf{Intuition}: The predicate \( P(t_1, \ldots, t_n) \) is true if and only if the term \( f_p(t_1, \ldots, t_n) \) evaluates to 
+the distinguished constant \( \bullet \).
+\subsubsection{Satisfiability Preservation}
+\begin{theorem}{Satisfiability Preservation}
+\centering 
+\textit{Let F be a quantifier-free formula and let F' be the result of applying predicate elimination to F. 
+Then F is satisfiable if and only if F' is satisfiable in models with cardinality greater than 1}.
+\vspace{1em}
+\noindent
+\newline
+\textit{Note}. The restriction to models with cardinality greater than 1 is necessary to avoid trivial models.
+In a model with domain \( D = \left\{d\right\} \) (cardinality 1), all terms evaluate to the same element \( d \), 
+making all equalities trivially true and potentially invalidating the transformation.
+\end{theorem}
+\subsubsection{Example: The Need for Cardinality Restriction}
+Consider the following two formulas:
+\vspace{1em}
+\noindent
+\newline
+\textbf{Original formula}:
+\[
+  S_1 = \left\{\forall x\, \forall y\, (x = y), \lnot P(a) \right\}
+\]
+This formula is \( \mathcal{T}_{E} \)-satisfiable. We can construct a model with domain \( D = \left\{d_1,d_2\right\} \) where:
+\begin{itemize}
+	\item \( \Phi(a) = d_1 \).
+	\item \( \Phi(P) = \left\{ d_2 \right\} \) (so \( d_1 \notin \Phi(P) \), making \( \lnot P(a) \) true)
+	\item The first axiom \( \forall x\, \forall y\, (x = y) \) is vacuously false in this model, but if we interpret it as 
+		requiring equality to be universal, we need a different construction
+\end{itemize}
+Actually, let's reconsider: \( \left\{ \forall x\, \forall y\, (x = y), \lnot P(a) \right\} \) asserts that all elements are equal 
+(domain has cardinality 1) and \( P(a) \) is false. This is satisfiable in a model with \( D = \left\{d\right\}, \Phi(a) = d \),
+and \( \Phi(P) = \varnothing \).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Transformed formula}:
+\[
+  S_2 = \left\{ \forall x\, \forall y\, (x = y), f_P(a) \neq \bullet \right\}
+\]
+In a model with cardinality 1, we have \( D = \left\{d\right\} \), so \( \Phi(f_P)(d) = d \) and \( \Phi(\bullet) = d \). Therefore,
+\( f_P(a) = \bullet \), contradicting \( f_P(a) \neq \bullet \). Thus \( S_2 \) is unsatisfiable in models of cardinality 1.
+\vspace{1em}
+\noindent
+\newline
+This example demonstrates that the transformation preserves satisfiability only when we exclude trivial models with cardinality 1.
+\subsection{Treatment of Free Variables}
+In quantifier-free formulas, free variables may appear. For the purpose of satisfiability checking,
+free variables are treated analogously to constants.
+\vspace{1em}
+\noindent
+\newline
+\textit{Note}. (Free Variables as Constants). To determine satisfiability of a formula \( F \) with free variables
+\( x_1, \ldots, x_k \), we need to find an interpretation \( \mathcal{I} \) and an assignment \( \beta \) such that \( \mathcal{I} \models_{\beta} F \).
+\vspace{1em}
+\noindent
+\newline
+Equivalently, we can treat each free variable \( x_i \) as a fresh constant symbol \( c_i \) and check satisfiability of the resulting 
+closed formula. The formula is satisfiable if and only if there exists domain elements that can be assigned to these constants to satisfy the formula.
+\vspace{1em}
+\noindent
+\newline
+This observation allows us to reduce the satisfiability problem for formulas with free variables 
+to the satisfiability problem for closed formulas by a simple syntactic substitution.
 \end{document}
