@@ -1318,4 +1318,103 @@ closed formula. The formula is satisfiable if and only if there exists domain el
 \newline
 This observation allows us to reduce the satisfiability problem for formulas with free variables 
 to the satisfiability problem for closed formulas by a simple syntactic substitution.
+\section{The Congruence Closure Algrithm}
+\subsection{Motivating Example}
+Consider the following conjunction of literals:
+\[
+  x = g(x) \wedge f(x,g(g(x))) \neq g(x) \wedge f(x,x) = g(g(x))
+\]
+\textbf{Question}: Is this formula satisfiable or unsatisfiable?
+\vspace{1em}
+\noindent
+\newline
+\textbf{Intuitive analysis}: This formula appears to be unsatisfiable. From \( x = g(x) \), we can derive \( g(x) = g(g(x)) \) by applying 
+the function \( g \) to both sides (congruence). Then from \( f(x,x) = g(g(x)) \) and the derived equality \( g(x) = g(g(x)) \), we obtain \( f(x,x) = g(x) \). 
+But we also have \( x = g(x) \), so by congruence on \( f \), we get \( f(x,x) = f(x,g(x)) \). However, we need to check whether 
+\( f(x,g(g(x))) = g(x) \) follows from the positive equalities, which would contradict \( f(x,g(g(x))) \neq g(x) \).
+\subsection{The congruence closure Decision Procedure}
+\begin{definition}{Congruence Closure Algorithm}
+\centering
+The \textbf{congruence closure algorithm} is a decision procedure for satisfiability in the quantifier-free fragment 
+of the theory of equality. The algorithm operates as follows:
+\begin{enumerate}
+	\item \textbf{Build the smallest congruence}: Construct the smallest congruence relation that satisfies all postive equalities in the input formula 
+	\item \textbf{Check negative equalities}: For each negative equality \( s \neq t \) in the input, check whether \( s \) and \( t \) belong to the same equivalence class in the congruence
+	\item \textbf{Determine satisfiability}:
+	\begin{itemize}
+		\item If any pair \( (s,t) \) with \( s \neq t \) belongs to the same equivalence class, the formula is \textbf{unsatisfiable}
+		\item Otherwise, the congruence provides a model, and the formula is \textbf{satisfiable}
+	\end{itemize}
+\end{enumerate}
+\end{definition}
+The key insight is that the smallest congruence containing all positive equalities is included in every congruence 
+that satisfies those equalities. Therefore, if a negative equality is violeted in the smallest congruence, it must be violated in 
+every model.
+\subsection{Equivalence Relations and Partitions}
+Before describing the algorithm in detail, we recall fundamental properties of equivalence relations.
+\begin{definition}{Equivalence Relation}
+\centering 
+An \textbf{equivalence relation} \( R \) on a set \( S \) is a binary relation that is:
+\begin{itemize}
+	\item \textbf{Reflexive}: \( \forall s \in S, sRs \).
+	\item \textbf{Symmetric}: \( \forall s,t \in S, sRt \Rightarrow tRs \).
+	\item \textbf{Transitive}: \( \forall s,t,u \in S, (sRt \wedge tRu) \Rightarrow sRu \).
+\end{itemize}
+\end{definition}
+\begin{definition}{Equivalence Class}
+\centering
+Given an equivalence relation \( R \) on set \( S \), the \textbf{equivalence class} of an element \( s \in S \) is:
+\[
+  [s]_R = \left\{s' \in S \;|\; s'Rs \right\}
+\]
+\end{definition}
+\begin{definition}{Quotient Set}
+\centering
+The \textbf{quotient set} \( S/R \) is the set of all equivalence classes:
+\[
+  S/R = \left\{ [s]_R \;|\; s \in S \right\}
+\]
+\end{definition}
+\begin{definition}{Partition Property}
+\centering 
+\textit{An equivalence relation R on S induces a parittion of S. That is, for any two distinct equivalence classes 
+\( [s]_R \) and  \( [p]_R \)}:
+\[
+  s\nsim_R p \quad \Rightarrow \quad [s]_R \cap [p]_R = \varnothing
+\]
+\textit{where \( s \backsim_R p \) denotes sRp}
+\vspace{1em}
+\noindent
+\newline
+\textit{Conversely, every element belongs to exactly one equivalence class, and the union of all equivalence classes equals S}.
+\end{definition}
+This partition property is fundamental to the congruence closure algorithm, as it allows us to represent the congruence relation efficiently using 
+a union-find data structure.
+\part{Decision Procedures for Quantifier-Free Theories}
+\section{The Congruence Closure Algorithm}
+\subsection{Computing Congruence Closure}
+We now describe how to compute the congruence closure for the quantifier-free fragment of the theory 
+of equality \( \mathcal{T}_{E} \).
+\subsubsection{Input Problem Structure}
+Consider an input formula \( F \) consisting of a conjunction of equality and disequality literals:
+\[
+  F = \underbrace{\left\{ s_1 = t_1, \ldots, s_n = t_n \right\}}_{F^+} \cup \underbrace{\left\{s_{n + 1} \neq t_{n + 1}, \ldots, s_{n + m} \neq t_{n + m} \right\}}_{F^-}
+\]
+where:
+\begin{itemize}
+	\item \( F^+ \) denotes the set of \textbf{positive equalities} (equations)
+	\item \( F^- \) denotes the set of \textbf{negative equalities} (disequations)
+\end{itemize}
+The congruence closure algorithm will construct the smallest congruence containing all equalities in \( F^+ \),
+then check whether any disequality \( F^- \) is violated.
+\subsubsection{Equivalence relations and Representatives}
+Given a binary equivalence relation \( R \subseteq S \times S \) on a set \( S \), we can construct its quotient:
+\[
+  S/R = \left\{ [s]_R \;|\; s \in S \right\}
+\]
+where the equivalence class of \( s \) is:
+\[
+  [s]_R = \left\{ p \in S \;|\; pRs \right\}
+\]
+The element \( s \) is called a \textbf{representative} of the equivalence class \( [s]_R \).
 \end{document}

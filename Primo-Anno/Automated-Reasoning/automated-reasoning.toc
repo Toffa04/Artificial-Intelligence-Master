@@ -81,3 +81,12 @@
 \contentsline {subsubsection}{\numberline {14.5.2}Satisfiability Preservation}{26}{subsubsection.14.5.2}%
 \contentsline {subsubsection}{\numberline {14.5.3}Example: The Need for Cardinality Restriction}{26}{subsubsection.14.5.3}%
 \contentsline {subsection}{\numberline {14.6}Treatment of Free Variables}{26}{subsection.14.6}%
+\contentsline {section}{\numberline {15}The Congruence Closure Algrithm}{27}{section.15}%
+\contentsline {subsection}{\numberline {15.1}Motivating Example}{27}{subsection.15.1}%
+\contentsline {subsection}{\numberline {15.2}The congruence closure Decision Procedure}{27}{subsection.15.2}%
+\contentsline {subsection}{\numberline {15.3}Equivalence Relations and Partitions}{28}{subsection.15.3}%
+\contentsline {part}{IV\hspace {1em}Decision Procedures for Quantifier-Free Theories}{28}{part.4}%
+\contentsline {section}{\numberline {16}The Congruence Closure Algorithm}{29}{section.16}%
+\contentsline {subsection}{\numberline {16.1}Computing Congruence Closure}{29}{subsection.16.1}%
+\contentsline {subsubsection}{\numberline {16.1.1}Input Problem Structure}{29}{subsubsection.16.1.1}%
+\contentsline {subsubsection}{\numberline {16.1.2}Equivalence relations and Representatives}{29}{subsubsection.16.1.2}%
