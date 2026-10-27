@@ -8,6 +8,8 @@
 \usepackage{xcolor}
 \renewcommand{\familydefault}{\sfdefault}
 \emergencystretch=1.5em
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 
 % ---------- Colori (UNA sola volta, prima di tikz/tcolorbox) ----------
 \usepackage[dvipsnames,table]{xcolor}
@@ -1563,4 +1565,202 @@ For the converse, consider \( n = 0 \) and \( m = 2 \). Then \( n \equiv_2 m \) 
 \]
 In this sense, \( \equiv_4 \) is \textbf{strictly smaller} than \( \equiv_2 \) (it is a proper subset), and provides a finer 
 partition of \( \mathbb{N} \).
+\subsection{The Congruence Closure Decision Procedure}
+We now return to the main problem: deciding satisfiability for quantifier-free formula in the theory of equality.
+\subsubsection{Algorithm Description}
+Recall that the input formula \( F \) has the form:
+\[
+  F = \underbrace{\left\{s_1 = t_1, \ldots, s_n = t_n \right\}}_{F^+} \cup \underbrace{\left\{s_{n + 1} \neq t_{n + 1}, \ldots, s_{n + m} \neq t_{n + m}\right\}}_{F^-}
+\]
+The congruence closure algorithm proceeds as follows:
+\begin{algorithm}
+\caption{Congruence Closure Decision Procedure}
+\begin{algorithmic}[1]
+	\Require Formula $F = F^+ \cup F^-$
+	\State Compute the congruence closure $\mathrm{CC}(F^+)$ of the positive equalities
+	\For{$i = n + 1$ \textbf{to} $n + m$}
+		\If{$(s_i, t_i) \in \mathrm{CC}(F^+)$}
+			\State \Return UNSATISFIABLE 
+		\EndIf
+	\EndFor
+	\State \Return SATISFIABLE
+\end{algorithmic}
+\end{algorithm}
+\textbf{Step 1}: Compute \( \mathrm{CC}(F^+) \), the smallest congruence relation containing all pairs \( (s_i,t_i) \) for \( i = 1, \ldots, n \).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Step 2}: For each disequality \( s_i \neq t_i \) in \( F^- \) (where \( n + 1 \leq i \leq n + m \)), check 
+whether \( (s_i, t_i) \) belongs to the same equivalence class in \( \mathrm{CC}(F^+) \).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Step 3}: 
+\begin{itemize}
+	\item If \( (s_j, t_j) \in \mathrm{CC}(F^+) \) for some \( j \) with \( n + 1 \leq j \leq n + m \), then \( F \) is \textbf{unsatisfiable}
+	\item Otherwise, \( F \) is \textbf{satisfiable}
+\end{itemize}
+\begin{center}
+	\begin{tikzpicture}[->, node distance = 2cm]
+		\node (input) {$F = F^+ \cup F^-$};
+		\node[draw, right=of input] (box) {Compute $\mathrm{CC}(F^+)$};
+		\node[above right=1.8cm and 2.2cm of box] (sat) {\textbf{SATISFIABLE}};
+		\node[below right=1.8cm and 2.2cm of box] (unsat) {\textbf{UNSATISFIABLE}};
+
+		\draw (input) -- (box);
+		\draw (box.north east) -- (sat);
+		\draw (box.south east) -- (unsat);
+	\end{tikzpicture}
+\end{center}
+\subsubsection{Correctness of the Algorithm}
+\begin{theorem}{Soundness and Completeness}
+\centering
+\textit{The congruence closure algorithm is sound and complete for deciding satisfiability in the quantifier-free fragment 
+of \( \mathcal{T}_{E} \)}.
+\vspace{1em}
+\noindent
+\newline
+\textit{Proof sketch}. \textbf{Soundness (Unsatisfiability)}: Suppose there exists \( j \) with \( n + 1 \leq j \leq n + m \) such that \( (s_j, t_j) \in \mathrm{CC}(F^+) \)
+\end{theorem}
+Since \( \mathrm{CC}(F^+) \) is the smallest congruence relation containing \( F^+ \), the pair \( (s_j, t_j) \) must belong 
+to \textit{every} congruence relation that contains \( F^+ \).
+\vspace{1em}
+\noindent
+\newline
+Therefore, in any model \( \mathcal{I} \) that satisfies all equalities in \( F^+ \), we must have \( \mathcal{I} \models s_j = t_j \). But
+\( F \) also contains \( s_j \neq t_j \), so \( \mathcal{I} \nvDash s_j \neq t_j \). Thus, no model can satisfy both \( F^+ \) and \( F^- \), making 
+\( F \) unsatisfiable.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Completeness (Satisfiability)}: If \( (s_i, t_i) \notin \mathrm{CC}(F^+) \) for all \( i \) with \( n + 1 \leq i \leq n + m \), then 
+we can contruct a model by interpreting the equivalence classes of \( \mathrm{CC}(F^+) \) as domain elements.
+This model satisfies all equalities in \( F^+ \) (by construction) and all disequalities in \( F^- \) (since the terms belong to 
+different equivalence classes).
+\vspace{1em}
+\noindent
+\newline
+The key insight is that the congruence closure captures exactly those equalities that are \textit{forced} by the positive 
+equalities in \( F^+ \) together with the congruence axioms of equality.
+\subsection{Examples: Manual Execution}
+We now illustrate the congruence closure algorithm with concrete Examples
+\subsubsection{Notation and Setup}
+For a formula \( F \) on the form:
+\[
+  F = \left\{s_1 = t_1, \ldots, s_n = t_n \right\} \cup \left\{s_{n + 1} \neq t_{n + 1}, \ldots, s_{n + m} \neq t_{n + m} \right\}
+\]
+we define \( S_F \) as the \textbf{set of all terms} that appear in \( F \).
+\subsubsection{Example 1}
+Consider the formula:
+\[
+  F = \left\{ x = g(x), f(x,x) = g(g(x)), f(x,g(g(x))) \neq g(x) \right\}
+\]
+The set of terms is:
+\[
+  S_F = \left\{x,g(x), f(x,x), g(g(x)), f(x,g(g(x))) \right\}
+\]
+\textbf{Notation}:
+\begin{itemize}
+	\item \( x \) is a \textbf{free variable symbol}
+	\item \( f \) is a \textbf{binary function symbol} (arity 2)
+	\item \( g \) is a \textbf{unary function symbol} (arity 1)
+\end{itemize}
+\textbf{Positive equalities}: \( F^+ = \left\{ x = g(x), f(x,x) = g(g(x)) \right\} \).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Negative equalities}: \( F^- = \left\{f(x,g(g(x))) \neq g(x) \right\} \).
+\subsubsection{Example 2}
+Consider the formula:
+\[
+	F = \left\{ f(a,b) = a, f(f(a,b),b) \neq a \right\}
+\]
+The set of terms is:
+\[
+  S_F = \left\{ f(a,b),a,b,f(f(a,b),b) \right\}
+\]
+\textbf{Notation}:
+\begin{itemize}
+	\item \( a,b \) are \textbf{constant symbols} (by convention)
+	\item \( f \) is a \textbf{binary function symbol}
+\end{itemize}
+\textbf{Positive equalities}: \( F^+ = \left\{f(a,b) = a \right\} \).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Negative equalities}: \( F^- = \left\{f(f(a,b),b) \neq a \right\} \).
+\vspace{1em}
+\noindent
+\newline
+\textit{Note} (Free Varialbes vs. Constants). In the quantifier-free fragment, all variables are free. From a semantic 
+perspective, free variables and constants can be used interchangeably: both are interpreted as arbitraty elements of the 
+domain. The distinction is purely syntactic.
+\subsubsection{Step-by-Step Execution for Example 1}
+We now execute the congruence closure algorithm on Example 1:
+\[
+	F = \left\{ x = g(x), f(x,x) = g(g(x)), f(x,g(g(x))) \neq g(x) \right\}
+\]
+\textbf{Step 1: Initialize the partition}
+\vspace{1em}
+\noindent
+\newline
+Create a partition of \( S_F \) where every term is in its own singleton equivalence class:
+\[
+  \left\{ \left\{ x \right\}, \left\{g(x) \right\}, \left\{f(x,x) \right\}, \left\{f(x,g(g(x))) \right\} \right\}
+\]
+\textbf{Step 2: Process positive equalities}
+\vspace{1em}
+\noindent
+\newline
+For each equality \( (s_i = t_i) \in F^+ \) (for all \( i \) with \( 1 \leq i \leq n \)):
+\begin{itemize}
+	\item Unite the equivalence class of \( s_i \) with the equivalence class of \( t_i \).
+	\item Unite the classes of all terms in \( S_F \) that become congruent as a consequence of \( s_i = t_i \).
+\end{itemize}
+\textbf{Processing} \( x = g(x) \):
+\vspace{1em}
+\noindent
+\newline
+Merge the classes \( \left\{x\right\} \) and \( \left\{g(x)\right\} \):
+\[
+  \left\{ \left\{ x,g(x) \right\}, \left\{f(x,x) \right\}, \left\{g(g(x)) \right\}, \left\{f(x,g(g(x))) \right\} \right\}
+\]
+Since \( x = g(x) \), by congruence we derive \( g(x) = g(g(x)) \) (applying \( g \) to both sides). Merge these classes:
+\[
+	\left\{ \left\{x,g(x),g(g(x)) \right\}, \left\{f(x,x) \right\}, \left\{f(x,g(g(x))) \right\} \right\}
+\]
+\textbf{Processing} \( f(x,x) = g(g(x)) \):
+\vspace{1em}
+\noindent
+\newline
+Since \( g(g(x)) \in \left\{x,g(x),g(g(x)) \right\} \) and \( f(x,x) \in \left\{f(x,x) \right\} \), merge these classes:
+\[
+  \left\{ \left\{ x,g(x),g(g(x)),f(x,x) \right\}, \left\{ f(x,g(g(x))) \right\} \right\}
+\]
+Now check for congruence: since \( x \sim g(g(x)) \) (both in the same class), we have:
+\[
+  f(x,x) \sim f(x,g(g(x)))
+\]
+by the congruence property (both arguments are in the same equivalence classes). Merge these classes:
+\[
+	\left\{ \left\{ x,g(x),g(g(x)),f(x,x),f(x,g(g(x))) \right\} \right\}
+\]
+\textbf{Step 3: Check negative equalities}
+\vspace{1em}
+\noindent
+\newline
+Check whether \( (s_i, t_i) \in \mathrm{CC}(F^+) \) for all \( i \) with \( n + 1 \leq i \leq n + m \).
+\vspace{1em}
+\noindent
+\newline
+For the disequality \( f(x,g(g(x))) \neq g(x) \):
+\begin{itemize}
+	\item \( f(x,g(g(x))) \in \left\{ x,g(x),g(g(x)),f(x,x),f(x,g(g(x))) \right\} \).
+	\item \( g(x) \in \left\{x,g(x),g(g(x)),f(x,x),f(x,g(g(x))) \right\} \)
+\end{itemize}
+Both terms are in the same equivalence class, so \( (f(x,g(g(x))), g(x)) \in \mathrm{CC}(F^+) \).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Conclusion}: The formula \( F \) is \textbf{UNSATISFIABLE}.
 \end{document}

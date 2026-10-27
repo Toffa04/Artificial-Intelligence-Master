@@ -94,3 +94,11 @@
 \contentsline {subsubsection}{\numberline {16.1.4}Example: Equivalence Closure}{30}{subsubsection.16.1.4}%
 \contentsline {subsubsection}{\numberline {16.1.5}Understanding the \( \subseteq \)-Smallest Property}{30}{subsubsection.16.1.5}%
 \contentsline {subsubsection}{\numberline {16.1.6}Example: Refinement of Equivalence Relations}{31}{subsubsection.16.1.6}%
+\contentsline {subsection}{\numberline {16.2}The Congruence Closure Decision Procedure}{32}{subsection.16.2}%
+\contentsline {subsubsection}{\numberline {16.2.1}Algorithm Description}{32}{subsubsection.16.2.1}%
+\contentsline {subsubsection}{\numberline {16.2.2}Correctness of the Algorithm}{33}{subsubsection.16.2.2}%
+\contentsline {subsection}{\numberline {16.3}Examples: Manual Execution}{33}{subsection.16.3}%
+\contentsline {subsubsection}{\numberline {16.3.1}Notation and Setup}{34}{subsubsection.16.3.1}%
+\contentsline {subsubsection}{\numberline {16.3.2}Example 1}{34}{subsubsection.16.3.2}%
+\contentsline {subsubsection}{\numberline {16.3.3}Example 2}{34}{subsubsection.16.3.3}%
+\contentsline {subsubsection}{\numberline {16.3.4}Step-by-Step Execution for Example 1}{35}{subsubsection.16.3.4}%

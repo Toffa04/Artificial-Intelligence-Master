@@ -1,6 +1,6 @@
 # Fdb version 4
-["pdflatex"] 1793093884.12113 "/Users/andreatoffali/Desktop/Magistrale-AI/Primo-Anno/Automated-Reasoning/automated-reasoning.tex" "automated-reasoning.pdf" "automated-reasoning" 1793093886.32012 2
-  "/Users/andreatoffali/Desktop/Magistrale-AI/Primo-Anno/Automated-Reasoning/automated-reasoning.tex" 1793093882.37564 80734 3e296f332e51ef4f1f7feb9b0396c776 ""
+["pdflatex"] 1793108922.57152 "/Users/andreatoffali/Desktop/Magistrale-AI/Primo-Anno/Automated-Reasoning/automated-reasoning.tex" "automated-reasoning.pdf" "automated-reasoning" 1793108924.88358 2
+  "/Users/andreatoffali/Desktop/Magistrale-AI/Primo-Anno/Automated-Reasoning/automated-reasoning.tex" 1793108916.40333 88951 97123d7def06963984354fb935801947 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-t1.enc" 1136849721 2971 def0b6c1f0b107b3b936def894055589 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.enc" 1136849721 2900 1537cc8184ad1792082cd229ecc269f4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/map/fontname/texfonts.map" 1577235249 3524 cb3e574dea2d1052e39280babc910dc8 ""
@@ -64,6 +64,7 @@
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/amsfonts/symbols/msbm10.pfb" 1248133631 34694 ad62b13721ee8eda1dcc8993c8bd7041 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsi1000.pfb" 1215737283 103607 8dec125a771685406ae21998f7cfb6f2 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfso1000.pfb" 1215737283 160858 2985abeca00255053fda4e0f01ab8650 ""
+  "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfss0800.pfb" 1215737283 95441 e322369dec2b43bb317c506a4a44deaa ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfss1000.pfb" 1215737283 94269 4665f0d253cc3cca9439f89dbf2b9f33 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfss1728.pfb" 1215737283 91468 74533647d615f4cea328e39d71fe88e4 ""
   "/usr/local/texlive/2026/texmf-dist/fonts/type1/public/cm-super/sfsx1000.pfb" 1215737283 149078 1f78530235f7e16c583e4692f7af72b1 ""
@@ -232,6 +233,9 @@
   "/usr/local/texlive/2026/texmf-dist/tex/generic/pgfplots/util/pgfplotsutil.verb.code.tex" 1312159636 3286 c17079ba50483e1ac1721268ea016041 ""
   "/usr/local/texlive/2026/texmf-dist/tex/generic/stringenc/stringenc.sty" 1575152242 21514 b7557edcee22835ef6b03ede1802dad4 ""
   "/usr/local/texlive/2026/texmf-dist/tex/generic/uniquecounter/uniquecounter.sty" 1576624663 7008 f92eaa0a3872ed622bbf538217cd2ab7 ""
+  "/usr/local/texlive/2026/texmf-dist/tex/latex/algorithmicx/algorithmicx.sty" 1160617237 26750 ce139c05a983e19ddca355b43e29c395 ""
+  "/usr/local/texlive/2026/texmf-dist/tex/latex/algorithmicx/algpseudocode.sty" 1160617237 3457 d9077efe6b74c5a094199256af8d7d9a ""
+  "/usr/local/texlive/2026/texmf-dist/tex/latex/algorithms/algorithm.sty" 1251330371 3249 15763257e50278eef5db1952ccde229c ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/amscls/amsthm.sty" 1591045760 12594 0d51ac3a545aaaa555021326ff22a6cc ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/amsfonts.sty" 1359763108 5949 3f3fd50a8cc94c3d4cbf4fc66cd3df1c ""
   "/usr/local/texlive/2026/texmf-dist/tex/latex/amsfonts/amssymb.sty" 1359763108 13829 94730e64147574077f8ecfea9bb69af4 ""
@@ -360,10 +364,10 @@
   "/usr/local/texlive/2026/texmf-var/fonts/map/pdftex/updmap/pdftex.map" 1776342538 5573038 b99aad5e4898a9034e953632f940512b ""
   "/usr/local/texlive/2026/texmf-var/web2c/pdftex/pdflatex.fmt" 1776342450 3636773 4f9043cf88d6f0044fd21c24bfb2b9f1 ""
   "/usr/local/texlive/2026/texmf.cnf" 1774209515 577 648cd9f92f9c0eac486f4c71c85cfbbe ""
-  "automated-reasoning.aux" 1793093886.12943 16281 68e78a2619878e76e642a48e8d1f72d8 "pdflatex"
-  "automated-reasoning.out" 1793093886.13228 20423 e24bc73ed4e59d5c23d1beddad8be13e "pdflatex"
-  "automated-reasoning.tex" 1793093882.37564 80734 3e296f332e51ef4f1f7feb9b0396c776 ""
-  "automated-reasoning.toc" 1793093886.13261 9223 52a4c658fad2bafaa9a58b8fe8f494f5 "pdflatex"
+  "automated-reasoning.aux" 1793108924.67796 17656 a223bd87c22b7e7844152827ed4716ad "pdflatex"
+  "automated-reasoning.out" 1793108924.68079 21960 3bf256637e03079d883834fff01a8a9d "pdflatex"
+  "automated-reasoning.tex" 1793108916.40333 88951 97123d7def06963984354fb935801947 ""
+  "automated-reasoning.toc" 1793108924.68108 10023 a8fa89fd9c26afc149957d33ad6c7d63 "pdflatex"
   (generated)
   "automated-reasoning.aux"
   "automated-reasoning.auxlock"
