@@ -1417,4 +1417,150 @@ where the equivalence class of \( s \) is:
   [s]_R = \left\{ p \in S \;|\; pRs \right\}
 \]
 The element \( s \) is called a \textbf{representative} of the equivalence class \( [s]_R \).
+\subsubsection{Disjointness of Equivalence Classes}
+\begin{definition}{Disjoint Class}
+\centering
+\textit{For any two equivalence classes \( [s_1]_R \) and \( [s_2]_R \), either they are identical or the 
+are disjoint}:
+\[
+  [s_1]_R \cap [s_2]_R \neq \varnothing \quad \Rightarrow \quad [s_1]_R = [s_2]_R
+\]
+\textit{Proof}. Suppose there exists \( p \in [s_1]_R \cap [s_2]_R \). Then:
+\begin{itemize}
+	\item \( p R s_1 \) (since \( p \in [s_1]_R \))
+	\item \( p R s_2 \) (since \( p \in [s_2]_R \))
+\end{itemize}
+\end{definition}
+By symmetry and transitivity of \( R \), we have \( s_1 R s_2 \). Therefore, for any \( q \in [s_1]_R \), we have \( q R s_1 \) and
+\( s_1 R s_2 \), so by transitivity \( q R s_2 \), which means \( q \in [s_2]_R \). Similarly, \( [s_2]_R \subseteq [s_1]_R \). Thus 
+\( [s_1]_R = [s_2]_R \).
+\subsubsection{Example: Equivalence Closure}
+Consider the binary relation:
+\[
+  R = \left\{ (a,b),(b,c),(d,d) \right\}
+\]
+We can visualize this as a directed graph:
+\begin{figure}
+	\begin{tikzpicture}[->, node distance = 1.8cm]
+		\node (a) {$a$};
+		\node (b) [right=of a] {$b$};
+		\node (c) [right=of b] {$c$};
+		\node (d) [right=2.5cm of c] {$d$};
+
+		\draw (a) -- (b);
+		\draw (b) -- (c);
+		\draw (d) edge [loop right] ();
+	\end{tikzpicture}
+\end{figure}
+The \textbf{equivalence closure} \( R^* \) of \( R \) must include:
+\begin{itemize}
+	\item \textbf{Reflexivity}: \( (a,a),(b,b),(c,c),(d,d) \).
+	\item \textbf{Symmetry}: \( (b,a),(c,b) \).
+	\item \textbf{Transitivity}: \( (a,c),(c,a) \).
+\end{itemize}
+Thus:
+\[
+  R^* = \left\{ (a,a),(a,b),(a,c),(b,a),(b,b),(b,c),(c,a),(c,b),(c,c)(d,d) \right\}
+\]
+The quotient set is:
+\[
+  S/R^* = \left\{ \left\{a,b,c \right\}, \left\{d\right\} \right\}
+\]
+\begin{definition}{Equivalence Closure}
+\centering
+Given a binary relation \( R \) on set \( S \), the \textbf{equivalence closure} of \( R \), denoted \( R^* \), is the 
+\( \subseteq \)-smallest equivalence relation such that:
+\begin{enumerate}
+	\item \( R^* \) is an equivalence relation 
+	\item \( R \subseteq R^* \)
+\end{enumerate}
+Equivalently, \( R^* \) is the intersection of all equivalence relations containing \( R \).
+\end{definition}
+The equivalence closure can be computed by iteratively applying reflexivity, symmetry, and transitivity rules 
+until a fixed point is reached.
+\subsubsection{Understanding the \( \subseteq \)-Smallest Property}
+\begin{definition}{Minimality of Equivalence Closure}
+\centering 
+\textit{Let R be a binary relation and \( R^* \) be its equivalence closure. For any equivalence relation P such that
+\( R \subseteq P \), we have \( R^* \subseteq P \).}
+\end{definition}
+This means that \( R^* \) is the \textbf{smallest} equivalence relation containing \( R \) with respect to the subset ordering \( \subseteq \).
+\begin{definition}{Congruence Closure}
+\centering 
+Given a binary relation \( R \), the \textbf{congruence closure} of \( R \), denoted \( R_{cong}^{*} \) is the 
+\( \subseteq \)-smallest relation such that:
+\begin{enumerate}
+	\item \( R_{cong}^{*} \) is a congruence relation 
+	\item \( R \subseteq R_{cong}^{*} \)
+\end{enumerate}
+\end{definition}
+A congruence relation is an equivalence realtion that is preserved under function application: if 
+\( s_1 \backsim t_1, \ldots, s_n \backsim t_n \), then \( f(s_1, \ldots, s_n) \backsim f(t_1, \ldots, t_n) \) for all function 
+symbols \( f \).
+\subsubsection{Example: Refinement of Equivalence Relations}
+To illustrate the concept of one equivalence relation being smaller (finer) than another, consider 
+the following example on the natural numbers \( \mathbb{N} \).
+\vspace{1em}
+\noindent 
+\newline
+\textbf{Equivalence modulo 2}: Define the relation \( \equiv_2 \subseteq \mathbb{N} \times \mathbb{N} \) by:
+\[
+  n \equiv_2 m \quad \text{iff} \quad n \equiv m \text{ (mod 2)}
+\] 
+\begin{center}
+	\begin{tikzpicture}
+		\draw (0,0) circle (2cm);
+		\node at (0,2.25) {$\mathbb{N}/{\equiv_2}$};
+
+		\draw[dashed, gray] (0,-2) -- (0,0.4);
+
+		\node[orange!80!black] at (-0.6,0.9) {$[0]_2$};
+		\node[orange!80!black] at (0.6,0.9) {$[1]_2$};
+		\node at (-0.75,0.4) {(even)};
+		\node at (0.75,0.4) {(odd)};
+	\end{tikzpicture}
+\end{center}
+\textbf{Equivalence modulo 4}: Define the relation \( \equiv_4 \subseteq \mathbb{N} \times \mathbb{N} \) by:
+\[
+  n \equiv_4 m \quad \text{iff} \quad n \equiv m \text{ (mod 4)}
+\]
+This relation partitions \( \mathbb{N} \) into four equivalence classes:
+\begin{center}
+	\begin{tikzpicture}
+		\draw (0,0) circle (2cm);
+		\node at (0,2.25) {$\mathbb{N}/{\equiv_4}$};
+
+		\draw[dashed, gray] (0,-2) -- (0,-0.4);
+		\draw[dashed, gray] (0,-0.4) -- (2,-0.4);
+
+		\node[orange!80!black] at (-0.7,0.9) {$[0]_4$};
+		\node[orange!80!black] at (0.7,0.9) {$[1]_4$};
+		\node[orange!80!black] at (-0.7,-1.0) {$[2]_4$};
+		\node[orange!80!black] at (0.7,-1.0) {$[3]_4$};
+	\end{tikzpicture}
+\end{center}
+\begin{definition}{Refinement}
+\centering 
+\textit{The relation \( \equiv_4 \) is a \textbf{refinement} of \( \equiv_2 \). That is:}
+\[
+  n \equiv_4 m \quad \Rightarrow \quad n \equiv_2 m
+\]
+\textit{However, the converse does not hold}:
+\[
+  n \equiv_2 m \quad \nRightarrow \quad n \equiv_4 m
+\]
+\textit{Proof}. If \( n \equiv_4 m \), then \( n \equiv m \) (mod 4), which means \( n - m = 4k \) for some \( k \in \mathbb{Z} \).
+Therefore, \( n - m = 2(2k) \), so \( n \equiv m \) (mod 2), i.e., \( n \equiv_2 m \).
+\vspace{1em}
+\noindent
+\newline
+For the converse, consider \( n = 0 \) and \( m = 2 \). Then \( n \equiv_2 m \) (both are even), but \( n \mathrel{\not\equiv_4} m \) (since 
+\( 0 \equiv 0 \) (mod 4) and \( 2 \equiv 2 \) (mod 4)).
+\end{definition}
+\textbf{Set-theoretic interpretation}: This means that \( (n,m) \in \equiv_4 \Rightarrow (n,m) \in \equiv_2 \), so:
+\[
+  \equiv_4 \subseteq \equiv_2
+\]
+In this sense, \( \equiv_4 \) is \textbf{strictly smaller} than \( \equiv_2 \) (it is a proper subset), and provides a finer 
+partition of \( \mathbb{N} \).
 \end{document}

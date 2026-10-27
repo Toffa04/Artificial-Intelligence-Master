@@ -90,3 +90,7 @@
 \contentsline {subsection}{\numberline {16.1}Computing Congruence Closure}{29}{subsection.16.1}%
 \contentsline {subsubsection}{\numberline {16.1.1}Input Problem Structure}{29}{subsubsection.16.1.1}%
 \contentsline {subsubsection}{\numberline {16.1.2}Equivalence relations and Representatives}{29}{subsubsection.16.1.2}%
+\contentsline {subsubsection}{\numberline {16.1.3}Disjointness of Equivalence Classes}{29}{subsubsection.16.1.3}%
+\contentsline {subsubsection}{\numberline {16.1.4}Example: Equivalence Closure}{30}{subsubsection.16.1.4}%
+\contentsline {subsubsection}{\numberline {16.1.5}Understanding the \( \subseteq \)-Smallest Property}{30}{subsubsection.16.1.5}%
+\contentsline {subsubsection}{\numberline {16.1.6}Example: Refinement of Equivalence Relations}{31}{subsubsection.16.1.6}%
