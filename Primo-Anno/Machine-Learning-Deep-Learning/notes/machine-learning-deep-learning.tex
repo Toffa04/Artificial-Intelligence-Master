@@ -2386,4 +2386,58 @@ bandwidth in kernel density estimation), but they don't assume a specific parame
     \textbf{Key Idea}\\[0.5em]
     The simplest form of nonparametric density estimation is the \textbf{histogram}.
 \end{tcolorbox}
+\section{Histogram-Based Density Estimation}
+The histogram is the most intuitive nonparametric density estimator.
+\subsubsection{How Histogram Work}
+\begin{definition}{Histogram Density Estimator}{Histogram Density Estimator}
+Dividing the sample space into number of bins and approximate the density at the \textbf{center of each bin} by the \textbf{fraction} of points in the 
+training data that fall into the corresponding bin:
+\[
+  p_H(x) = \frac{1}{N} \cdot \frac{\# \text{ of } x^{(k)} \text{ in same bin as } x}{\text{width of bin}}
+\]  
+where \( N \) is the total number of training samples.
+\end{definition}
+\textit{Observation}. The histogram essentially counts how many data points fall into each bin and normalizes by the bin width and total number of samples to 
+create a probability density estimate.
+\subsubsection{Hisogram Parameters}
+The histogram requires two "parameters" to be defined:
+\begin{enumerate}
+    \item \textbf{Bin width}: Determines the resolution of the density estimate
+    \item \textbf{Starting position} of the first bin: Determines where the bins are anchored
+\end{enumerate}
+\begin{center}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/histogram.png}
+    \end{figure}
+\end{center}
+\subsection{Drawbacks of Histograms}
+Despite their simplicity, histograms have several significant limitations:
+\begin{enumerate}
+    \item \textbf{Dependence on starting position}: The density estimate depends on the starting position of the bins
+    \begin{itemize}
+        \item Different starting positions can produce different density estimates
+        \item For multivariate data, the density estimate is also affected by the \textbf{orientation of the bins}
+    \end{itemize}
+    \item \textbf{Discontinuities}: The discontinuities of the estimate are not due to the underlying density they are only an artifact of the chosen bin locations 
+    \begin{itemize}
+        \item These discontinuities make it very difficult to grasp the \textbf{structure} of the data 
+        \item The true underlying distribution is typically smooth, but histograms create artificial jumps
+    \end{itemize}
+    \item \textbf{Curse of dimensionality}: A much more serious problem is the \textbf{curse of dimensionality}, since the number of bins grows exponentially with the number of dimensions
+    \begin{itemize}
+        \item In high dimensions we would require a very large number of examples or else most of the bins woulde be empty
+        \item With \( d \) dimensions and \( k \) bins per dimensio, we need \( k^d \) total bins
+    \end{itemize}
+\end{enumerate}
+\begin{tcolorbox}[
+    colback=magenta!15!white,
+    colframe=magenta!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{The curse of dimensionality}\\[0.5em]
+    As the number of features or dimensions increases, the amount of data required to effectively cover the feature space increases \textbf{eponentially}
+\end{tcolorbox}
 \end{document}
