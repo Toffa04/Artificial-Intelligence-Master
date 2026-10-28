@@ -200,8 +200,8 @@ The ML recipe consists of 4 fundamental step:
     \item Find the model that minimize the error function (training/learning a model)
 \end{enumerate}
 \subsubsection{The Key ingredients}
-\begin{example}{Essential Ingredient}
-\centering    Task \( \bullet \) Data \( \bullet \) Model \( \bullet \) Objective Function \( \bullet \) Learning Algorithm 
+\begin{example}{Essential Ingredient}{Essential Ingredient}
+Task \( \bullet \) Data \( \bullet \) Model \( \bullet \) Objective Function \( \bullet \) Learning Algorithm 
 \end{example}
 Every machine learning problem requires five essential ingredients:
 \begin{itemize}
@@ -375,8 +375,7 @@ When training, validation, and test sets are sampled from the \textbf{same distr
     \item However, they \textbf{do not overlap} (no data point appears in multiple sets)
 \end{itemize}
 This ensures that the model cna generalize well from training to test data.
-\begin{example}{Fruits}
-\centering
+\begin{example}{Fruits}{Fruits}
 If we're classifying fruits, all three sets might contain apples and bananas in similar proportions, but with different specific instances.
 \end{example}
 \subsubsection{Incorrect Scenario: Different Distribution}
@@ -387,12 +386,10 @@ This problematic scenario typically leads to:
     \item Unrealiable predictions on new data 
     \item Inability to generalize to real-world applications
 \end{itemize}
-\begin{example}{Different distributions}
-\centering
+\begin{example}{Different distributions}{Different distributions}
 Training on apples and bananas, but testing on oranges and limes. The model cannot calssify fruits it has never seen during training
 \end{example}
-\begin{theorem}{Key principle}
-\centering
+\begin{theorem}{Key principle}{Key principle}
 Training and test data must come from the \textbf{same distribution}, violating thi leads to poor generalization
 \end{theorem}
     
@@ -400,8 +397,7 @@ Training and test data must come from the \textbf{same distribution}, violating 
 \subsection{Training (Learning, Induction)}
 During the training phase, the model learns to distinguish between different classes based on the features provided in the training 
 data.
-\begin{example}{Fruit classification}
-\centering 
+\begin{example}{Fruit classification}{Fruit classification}
 Consider a fruit classification task with the following training data:
 \begin{itemize}
     \item \textit{red, round, leaf, 3oz, \( \ldots \)} \( \rightarrow \) apple 
@@ -416,13 +412,11 @@ are characteristic of each class.
 \subsection{Testing}
 Once trained, the model can classify new examples based on the same features it learned during training.
 When presented with a new example described byt the same semantic features, the model make a prediction 
-\begin{example}{Fruit}
-\centering 
+\begin{example}{Fruit}{Fruit}
 Given a new fruit with features \textit{red, round, no leaf, 4oz, \( \ldots \)}, the model uses the 
 learned patterns to predict whether it is an apple or banana.
 \end{example}
-\begin{theorem}{Critical Assumption}
-\centering 
+\begin{theorem}{Critical Assumption}{Critical Assumption}
 THe features of training and testing data \textbf{must be the same!}. The model can only make 
 predictions based on features it was trained on
 \end{theorem}
@@ -434,8 +428,7 @@ but to learn patterns that apply to new, unseen data.
 \newline
 However, the failure of a machine learning algorithm is foten caused by a \textbf{bad selection of training samples}.
 The key issue is that we might introduce \textbf{unwanted correlations} from which the algorithm derives \textbf{wrong conclusions}.
-\begin{example}{Recognize object in images}
-\centering 
+\begin{example}{Recognize object in images}{Recognize object in images}
 Consider a model trained to recognize objects in images. If all training images were captured on sunny days, the model might 
 learn to associate sunny weather conditions with the objects. When tested on images taken on cloudy days, the model might
 fail to recognize the same objects because it never encountered cloudy cnditions during training. The model incorrectly 
@@ -534,8 +527,7 @@ to leverage large dataset through self-supervised learning techniques.
 The key idea is to provide the model with tasks different from the one to be solved, but that allow 
 the model to learn the data distribution from the unlabeled data. Once the model understands the general structure of 
 the data, it can then specialize on the few labeled examples to solve the target task.
-\begin{example}{Training a language}
-\centering 
+\begin{example}{Training a language}{Training a language}
 Training a language model on large amounts of unlabeled text to learn general 
 laguage pattern, then fine-tuning it on a small labeled dataset for sentiment analysis.
 \end{example}
@@ -877,8 +869,7 @@ The optimal \( \lambda \) is found where the validation error is minimized.
 \end{center}
 \subsection{Generalization and Data Size}
 An important theoretical result in machine learning relates training erorr to generalization error:
-\begin{theorem}{Generalization with Infinite Data}
-\centering
+\begin{theorem}{Generalization with Infinite Data}{Generalization with Infinite Data}
 \textit{As the number of training samples approaches infinity, the training error approzimates the generalization erorr}:
 \[
   E(f;\mathcal{D}_n) \rightarrow E(f;p_{data}) \text{ as } n \to \infty 
@@ -1438,15 +1429,14 @@ This is achieved through wighting them:
   \text{Cost} = C_{FP} \times \text{FP } + C_{FN} \times \text{FN}
 \]
 where \( C_{FP} \) and \( C_{FN} \) are the costs associated with false positive and false negatives, respectively.
-\begin{example}{Medical Diagnosis (Cancer detection)}
-\centering 
+\begin{example}{Medical Diagnosis (Cancer detection)}{Medical Diagnosis (Cancer detection)} 
 \begin{itemize}
     \item False Negative (missing a cancer diagnosis): Very high cost - patient doesn't receive treatment 
     \item False Positive (false alarm): Lower cost - patient undergoes additional tests 
     \item Therefore: \( C_{FN} \gg C_{FP} \), we prioritize high recall
 \end{itemize}    
 \end{example}
-\begin{example}{Spam Email Filter}
+\begin{example}{Spam Email Filter}{Spam Email Filter}
 \centering 
 \begin{itemize}
     \item False Positive (marking important email as spam): High cost - user misses important messages 
@@ -1696,8 +1686,7 @@ insights into both the typical error magnitude and the presence of outliers.
 \subsection{Introduction}
 The bayes classifier represents a funamental \textbf{statistical approach} for classification problems.
 It provides an optimal decision-making framework when all relevant probabilities are known.
-\begin{theorem}{Core Hypothesis}
-\centering 
+\begin{theorem}{Core Hypothesis}{Core Hypothesis}
 The decision problem is cast in \textbf{probabilistic terms}, where all relevant \textbf{probabilities are known}
 \end{theorem}
 \subsubsection{Goal of Bayes Classifier}
@@ -1709,8 +1698,7 @@ The primary objectives are:
 \textbf{Key Concept} \( \rightarrow \) The bayes classifier aims to estimate the join probability distribution \( p(\textbf{x},y) \) to make optimal classification decisions.
 \subsection{An Easy Example}
 Let's start with a simple example to understande the basic principles.
-\begin{example}{Two-Class Classification}
-\centering
+\begin{example}{Two-Class Classification}{Two-Class Classification}
 Let \( y \) be what we want to classify, and it is to be probabilistically described.
 \vspace{1em}
 \noindent
@@ -1740,8 +1728,7 @@ is greater than 0.3.
 This makes intuitive sense: without any additional information, we should choose the more probable class.
 \subsection{Another example: Adding Measurements}
 Now let's consider a more realistic scenario where we have measurements to help us decide.
-\begin{example}{Classification with Measurements}
-\centering
+\begin{example}{Classification with Measurements}{Classification with Measurements}
 Having the previous hypothesis and additionally \textbf{a single measurement x}, which is a random variable that depends 
 on the class \( y_j \), we can get:
 \[
@@ -1903,8 +1890,7 @@ The training process involves:
 \end{enumerate}
 \subsection{Example: Email Spam Classification}
 Let's work through a complete example to understand how Naïve Bayes works in practice.
-\begin{example}{Spam detection}
-\centering
+\begin{example}{Spam detection}{Spam detection}
 We want to classify an email as either:
 \begin{itemize}
     \item \textbf{Class 1}: Spam 
@@ -2078,7 +2064,8 @@ To create an optimal classifier that uses the Bayesian decision rule, you need t
 ]
     \textbf{The fundamental Problem}\\[0.6em]
     \[
-      BUT PRATICAlLY ALL THIS INFORMATION IS NEVER AVAILABLE!!
+      \text{BUT PRATICALLY ALL THIS INFORMATION
+      IS NEVER AVAILABLE!!}
     \]
 \end{tcolorbox}
 \subsubsection{What we actually have}
@@ -2092,4 +2079,311 @@ More often we only have:
     \item Estimating a-priori probabilities is usually not particularly difficult 
     \item Estimating conditional densities (likelihood) is \textbf{more complex} \( \rightarrow \) needs approximations
 \end{itemize}
+\subsection{Challenges in Estimating Conditional Densities}
+Estimating conditional densities (likelihood) is more complex and needs approximations due to several challenges:
+\begin{enumerate}
+    \item \textbf{High-dimensional problem}: Data can have many features \( \rightarrow \) exponential combinations
+    \begin{itemize}
+        \item With \( d \) features, each with \( k \) possible values, there are \( k^d \) possible feature combinations 
+        \item This leads to the \textbf{curse of dimensionality}
+    \end{itemize}
+    \item \textbf{Zero probabilities}: Some feature combinations may never appear in training data \( \rightarrow \) zero probabilities
+    \begin{itemize}
+        \item This can cause the entire posterior probability to become zero 
+        \item Requires smoothing techniques
+    \end{itemize}
+    \item \textbf{Continuous features}: Features may be continuos, requiring parametric assumptions (e.g., Gaussian)
+    \begin{itemize}
+        \item We need to assume a probability distribution family 
+        \item Then estimate the parameters of that distribution
+    \end{itemize}
+\end{enumerate}
+\begin{tcolorbox}[
+    colback=yellow!15!white,
+    colframe=yellow!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Key Challenge}\\[0.6em]
+    The complexity of estimating \( p(\mathbf{x} \mid y_j) \) grows exponentially with the number of features 
+    making it impratical to estimate directly from data without making simplifying assumptions.
+\end{tcolorbox}
+\subsection{Solution: Parametric Models}
+One solution (out of many) is to approximate the conditional densities by \textbf{fitting a parametric model}.
+\begin{definition}{Parametric Approach}{Parametric Approach}
+We approximate the likelihood by fitting a \textbf{parametric model} (e.g., Gaussian) to the training data and estimate its parameters using, for example,
+\textbf{Maximum Likelihood Estimation (MLE)}.
+\begin{itemize}
+    \item It is a standard way to estimate parameters associated to the likelihood from training data 
+    \item For a Gaussian model, the parameters are:
+    \[
+      \theta_j = (\mu_j, \Sigma_j)
+    \]
+    where \textbf{\( \mu_j \)} is the mean vector and \textbf{\( \Sigma_j \)} is the covariance matrix for class \( y_j \).
+    \item The likelihood is then approximated as:
+    \[
+      P(\mathbf{x}\mid y_j) \approx \mathcal{N}(\mu_j,\Sigma_j)
+    \]
+\end{itemize}
+\end{definition}
+\subsubsection{Maximum Likelihood Estimation (MLE)}
+\begin{definition}{Maximum Likelihood Estimation}{Maximum Likelihood Estimation}
+MLE choose the parameter values that make the observed data \textbf{most probable}.
+\vspace{1em}
+\noindent
+\newline
+For a dataset \( \mathcal{D} = \left\{ (\mathbf{x}_1,\mathbf{y}_1),(\mathbf{x}_2,\mathbf{y}_2), \ldots, (\mathbf{x}_N,\mathbf{y}_N) \right\} \), the likelihood
+function is:
+\[
+  L(\theta_j) = \prod_{i:y_i = y_j} p(\mathbf{x}_i \mid y_j, \theta_j)
+\]
+MLE finds:
+\[
+  \hat{\boldsymbol{\theta}}_j = \arg\max_{\boldsymbol{\theta}_j} L(\boldsymbol{\theta}_j)
+\]
+\end{definition}
+\textit{Observation}. In pratice, we often maximize the \textbf{log-likelihood} instead:
+\[
+  log L(\theta_j) = \sum_{i: y_i = y_j} log p(\mathbf{x}_i \mid y_j, \theta_j)
+\]
+This is mathematically equivalent but numrically more stable and easier to optimize
+\subsubsection{Gaussian Naïve Bayes}
+When features are continuos and we assume they follow a Gaussian distribution:
+\begin{itemize}
+    \item For each class \( y_j \) and feature \( x_i \), we estimate:
+    \[
+      \mu_{ij} = \frac{1}{N_j} \sum_{k: y_k = y_j} x_{ki}
+    \]
+    \[
+      \sigma_{ij}^2 = \frac{1}{N_j} \sum_{k: y_k = y_j} (x_{ki} - \mu_{ij})^2
+    \]
+    where \( N_j \) is the number of training samples in class \( y_j \)
+    \item The likelihood for feature \( x_i \) given class \( y_j \) is:
+    \[
+      p(x_i \mid y_j) = \frac{1}{\sqrt{2\pi\sigma_{ij}^2}}exp(-\frac{(x_i - \mu_{ij})^2}{2\sigma_{ij}^2})
+    \]
+    \item Under the independence assumption:
+    \[
+      p(\mathbf{x}\mid y_j) = \prod_{i = 1}^d p(x_i\mid y_i)
+    \]
+\end{itemize}
+\textit{Note}. The Gaussian assumption is reasonable for many real-world problems, but it's important to verify whether your data 
+actually follows this distribution. For non-Gaussian data, other parametric models (e.g., multinomial for discrete features) or non-parametric 
+methods may be more appropriate.
+\subsection{Summary: From Theory to Practice}
+\begin{tcolorbox}[
+    colback=magenta!15!white,
+    colframe=magenta!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Bayesian Classification Pipeline:}\\[0.3em]
+    \begin{enumerate}
+        \item \textbf{Theoretical Foundation}: Bayes' theorem provides the optimal decision rule
+        \item \textbf{Practical Challenge}: We don't have access to true probability distributions
+        \item \textbf{Naïve Assumption}: Fit parametric models (e.g., Gaussian) to estimate likelihoods 
+        \item \textbf{Parameter Estimation}: Use MLE to learn model parameters from training data 
+        \item \textbf{Smoothing}: Apply techniques like Laplace smoothing to handle zero probabilities
+    \end{enumerate}
+    
+\end{tcolorbox}
+\section{MLE in Naïve Bayes: Practical Implementation}
+\subsection{MLE for Discrete (Categorical) Features}
+Suppose you're training Naïve Bayes classifier with \textbf{categorical features}. For each class \( y \), you estimate:
+\begin{itemize}
+    \item the \textbf{prior} \( P(y) \) and the \textbf{likelihoods} \( P(x_i\mid y) \)
+\end{itemize} 
+\subsubsection{(a) Prior via MLE}
+\begin{definition}{Prior Estimation}{Prior Estimation}
+\[
+  P(y) = \frac{\text{number of samples with class } y}{\text{total number of sample}}
+\]
+\end{definition}
+\textit{Observation}. This is simply the relative frequency of class \( y \) in the training data. If we have \( 100 \) samples and 
+\( 60 \) belong to class \( y_1 \), then \( P(y_1) = 0.6 \).
+\subsubsection{(b) Likelihood via MLE}
+For categorical features (e.g., words in text classification):
+\begin{definition}{Likelihood Estimation for Categorical Features}{Likelihood Estimation for Categorical Features}
+If \( x_i \) is a categorical feature (e.g., word):
+\[
+  P(x_i = v_k \mid y) = \frac{\text{count of } (x_i = v_k, y)}{\text{count of } y}
+\]
+where \( v_k \) is a specific value (category) that feature \( x_i \) can take.
+\end{definition}
+\textit{Observation}. This is the \textbf{maximum likelihood estimate} of the conditional probability \( P(x_i = v_k \mid y) \). You're simply 
+estimating probabilities by \textbf{relative frequencies}: the parameter values that \textbf{maximise} the likelihood of your training data.
+\begin{example}{Word Frequency in Spam detection}{Word Frequency in Spam detection}
+If we're classifying emails as spam or ham, and the word "free" appears in 40 out of 60 spam emails, then:
+\[
+  P(\text{free = Yes } \mid \text{ Spam}) = \frac{40}{60} = 0.667
+\]
+\end{example}
+\subsection{MLE for Continuos Features: Gaussian Model}
+If features are continuos and you assume a Gaussian likelihood:
+\[
+  P(x_i \mid y) = \mathcal{N}(x_i; \mu_{iy}, \sigma_{iy}^2) \quad \Rightarrow \quad P(x_i \mid y) = \frac{1}{\sqrt{2\pi\sigma_{iy}^2}}exp(-\frac{(x_i - \mu_iy)^2}{2\sigma_{iy}^2})
+\]
+Then MLE gives:
+\begin{definition}{Gaussian MLE Parameters}{Gaussian MLE Parameters}
+\[
+  \hat{\mu_iy} = \frac{1}{N_y} \sum_{j: y_j = y} x_{ij}
+\]
+\[
+  \hat{\sigma_{iy}^2} = \frac{1}{N_y} \sum_{j: y_j = y} (x_{ij} - \hat{\mu_iy})^2
+\]
+where \( N_y \) is the number of samples in class \( y \).
+\end{definition}
+\begin{tcolorbox}[
+    colback=blue!15!white,
+    colframe=blue!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Key Insight}\\[0.6em]
+    There are just the \textbf{sample mean and variance} of that feature within each class.
+\end{tcolorbox}
+\subsection{Complete Example: Fruit Classification}
+Let's work through a complete example of Gaussian Naïve Bayes with continuos features.
+\begin{example}{Classifying Fruits by Weight}{Classifying Fruits by Weight}
+We have a dataset of fruits with their weights (in grams):
+\vspace{1em}
+\noindent
+\newline
+We want to classify a new fruit with weight \( x = 158 g \).
+\end{example}
+\subsubsection{Step 1: Estimate Gaussian Parameters (MLE)}
+\textbf{For Apples}:
+% ---------- PAGINA 1 ----------
+
+\begin{table}[h]
+\centering
+\begin{tabular}{|l|c|}
+\hline
+\textbf{Fruit} & \textbf{Weight (g)} \\
+\hline
+Apple  & 150 \\
+Apple  & 160 \\
+Apple  & 155 \\
+Orange & 180 \\
+Orange & 190 \\
+Orange & 185 \\
+\hline
+\end{tabular}
+\caption{Training data for fruit classification}
+\end{table}
+
+\begin{align}
+\mu_{\text{Apple}} &= \frac{150 + 160 + 155}{3} = \frac{465}{3} = 155 \\
+\sigma^2_{\text{Apple}} &= \frac{(150-155)^2 + (160-155)^2 + (155-155)^2}{3} \\
+&= \frac{25 + 25 + 0}{3} = \frac{50}{3} \approx 16.67
+\end{align}
+
+\textbf{For Oranges:}
+
+\begin{align}
+\mu_{\text{Orange}} &= \frac{180 + 190 + 185}{3} = \frac{555}{3} = 185 \\
+\sigma^2_{\text{Orange}} &= \frac{(180-185)^2 + (190-185)^2 + (185-185)^2}{3} \\
+&= \frac{25 + 25 + 0}{3} = \frac{50}{3} \approx 16.67
+\end{align}
+
+\emph{Observation.} Notice that both classes have the same variance in this
+example. This is coincidental and won't always be the case in real data.
+
+\subsubsection{Step 2: Compute the Likelihood for a New Sample}
+
+New fruit weight: $x = 158$ g.
+
+Using the Gaussian likelihood formula:
+\[
+P(x|y) = \frac{1}{\sqrt{2\pi\sigma_y^2}}
+\exp\left(-\frac{(x-\mu_y)^2}{2\sigma_y^2}\right)
+\]
+
+\textbf{For Apple:}
+
+\begin{align}
+P(158|\text{Apple}) &= \frac{1}{\sqrt{2\pi \cdot 16.67}}
+\exp\left(-\frac{(158-155)^2}{2 \cdot 16.67}\right) \\
+&= \frac{1}{\sqrt{104.67}} \exp\left(-\frac{9}{33.34}\right) \\
+&\approx 0.097 \cdot \exp(-0.27) \\
+&\approx 0.097 \cdot 0.763 \\
+&\approx 0.072
+\end{align}
+
+% ---------- PAGINA 2 ----------
+
+\textbf{For Orange:}
+
+\begin{align}
+P(158|\text{Orange}) &= \frac{1}{\sqrt{2\pi \cdot 16.67}}
+\exp\left(-\frac{(158-185)^2}{2 \cdot 16.67}\right) \\
+&= \frac{1}{\sqrt{104.67}} \exp\left(-\frac{729}{33.34}\right) \\
+&\approx 0.097 \cdot \exp(-21.87) \\
+&\approx 0.097 \cdot 3.0 \times 10^{-10} \\
+&\approx 1.6 \times 10^{-11}
+\end{align}
+
+\emph{Observation.} The likelihood for Apple is much higher than for Orange.
+This makes intuitive sense: 158g is much closer to the Apple mean (155g) than
+to the Orange mean (185g).
+
+\subsubsection{Step 3: Multiply by Class Prior}
+
+Assume equal priors (we have 3 apples and 3 oranges):
+\[
+P(\text{Apple}) = P(\text{Orange}) = 0.5
+\]
+
+Computing the posterior (proportional to likelihood $\times$ prior):
+
+\begin{align}
+P(\text{Apple}|158) &\propto P(158|\text{Apple}) \cdot P(\text{Apple}) \\
+&= 0.072 \cdot 0.5 \\
+&\approx 0.036
+\end{align}
+
+\begin{align}
+P(\text{Orange}|158) &\propto P(158|\text{Orange}) \cdot P(\text{Orange}) \\
+&= 1.6 \times 10^{-11} \cdot 0.5 \\
+&\approx 8 \times 10^{-12}
+\end{align}
+\begin{tcolorbox}[
+    colback=magenta!15!white,
+    colframe=magenta!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Prediction: Apple}, because posterior probability is much higher.
+    \[
+      P(\text{Apple}\mid158) \approx 0.036 \gg P(Orange\mid158) \approx 8 \times 10^{-12}
+    \]
+\end{tcolorbox}
+\section{Nonparametric Classifiers}
+\subsubsection{Introduction to Nonparametric Methods}
+So far, we've discussed parametric approaches (like Gaussian Naive Bayes) that assume a specific form for the probability distribution. Now we turn
+to \textbf{nonparametric methods}.
+\begin{definition}{Nonparametric Methods}{Nonparametric Methods}
+Given a set of examples, model the density function of the data \textbf{without making any assumptions about the form of the distribution} (e.g., Gaussian
+distribution).
+\begin{itemize}
+    \item Estimate the probability density function \textbf{directly from the samples}
+    \item No predeterined functional form (e.g., no assumption of Gaussian, exponential, etc.)
+\end{itemize}
+\end{definition}
+\textit{Observation}. The term "nonparametric" is somewhat misleading - these methods often have parameters (like bin width in histograms or 
+bandwidth in kernel density estimation), but they don't assume a specific parametric form for the underlying distribution.
+\begin{tcolorbox}[
+    colback=magenta!15!white,
+    colframe=magenta!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Key Idea}\\[0.5em]
+    The simplest form of nonparametric density estimation is the \textbf{histogram}.
+\end{tcolorbox}
 \end{document}
