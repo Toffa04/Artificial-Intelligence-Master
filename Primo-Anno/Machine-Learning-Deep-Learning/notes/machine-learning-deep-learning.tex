@@ -2440,4 +2440,265 @@ Despite their simplicity, histograms have several significant limitations:
     \textbf{The curse of dimensionality}\\[0.5em]
     As the number of features or dimensions increases, the amount of data required to effectively cover the feature space increases \textbf{eponentially}
 \end{tcolorbox}
+\subsection{The curse of Dimensionality}
+\begin{definition}{Curse of Dimensionality}{Curse of Dimensionality}
+The curse of dimensionality refers to the challenges and issues that arise when working with high-dimensional data in machine learning.
+\vspace{1em}
+\noindent
+\newline
+As the number of features or dimensions in a dataset increases, the amount of data required to effectively cover the feature space also 
+increases eponentially.
+\end{definition}
+\subsubsection{Why it matters}
+\begin{itemize}
+    \item \textbf{Exponential growth}: With \( d \) dimensions, if each dimension is divided into \( k \) bins, we need \( k^d \) bins total.
+    \item \textbf{Data sparsity}: In high dimensions, data points become increasingly sparse
+    \begin{itemize}
+        \item Most bins will be empty unless we have an enormous amount of data 
+        \item The distance between points increases, making it harder to find meaningful patterns
+    \end{itemize}
+    \item \textbf{Sample size requirements}: To maintain the same density of samples, we need exponentially more data as dimensions increase
+\end{itemize}
+\begin{example}{Exponential Growth of Bins}{Exponential Growth of Bins}
+\begin{itemize}
+    \item 2D: 10 bins per dimension \( \rightarrow \) 100 bins total 
+    \item 3D: 10 bins per dimension \( \rightarrow \) 1,000 bins total 
+    \item 10D: 10 bins per dimension \( \rightarrow \) 10,000,000,000 bins total
+\end{itemize}
+\end{example}
+\subsubsection{Mitigatin the Curse of Dimensionality}
+To mitigate the curse of dimensionality, various techniques are employed:
+\begin{itemize}
+    \item \textbf{Feature selection}: Choose only the most relevant features 
+    \item \textbf{Dimensionality reduction}: Techniques like Principal Component Analysis (PCA) reduce the number of dimensions while preserving important characteristics
+    \item \textbf{Regularization methods}: Add constraints to prevent overfitting in high dimensions
+    \item \textbf{Domain knowledge}: Use expert knowledge to identify which features are truly important
+\end{itemize}
+\begin{tcolorbox}[
+    colback=yellow!15!white,
+    colframe=yellow!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Practical Implication}\\[0.6em]
+    In practice, nonparametric methds like histograms work well for 1D or 2D data, but become impractical for high-dimensional data.
+    This motivates the development of more sophisticated techinques.
+\end{tcolorbox}
+\subsection{Probability Density: Mathematical Foundation}
+Before we proceed with more advanced nonparametric techinques, let's return to the basic definition of probability to get a solid idea of what 
+we are trying to accomplish.
+\begin{definition}{Probability in a Region}{Probability in a Region}
+The probability that a vector \( \mathbf{x} \), drawn from a distribution \( P(\mathbf{x}) \), will fall in a region \( \mathcal{R} \) of 
+the sample space is:
+\[
+  P = \int_{\mathbf{x}\in \mathcal{R}}^{} P(\mathbf{x}') \,dx 
+\]
+where:
+\begin{itemize}
+    \item \( \mathbf{x} \) is a particular vector we are asking about ("drawn from the distribution")
+    \item \( \mathbf{x}' \) is a dummy variable used to sum/integrate over all vectors in \( \mathcal{R} \).
+    \item \( \mathcal{R} \) is a region in the feature space
+\end{itemize}
+\end{definition}
+\textit{Observation}. This integral formuulation is the founation for all density estimation methods. The key insight is that if we can estimate 
+the probability is small regions around each point, we can reconstruct the entire probability density function.
+\subsubsection{Key concepts}
+\begin{itemize}
+    \item \textbf{Probability density function} \( P(\mathbf{x}) \): Describe how probability is distributed over the feature space
+    \item \textbf{Integration over a region}: The probability of falling in region \( \mathcal{R} \) is the integral of the density over that region
+    \item \textbf{Dummy variable} \( \mathbf{x}' \): Used for integration; represent all possible points in the region
+    \item \textbf{Normalization}: The integral over the entire space must equal 1:
+    \[
+      \int_{\text{all space}} P(\mathbf{x}') \,dx' = 1
+    \]
+\end{itemize}
+\textit{Note}. For discrete distributions, the integral become a sum:
+\[
+  P = \sum_{\mathbf{x}' \in \mathcal{R}} P(\mathbf{x}')
+\]
+This is the discrete analog of the continuos case and is what we use when working with categorical data.
+\subsection{Binomial Distribution Approach}
+Now let's develop a more rigorous approach to nonparametric density estimation based on probability theory.
+\subsubsection{Setup}
+Suppose now that \( N \) vectors \( \left\{ \mathbf{x}(1), \mathbf{x}(2), \ldots, \mathbf{x}(N) \right\} \) are drawn \textbf{independently and identically
+distributed (i.i.d.)} from the distribution. The probability that \( k \) of these \( N \) vectors fall in \( \mathcal{R} \) is given by the binomial distribution:
+\begin{definition}{Binomial distribution}{Binomia distribution}
+\[
+  P(k) = \binom{N}{k} p^k(1 - p)^{N - k} 
+\]
+where:
+\[
+  \binom{N}{k} = \frac{N!}{k!(N - k)!}
+\]
+and the expected value for \( k \) is:
+\[
+  \mathbb{E}[k] = NP
+\]
+\end{definition}
+\textit{Observation}. \textbf{Recall}: The expectation is the average value we would get if we repeated drawing samples many times.
+\vspace{1em}
+\noindent
+\newline
+The binomial distribution tells us how likely it is to observe exactly \( k \) points in region \( \mathcal{R} \) when we draw \( N \) samples, given that each 
+point has probability \( P \) of falling in \( \mathcal{R} \).
+\subsubsection{Mean and Variance of the Ratio}
+The mean and variance of the ratio \( k/N \) are:
+\[
+  \mathbb{E} [\frac{k}{N}] = P
+\]
+\[
+  \text{Var } [\frac{k}{N}] = \mathbb{E} [(\frac{k}{N} - P)^2] = \frac{P(1 - P)}{N} 
+\]
+\textit{Observation}. Therefore, as \( N \rightarrow \infty \), the distribution becomes \textbf{sharper}, the variance gets \textbf{smaller},
+thus we can obtain a \textbf{better estimate} of the probability \( P \) from the mean fraction of the points that fall within \( \mathcal{R} \):
+\[
+  P \cong \frac{k}{N}
+\]
+This is the law of large numbers in action: with more samples, our estimate becomes more accurate.
+\subsection{Density Estimation Formula}
+\subsubsection{Small Region Assumption}
+On the other hand, if we assume that \( \mathcal{R} \) is \textbf{so small} that \( P(\mathbf{x}) \) \textbf{does not vary} appreciably within it, then:
+\[
+  \int_{\mathcal{R}} P(\mathbf{x}')\,dx' \cong P(\mathbf{x})V
+\]
+where \( V \) is the \textbf{volume enclosed} by region \( \mathcal{R} \).
+\vspace{1em}
+\noindent
+\newline
+\textit{Observation}. This approximation assumes that the probability density is approximately constant within the small region \( \mathcal{R} \), so 
+we can pull \( P(\mathbf{x}) \) out of the integral, leaving just the volume \( V \).
+\subsubsection{Combining the Results}
+Merging with the previous result, we obtain:
+\[
+  P = \int_{\mathcal{R}} p(\mathbf{x}')\,dx' \cong P(\mathbf{x}) V
+\]
+where \( V \) is the \textbf{volume enclosed} by region \( \mathcal{R} \).
+\vspace{1em}
+\noindent
+\newline
+\textit{Obseravation}. This approximation assumes that the probability density it approximately constant withint the small region \( \mathcal{R} \), so we can pull \( P(\mathbf{x}) \) out of the integral,
+leaving just the volume \( V \).
+\subsubsection{Combining the Results}
+Merging with the previous result, we obtain:
+\[
+  P = \int_{\mathcal{R}} p(\mathbf{x}')\,dx' \cong p(\mathbf{x}) V
+\]
+\[
+  P \cong \frac{k}{N}
+\]
+Therefore:
+\[
+  p(\mathbf{x}) \cong \frac{k}{NV}
+\]
+\begin{tcolorbox}[
+    colback=green!15!white,
+    colframe=green!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Key Result}\\[0.6em]   
+    This estimate becomes more accurate as we \textbf{increase the number of sample points} \( N \) and 
+    \textbf{shrink the volume} \( V \)
+\end{tcolorbox}
+\subsection{The Trade-off Problem}
+In practice, the value of \( N \) (the total number of examples) is fixed.
+\subsubsection{The dilemma}
+\begin{itemize}
+    \item In order to improve the accuracy of the estimate \( P(\mathbf{x}) \) we could let \( V \) to approach zero, but then the region \( \mathcal{R} \) would become so small that it would enclose no examples 
+    \item This means that in practice, we will have to find a \textbf{compromise value of the volume} \( V \):
+    \begin{itemize}
+        \item \textbf{Large enough} to include enough examples withing \( \mathcal{R} \).
+        \item \textbf{Small enough} to support the assumption that \( P(\mathbf{x}) \) is constant within \( \mathcal{R} \) 
+    \end{itemize}
+\end{itemize}
+\begin{tcolorbox}[
+    colback=magenta!15!white,
+    colframe=magenta!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{The fundamental Trade-off}\\[0.6em]   
+    \begin{itemize}
+        \item Too large \( V \rightarrow \) Poor approximation (density varies within region)
+        \item Too small \( V \rightarrow \) Too few samples (high variance in estimate)
+    \end{itemize}
+\end{tcolorbox}
+\subsection{General Nonparametric Density Estimation Formula}
+\begin{theorem}{General Expression for Nonparametric Density Estimation}{General Expression for Nonparametric Density Estimation}
+\[
+  P(\mathbf{x}) \cong \frac{K}{NV}
+\]
+where:
+\begin{itemize}
+    \item \( V \) is the volume surrounding \( \mathbf{x} \).
+    \item \( N \) is the total number of examples 
+    \item \( k \) is the number of examples inside \( V \)
+\end{itemize}
+\end{theorem}
+\subsection{Two Approaches to Nonparametric Density Estimation}
+When applying this result to practical density estimation problems, two basic approaches can be adopted:
+\begin{enumerate}
+    \item \textbf{Fix} \( V \) \textbf{and determine} \( k \) \textbf{from the data}
+    \begin{itemize}
+        \item This leads to \textbf{kernel density estimation (KDE)}, e.g., Parzen window 
+        \item We define a fixed-size region around each point and count how many samples fall within it
+    \end{itemize}
+    \item \textbf{Fix} \( k \) \textbf{and determine} \( V \) \textbf{from the data}
+    \begin{itemize}
+        \item This gives rise to the \( k \)-\textbf{nearest-neighbor} (\( k \)-\textbf{NN}) \textbf{approach}
+        \item We find the \( k \) nearest neighbors and measure the volume needed to enclose them 
+    \end{itemize}
+\end{enumerate}
+\begin{tcolorbox}[
+    colback=magenta!15!white,
+    colframe=magenta!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Convergence Property}\\[0.6em]
+    Both \( k \)-NN and KDE converge to the true probability density as \( N \rightarrow \infty \), provided that:
+    \begin{itemize}
+        \item \( V \) shrinks with \( N \).
+        \item \( k \) grows with \( N \) appropriately
+    \end{itemize}   
+\end{tcolorbox}
+\subsubsection{Comparison of Approaches}
+\textit{Observation}. \textbf{KDE} produces smoother estimates but may miss structure in sparse regions, while \( k \)-\textbf{NN} 
+adapts to local density but can produce less smooth estimates. The choice depends on
+the specific application and data characteristics
+
+\begin{center}
+    \begin{tabular}{ |c|c| }
+        \hline
+        \textbf{Kernel Density Estimation (KDE)} & \( k \)-\textbf{Nearest Neighbor} \( (k \)-\textbf{NN}) \\
+        \hline
+        Fix volume \( V \), Count samples \( k \) in fixed region & Fix number of neighbors \( k \). Adjust volume \( V \) to include \( k \) samples \\
+        \hline 
+        Smooth density estimate & Adaptive to local density \\
+        \hline 
+        Can be zero in sparse region & Always use \( k \) neighbors \\
+        \hline 
+        Examples: Parzen window, Gaussian kernel & Examples: \( k \)-NN classifier, \( k \)-NN regressor \\
+        \hline
+    \end{tabular}
+\end{center}
+\subsubsection{Choosing Parameters}
+\begin{itemize}
+    \item \textbf{For KDE}: Choose bandwidth (related to \( V \))
+    \begin{itemize}
+        \item Too small: noisy, overfitting 
+        \item Too large: oversmoothing, missing details 
+    \end{itemize}
+    \item \textbf{For} \( k \)-\textbf{NN}: Choose \( k \):
+    \begin{itemize}
+        \item Too small: sensitive to noise, high variance 
+        \item Too large: oversmoothing, high bias 
+    \end{itemize}
+\end{itemize}
+\textit{Note}. Both methods require careful tuning of their parameters (bandwidth for KDE, \( k \) for \( k \)-NN). Corss-validation is commonly used to select 
+these parameters in practice.
 \end{document}
