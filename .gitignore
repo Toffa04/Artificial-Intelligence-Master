@@ -1,0 +1,9 @@
+# Dataset (troppo pesante)
+flowers102/
+
+# File di sistema macOS
+.DS_Store
+
+# Notebook checkpoints e cache Python
+.ipynb_checkpoints/
+__pycache__/
