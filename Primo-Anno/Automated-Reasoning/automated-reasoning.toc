@@ -1,0 +1,104 @@
+\babel@toc {italian}{}\relax 
+\babel@toc {italian}{}\relax 
+\contentsline {part}{I\hspace {1em}}{2}{part.1}%
+\contentsline {section}{\numberline {1}Introduction}{2}{section.1}%
+\contentsline {subsection}{\numberline {1.1}Why study Automated Reasoning?}{2}{subsection.1.1}%
+\contentsline {section}{\numberline {2}Historical Foundations and Theoretical Limits}{2}{section.2}%
+\contentsline {subsection}{\numberline {2.1}The Hilbert-Turing Perspective}{2}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}Practical Applications of Automated Reasoning}{3}{subsection.2.2}%
+\contentsline {section}{\numberline {3}Core Problems in Automated Reasoning}{3}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Satisfiability problems}{3}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}Validity problems}{3}{subsection.3.2}%
+\contentsline {subsection}{\numberline {3.3}Logical Consequence Problems}{4}{subsection.3.3}%
+\contentsline {section}{\numberline {4}Formal Language and Semantics}{4}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Logical Language: First-Order Logic}{4}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Signature and Universe of Discourse}{4}{subsection.4.2}%
+\contentsline {section}{\numberline {5}Syntactic Foundations: Terms and Formulas}{6}{section.5}%
+\contentsline {subsubsection}{\numberline {5.0.1}Terms: The building blocks}{6}{subsubsection.5.0.1}%
+\contentsline {subsubsection}{\numberline {5.0.2}From terms to Atomic Formulas}{6}{subsubsection.5.0.2}%
+\contentsline {subsection}{\numberline {5.1}Literals: Positive and Negative Atomic Formulas}{6}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}Logical Connectives}{7}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Formulas: The Complete Syntax}{7}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Quantifiers: Universality and Existence}{7}{subsection.5.4}%
+\contentsline {subsection}{\numberline {5.5}Illustrative Example: Geometric Axioms}{8}{subsection.5.5}%
+\contentsline {subsection}{\numberline {5.6}Closed Formulas and Variable Scope}{8}{subsection.5.6}%
+\contentsline {part}{II\hspace {1em}Semantic Foundations}{8}{part.2}%
+\contentsline {section}{\numberline {6}Interpretations and Model}{8}{section.6}%
+\contentsline {subsection}{\numberline {6.1}The concept of Interpretation}{8}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Example: Interpreting a Formula over Natural Numbers}{9}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Semantic Evaluation}{9}{subsection.6.3}%
+\contentsline {subsection}{\numberline {6.4}Formal Verification of Satisfaction}{10}{subsection.6.4}%
+\contentsline {subsection}{\numberline {6.5}Formal Definition of Interpretation}{10}{subsection.6.5}%
+\contentsline {section}{\numberline {7}Satisfaction Relation}{11}{section.7}%
+\contentsline {subsection}{\numberline {7.1}The satisfaction relation}{11}{subsection.7.1}%
+\contentsline {subsection}{\numberline {7.2}Interpretation of Terms}{11}{subsection.7.2}%
+\contentsline {subsection}{\numberline {7.3}Satisfaction for Atomic Formulas}{11}{subsection.7.3}%
+\contentsline {subsection}{\numberline {7.4}Satisfaction for Logical Connectives}{11}{subsection.7.4}%
+\contentsline {subsection}{\numberline {7.5}Example: Quantifier Evaluation}{12}{subsection.7.5}%
+\contentsline {section}{\numberline {8}Semantic Properties of Formulas}{12}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Satisfiability}{13}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Validity}{13}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Unsatisfiability}{13}{subsection.8.3}%
+\contentsline {subsection}{\numberline {8.4}Invalidity}{13}{subsection.8.4}%
+\contentsline {subsection}{\numberline {8.5}Relationship Between Semantic Properties}{13}{subsection.8.5}%
+\contentsline {section}{\numberline {9}Logical Consequence}{14}{section.9}%
+\contentsline {subsection}{\numberline {9.1}The Three Fundamental Query Types}{14}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Definition of Logical Consequence}{14}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}The deduction Theorem}{14}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Notational Ambiguity of \( \models \)}{15}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}Reduction to Unsatisfiability}{15}{subsection.9.5}%
+\contentsline {section}{\numberline {10}Refutational Reasoning}{16}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Proof by Contradiction}{16}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}The refutational Framework}{16}{subsection.10.2}%
+\contentsline {part}{III\hspace {1em}Free Variables and Satisfiability}{17}{part.3}%
+\contentsline {section}{\numberline {11}Satisfiability of Formulas with Free Variables}{17}{section.11}%
+\contentsline {subsection}{\numberline {11.1}The problem of Free Variables}{17}{subsection.11.1}%
+\contentsline {subsection}{\numberline {11.2}Motivating Example}{17}{subsection.11.2}%
+\contentsline {subsection}{\numberline {11.3}Semantic Evaluation with Free Variables}{18}{subsection.11.3}%
+\contentsline {subsection}{\numberline {11.4}Existential Closure}{18}{subsection.11.4}%
+\contentsline {subsection}{\numberline {11.5}Satisfiability to Open Formulas}{19}{subsection.11.5}%
+\contentsline {subsection}{\numberline {11.6}Universal Closure and Validity}{19}{subsection.11.6}%
+\contentsline {section}{\numberline {12}Decidability and Semidecidability in First-Order Logic}{20}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Computational Complexity of First-Order Logic}{20}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Review: Semi-Decision Procedures}{20}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}The need for Restricted Theories}{21}{subsection.12.3}%
+\contentsline {section}{\numberline {13}First-Order Theories}{21}{section.13}%
+\contentsline {subsection}{\numberline {13.1}Definition of a First-Order Theory}{21}{subsection.13.1}%
+\contentsline {subsection}{\numberline {13.2}The theory of Equality}{21}{subsection.13.2}%
+\contentsline {subsection}{\numberline {13.3}Axioms of Equality}{21}{subsection.13.3}%
+\contentsline {subsection}{\numberline {13.4}Models of a Theory}{22}{subsection.13.4}%
+\contentsline {subsection}{\numberline {13.5}Satisfiability and Validity Relative to a Theory}{22}{subsection.13.5}%
+\contentsline {subsection}{\numberline {13.6}Example: Satisfiability vs. \( \mathcal {T}_{E} \)-Satisfiability}{22}{subsection.13.6}%
+\contentsline {section}{\numberline {14}Quantifiers-Free Fragments and Decidability}{23}{section.14}%
+\contentsline {subsection}{\numberline {14.1}The Quantifier-Free Fragment of \( \mathcal {T}_{E} \)}{23}{subsection.14.1}%
+\contentsline {subsection}{\numberline {14.2}Normal Forms}{23}{subsection.14.2}%
+\contentsline {subsubsection}{\numberline {14.2.1}Negation Normal Form (NNF)}{24}{subsubsection.14.2.1}%
+\contentsline {subsubsection}{\numberline {14.2.2}Disjunctive Normal Form (DNF)}{24}{subsubsection.14.2.2}%
+\contentsline {subsection}{\numberline {14.3}Conversion to DNF}{24}{subsection.14.3}%
+\contentsline {subsection}{\numberline {14.4}Decision Procedure for Quantifier-Free \( \mathcal {T}_{E} \)}{25}{subsection.14.4}%
+\contentsline {subsection}{\numberline {14.5}Elimination of Non-Equality Predicates}{25}{subsection.14.5}%
+\contentsline {subsubsection}{\numberline {14.5.1}The Transformation}{25}{subsubsection.14.5.1}%
+\contentsline {subsubsection}{\numberline {14.5.2}Satisfiability Preservation}{26}{subsubsection.14.5.2}%
+\contentsline {subsubsection}{\numberline {14.5.3}Example: The Need for Cardinality Restriction}{26}{subsubsection.14.5.3}%
+\contentsline {subsection}{\numberline {14.6}Treatment of Free Variables}{26}{subsection.14.6}%
+\contentsline {section}{\numberline {15}The Congruence Closure Algrithm}{27}{section.15}%
+\contentsline {subsection}{\numberline {15.1}Motivating Example}{27}{subsection.15.1}%
+\contentsline {subsection}{\numberline {15.2}The congruence closure Decision Procedure}{27}{subsection.15.2}%
+\contentsline {subsection}{\numberline {15.3}Equivalence Relations and Partitions}{28}{subsection.15.3}%
+\contentsline {part}{IV\hspace {1em}Decision Procedures for Quantifier-Free Theories}{28}{part.4}%
+\contentsline {section}{\numberline {16}The Congruence Closure Algorithm}{29}{section.16}%
+\contentsline {subsection}{\numberline {16.1}Computing Congruence Closure}{29}{subsection.16.1}%
+\contentsline {subsubsection}{\numberline {16.1.1}Input Problem Structure}{29}{subsubsection.16.1.1}%
+\contentsline {subsubsection}{\numberline {16.1.2}Equivalence relations and Representatives}{29}{subsubsection.16.1.2}%
+\contentsline {subsubsection}{\numberline {16.1.3}Disjointness of Equivalence Classes}{29}{subsubsection.16.1.3}%
+\contentsline {subsubsection}{\numberline {16.1.4}Example: Equivalence Closure}{30}{subsubsection.16.1.4}%
+\contentsline {subsubsection}{\numberline {16.1.5}Understanding the \( \subseteq \)-Smallest Property}{30}{subsubsection.16.1.5}%
+\contentsline {subsubsection}{\numberline {16.1.6}Example: Refinement of Equivalence Relations}{31}{subsubsection.16.1.6}%
+\contentsline {subsection}{\numberline {16.2}The Congruence Closure Decision Procedure}{32}{subsection.16.2}%
+\contentsline {subsubsection}{\numberline {16.2.1}Algorithm Description}{32}{subsubsection.16.2.1}%
+\contentsline {subsubsection}{\numberline {16.2.2}Correctness of the Algorithm}{33}{subsubsection.16.2.2}%
+\contentsline {subsection}{\numberline {16.3}Examples: Manual Execution}{33}{subsection.16.3}%
+\contentsline {subsubsection}{\numberline {16.3.1}Notation and Setup}{34}{subsubsection.16.3.1}%
+\contentsline {subsubsection}{\numberline {16.3.2}Example 1}{34}{subsubsection.16.3.2}%
+\contentsline {subsubsection}{\numberline {16.3.3}Example 2}{34}{subsubsection.16.3.3}%
+\contentsline {subsubsection}{\numberline {16.3.4}Step-by-Step Execution for Example 1}{35}{subsubsection.16.3.4}%

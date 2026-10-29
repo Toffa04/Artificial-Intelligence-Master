@@ -1,0 +1,301 @@
+\documentclass[a4paper]{article}
+
+\usepackage{import}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage[italian]{babel}
+\usepackage{amsmath, amssymb}
+\usepackage{booktabs,xltabular}
+\usepackage{amsfonts}
+\usepackage{subcaption}
+\usepackage{amsthm}
+\usepackage{cancel}
+\usepackage{mdframed}
+\usepackage{makecell}
+\usepackage{float}
+\usepackage[dvipsnames]{xcolor}
+\usepackage{listings}
+\usepackage{gensymb}
+\usepackage{graphicx}
+\usepackage[table]{xcolor}
+\usepackage{booktabs}
+\usepackage{tabularx}
+% \usepackage{bodeplot}
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, automata, petri, decorations.markings, decorations.pathreplacing, positioning, calc, quotes}
+\usepackage{circuitikz}
+% \usepackage[label=corner]{karnaugh-map}
+\graphicspath{{./figures/}}
+
+% Prevent overfull hbox warnings
+\emergencystretch=1.5em
+
+% Set default font to sans-serif
+\renewcommand{\familydefault}{\sfdefault} 
+% \usepackage{eulervm}
+
+\usepackage{forest}
+
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+
+% \usepackage{ntheorem}
+
+\usepackage{import}
+\usepackage{pdfpages}
+% \usepackage{transparent}
+\usepackage{xcolor}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks=false,
+}
+
+% Code blocks
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
+
+\lstdefinestyle{mystyle}{
+	backgroundcolor=\color{backcolour},
+	commentstyle=\color{codegreen},
+	keywordstyle=\color{magenta},
+	numberstyle=\tiny\color{codegray},
+	stringstyle=\color{codepurple},
+	basicstyle=\ttfamily\footnotesize,
+	breakatwhitespace=false,
+	breaklines=true,
+	captionpos=b,
+	keepspaces=true,
+	numbers=left,
+	numbersep=5pt,
+	showspaces=false,
+	showstringspaces=false,
+	showtabs=false,
+	tabsize=2
+}
+
+\definecolor{head}{HTML}{1F3A5F}
+\definecolor{rowgray}{HTML}{EEF2F7}
+
+\renewcommand{\arraystretch}{1.5}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+\lstdefinestyle{terminal}{
+    backgroundcolor=\color{black},
+    basicstyle=\ttfamily\color{green},
+    frame=single,
+    breaklines=true,
+    showstringspaces=false
+}
+
+\lstset{style=mystyle}
+
+\usepackage{color}
+\usepackage{import}
+\usepackage{pdfpages}
+% \usepackage{transparent}
+\usepackage{xcolor}
+
+% Example frame
+\theoremstyle{definition}
+\newmdtheoremenv[%
+	linecolor=gray,leftmargin=0,%
+	rightmargin=0,
+	innertopmargin=8pt,%
+	innerbottommargin=8pt,
+	ntheorem]{example}{Esempio}[section]
+
+% Important definition frame
+\theoremstyle{definition}
+\newmdtheoremenv[%
+	linecolor=gray,leftmargin=0,%
+	rightmargin=0,
+	backgroundcolor=gray!40,%
+	innertopmargin=8pt,%
+	innerbottommargin=8pt,
+	ntheorem]{definition}{Definizione}[section]
+
+% Exercise frame
+\theoremstyle{definition}
+\newmdtheoremenv[%
+	linecolor=gray,leftmargin=0,%
+	rightmargin=0,
+	innertopmargin=8pt,%
+	innerbottommargin=8pt,
+	ntheorem]{exercise}{Esercizio}[section]
+
+% Theorem frame
+\theoremstyle{definition}
+\newmdtheoremenv[%
+  linecolor=gray,leftmargin=0,%
+  rightmargin=0,
+  innertopmargin=8pt,%
+  innerbottommargin=8pt,
+  ntheorem]{theorem}{Teorema}[section]
+
+\theoremstyle{definition}
+\newmdtheoremenv[%
+  linecolor=white,leftmargin=0,%
+  rightmargin=0,
+  innertopmargin=8pt,%
+  innerbottommargin=8pt,
+  ntheorem]{define}{Definizione utile}[section]
+
+% figure support
+\usepackage{import}
+\usepackage{xifthen}
+\pdfminorversion=7
+\usepackage{pdfpages}
+% \usepackage{transparent}
+\newcommand{\incfig}[1]{%
+	\def\svgwidth{\columnwidth}
+	\import{./figures/}{#1.pdf_tex}
+}
+
+% FSM tikz
+\tikzset{
+    place/.style={
+        circle,
+        thick,
+        draw=black,
+        minimum size=6mm,
+    },
+        state/.style={
+        circle,
+        thick,
+        draw=black,
+        fill=white,
+        minimum size=6mm,
+    },
+}
+
+\pdfsuppresswarningpagegroup=1
+
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18,width=10cm}
+
+% Save plots as pdf and reuse them without compiling every time
+\usetikzlibrary{external}
+\tikzexternalize[prefix=figures/tikz/, optimize=false]
+
+
+\begin{document}
+\begin{titlepage}
+	\begin{center}
+		\vspace*{1cm}
+
+		\Huge
+		\textbf{Natural Language Processing}
+
+		\vspace{0.5cm}
+		\LARGE
+		UniVR - Dipartimento di Informatica
+
+		\vspace{1.5cm}
+
+		\textbf{Tommaso Toffali}
+
+		\vfill
+
+
+		\vspace{0.8cm}
+
+
+		1° Semestre 2026/2027
+    \end{center}
+\end{titlepage}
+
+\tableofcontents
+\pagebreak
+
+\section{Introduction}
+Language is a structured system of conventional signs used by agents to represent,
+express and communicate meanings.
+
+\subsection{How did language emerge?}
+Two question must be distinguished:
+\begin{itemize}
+    \item \textbf{fThe evolutionary origin of the human capacity for language:} how biological, cognitive and 
+        social evolution made language possibile.
+    \item \textbf{The historical development of particular language:} how language changes, differentiate, interact
+        and give rise to language families
+\end{itemize}
+The origin of language itself is not directly documented. Spoken and signed languages existed long before
+writing, so their early history must be reconstructured indirectly using evidence from:
+\begin{itemize}
+    \item human biology and cognition
+    \item archaeology
+    \item comparative linguistic
+    \item animal comunication
+\end{itemize}
+
+\subsection{What is language?}
+Language is a structured system of conventional signs used by agents to represent, express and communicate meanings.
+\begin{itemize}
+    \item Spoken sound
+    \item Signed gesture
+    \item Written symbols
+    \item Tactile signs, such as Braille
+    \item Haptic signs, conveyed through touch or movement
+\end{itemize}
+
+\subsection{Who does use language?}
+\begin{itemize}
+    \item \textbf{Human agents}
+    \item \textbf{Non-human animal agents}
+        \begin{itemize}
+            \item some non-human animals use structured communication system, although their classification
+                as languages is disputed
+        \end{itemize}
+    \item \textbf{Artificial agents}
+        \begin{itemize}
+            \item artificial agents process and generate linguistic expressions, while the nature of their understanding remains an open theoretical question.
+        \end{itemize}
+\end{itemize}
+\subsection{Level of linguistic representation}
+
+\rowcolors{2}{rowgray}{white}
+\begin{tabularx}{\textwidth}{>{\bfseries}p{3.6cm} Y Y}
+    \rowcolor{head}
+    \color{white}\bfseries Level &
+    \color{white}\bfseries Principal units &
+    \color{white}\bfseries Central question \\
+    \toprule
+    Signal & Sounds, gestures, written or tactile signs & How is language physically conveyed? \\
+    Phonological or graphemic & Phonemes, syllables, graphemes & How are elementary signs organized and distinguished? \\
+    Morphological & Morphemes and word forms & How are meaningful components combined into words? \\
+    Lexical & Words, lemmas and senses & What words exist, and what can they mean? \\
+    Syntactic & Phrases, clauses and sentences & How are words combined into structured expressions? \\
+    Semantic & Concepts, entities, predicates, arguments and propositions & What does the expression mean? \\
+    Discourse & Sentences, utterances and discourse relations & How does an expression connect with the surrounding text or conversation? \\
+    Pragmatic & Speakers, hearers, intentions and context & What does an agent want to obtain by using the expression in this situation? \\
+    \bottomrule
+\end{tabularx}
+
+\subsection{Typology based on writing system}
+Languages should be distinguished based on their features. We may start by their writing system to step 
+onto four further basic features:
+\begin{itemize}
+    \item Morphology
+    \item Syntax
+    \item Semantics
+    \item Pragmatics
+\end{itemize}
+
+\subsection{IPA}
+The international phonetic alphabet (IPA) is a standardized system for representing the sounds of spoken language.
+Ideally, each symbol identifies a particular speech sound independently of the ordinary spelling conventions of a laguage.
+\vspace{1em}
+\noindent
+\newline
+We can present three languages as a progression in the relationship between \textbf{written form and pronounciation}.
+This is not a progression from a \textit{simple language} to a \textit{complex language}, it concerns the complexity
+of their orthographic systems and form-sound correspondences. 
+
+\subsection{Ambiguity}
+Ambiguity occurs when the same linguistic expression permits two or more distinct analyses or interpretations.
+\end{document}
