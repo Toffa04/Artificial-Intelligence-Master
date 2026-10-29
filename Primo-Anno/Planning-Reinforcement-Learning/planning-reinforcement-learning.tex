@@ -1,0 +1,725 @@
+\documentclass[a4paper]{article}
+
+% ---------- Encoding, lingua, font ----------
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{textcomp}
+\usepackage[italian]{babel}
+\renewcommand{\familydefault}{\sfdefault}
+\emergencystretch=1.5em
+
+% ---------- Colori (UNA sola volta, prima di tikz/tcolorbox) ----------
+\usepackage[dvipsnames,table]{xcolor}
+
+% ---------- Matematica ----------
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
+\usepackage{mathtools}
+\DeclarePairedDelimiter\ceil{\lceil}{\rceil}
+\DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\usepackage{cancel}
+\usepackage{gensymb}
+
+% ---------- Tabelle, figure, utilità ----------
+\usepackage{booktabs, xltabular, tabularx, makecell}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{graphicx}
+\usepackage{import}
+\usepackage{pdfpages}
+\usepackage{xifthen}
+\pdfminorversion=7
+\pdfsuppresswarningpagegroup=1
+\graphicspath{{./figures/}}
+
+\renewcommand{\arraystretch}{1.5}
+\newcolumntype{Y}{>{\raggedright\arraybackslash}X}
+
+% ---------- TikZ / pgfplots ----------
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, automata, petri, decorations.markings,
+                decorations.pathreplacing, positioning, calc, quotes}
+\usepackage{circuitikz}
+\usepackage{forest}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18, width=10cm}
+
+\tikzset{
+    place/.style={circle, thick, draw=black, minimum size=6mm},
+    state/.style={circle, thick, draw=black, fill=white, minimum size=6mm},
+}
+
+% ---------- Palette (solo quella nuova) ----------
+\definecolor{thmcol}{HTML}{2563EB}   % blu     - teoremi
+\definecolor{lemcol}{HTML}{7C3AED}   % viola   - lemmi
+\definecolor{defcol}{HTML}{059669}   % verde   - definizioni
+\definecolor{excol}{HTML}{EA580C}    % arancio - esempi
+\definecolor{remcol}{HTML}{6B7280}   % grigio  - osservazioni
+
+% ---------- Listings (riusa la palette nuova) ----------
+\usepackage{listings}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{remcol!8},
+    commentstyle=\color{defcol},
+    keywordstyle=\color{thmcol},
+    numberstyle=\tiny\color{remcol},
+    stringstyle=\color{lemcol},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false, breaklines=true, captionpos=b,
+    keepspaces=true, numbers=left, numbersep=5pt,
+    showspaces=false, showstringspaces=false, showtabs=false, tabsize=2
+}
+\lstdefinestyle{terminal}{
+    backgroundcolor=\color{black},
+    basicstyle=\ttfamily\color{green},
+    frame=single, breaklines=true, showstringspaces=false
+}
+\lstset{style=mystyle}
+
+% ---------- Teoremi, definizioni, esempi (tcolorbox) ----------
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{theorems}
+
+\tcbset{
+  thmstyle/.style={
+    enhanced, breakable, sharp corners,
+    boxrule=0pt, frame hidden,
+    borderline west={3pt}{0pt}{#1},
+    colback=#1!6,
+    colbacktitle=#1!14, coltitle=#1!60!black,
+    fonttitle=\bfseries,
+    titlerule=0pt,
+    separator sign none,
+    description delimiters parenthesis,
+    before skip=12pt, after skip=12pt,
+    left=8pt, right=8pt, top=4pt, bottom=4pt,
+    overlay unbroken and first={\tikzset{external/export=false}},
+    overlay middle and last={\tikzset{external/export=false}},
+  }
+}
+
+\newtcbtheorem[number within=section]{theorem}{Teorema}{thmstyle=thmcol}{thm}
+\newtcbtheorem[use counter from=theorem]{lemma}{Lemma}{thmstyle=lemcol}{lem}
+\newtcbtheorem[use counter from=theorem]{definition}{Definizione}{thmstyle=defcol}{def}
+\newtcbtheorem[use counter from=theorem]{example}{Esempio}{thmstyle=excol}{ex}
+\newtcolorbox{remark}[1][]{thmstyle=remcol, title={Osservazione}, #1}
+
+% ---------- Esercizi (mdframed) ----------
+\usepackage{mdframed}
+\theoremstyle{definition}
+\newmdtheoremenv[
+    linecolor=gray, leftmargin=0, rightmargin=0,
+    innertopmargin=8pt, innerbottommargin=8pt
+]{exercise}{Esercizio}[section]
+
+% ---------- Figure svg ----------
+\newcommand{\incfig}[1]{%
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
+}
+
+% ---------- Hyperref (sempre per ultimo, prima di externalize) ----------
+\usepackage{hyperref}
+\hypersetup{colorlinks=false}
+
+% ---------- Externalize ----------
+\usetikzlibrary{external}
+\tikzexternalize[prefix=figures/tikz/, optimize=false]
+\tikzexternaldisable
+
+
+\begin{document}
+\begin{titlepage}
+	\begin{center}
+		\vspace*{1cm}
+
+		\Huge
+		\textbf{Planning \& Reinforcement Learning}
+
+		\vspace{0.5cm}
+		\LARGE
+		UniVR - Dipartimento di Informatica
+
+		\vspace{1.5cm}
+
+		\textbf{Tommaso Toffali}
+
+		\vfill
+
+
+		\vspace{0.8cm}
+
+
+		1° Semestre 2026/2027
+    \end{center}
+\end{titlepage}
+
+\tableofcontents
+\pagebreak
+\part{Classical Planning}
+\section{Introduction to Planning}
+\subsection{Historical Context and Motivation}
+Planning has been a central topic in artificial intelligence since the inception
+of the field at the \textbf{Dartmouth Conference in 1956}, where the foundings
+fathers of AI first gathered to define the scope and ambitions of this new discipline.
+Planning represent one of the foundamental capabilities required for intelligence behavior:
+the ability to reason about sequences of actions that achieve desired goals.
+\vspace{1em}
+\noindent
+\newline
+The motivation for studying automated planning are manifold:
+\begin{itemize}
+    \item \textbf{Autonomous agents}: Enabling robots, software agents, and autonomouse system 
+        to make decision and act independently in complex environemnts
+    \item \textbf{Resource optimization}: Finding optimal or near-optimal stragies for Resource
+        allocation, scheduling, and logistics
+    \item \textbf{Scientific applications}: Modeling and solving problems in domain such as space 
+        exploration, manufacturing, and healtcare
+    \item \textbf{Theoretical foundations}: Understanding the computional complexity and formal properties
+        of reasoning about action and change
+\end{itemize}
+\subsection{The planning Cycle}
+The complete planning process involves several interconnected pahses that form a continuos cycle:
+\begin{enumerate}
+    \item \textbf{Plan Generation}: Given a description of the current state, available actions, and desired
+            goals, synthesize a sequence of actions (a plan) that transforms the inital state into a goal state.
+            This phase involves:
+            \begin{itemize}
+                \item Analyzing the initial state to understand what is currently true 
+                \item Identifying the gap between the current state and the goal state
+                \item Searching throungh the space of possible action sequences 
+                \item Evaluating candidate plans for correctness and optimality 
+                \item Selecting the best plan according to specified criteria (e.g., shortes length, minimum cost, fastest execution)
+            \end{itemize}
+    \item \textbf{Plan Deployment}: Execute the generated plan in the actual environment, monitoring the execution
+            to detect deviations from expected behavior. This phase includes:
+            \begin{itemize}
+                \item Translating abstract plan actions into concrete executable commands 
+                \item Monitoring sensors and feedback to verify that actions have the expected effects
+                \item Detecting discrepancies between predicted and actual states
+                \item Maintaining a record of executed actions for debugging and learning
+            \end{itemize}
+    \item \textbf{Replanning}: When execution monitoring detects that the current plan is no longer valid
+            (due to unexpected events, actions failures, or environmental changes), generate a new plan
+            or repair the existing one. Replanning strategies includes:
+            \begin{itemize}
+                \item \textbf{Plan repair}: Modify the existing plan minimally to accomodate the new situation 
+                \item \textbf{Replan from scratch}: Generate an entirely new plan from the current state
+                \item \textbf{Contingency planning}: Use pre-computed alternative plans for anticipated failures
+            \end{itemize}
+\end{enumerate}
+This cycle reflects the reality that planning systems must operate in dynamic, partially unpredictable environments where
+initial plans may need adaptation. The cyle continues iteratively until the goal is achived or deemed unreachable.
+\subsubsection{Challenges in Real-World Planning}
+Real-World deployment of planning systems faces several challengs:
+\begin{itemize}
+    \item \textbf{Excution uncertainty}: Actions may fail or have unexpected outcomes
+    \item \textbf{Incomplete information}: The planner may not have complete knowledge of the environment
+    \item \textbf{Dynamic environments}: The world may change while the plan is beign executed
+    \item \textbf{Computional constraints}: Planning must often occur in real-time with limited computational resoruces 
+    \item \textbf{Plan quality vs. planning time}: Trade-off between finding optimal plans and responding quickly
+\end{itemize}
+These challenge motivate the development of robust planning algorihms that cna handle unvertainty, adapt to changes,
+and operate efficiently under resource constraints.
+\section{Formalization of the Planning Problem}
+\subsection{State Transition Systems}
+The mathematical foundation of planning rests on the concept of state transition system, which provides a formal model of 
+how actions transform states.
+
+\begin{definition}{State Transition System}
+A state transition system is a tuple \( \Sigma = (S,A,\gamma) \) where:
+\begin{itemize}
+    \item \( S \) is a finite or countably infinite set of \textbf{states}
+    \item \( A \) is a finite or countably infinite set of \textbf{actions}
+    \item \( \gamma : S \times A \rightarrow S \) is a \textbf{state transition function} that maps a state and an action to a resulting state
+\end{itemize}
+\end{definition}
+The transition function \( \gamma(s,a) = s' \) specifies that executing action \( a \) in state \( s \) result in state
+\( s' \). This function encodes the \textbf{dynamics} of the domain - how the world changes in response to actions.
+\subsubsection{Properties of State Transition System}
+State transition systems can be characterized by serveral important properties:
+\begin{itemize}
+    \item \textbf{Determinism}: In a deterministic system, \( \gamma \) is a function - each state-action pair leads to 
+        exactly one successor state. In non-deterministic systems, multiple outcomes are possible.
+    \item \textbf{Reachability}: A state \( s' \) is reachable from state \( s \) if there exists a sequence of actions 
+        that transform \( s \) into \( s' \). The reachable state space from an initial state is often much smaller thant the totale
+        state sapce.
+    \item \textbf{Reversibility}: An action is reversible if there exists another action that undoes its effects. Many real-world
+        actions are irreversible (e.g., breaking an object)
+    \item \textbf{State space structure}: The connectivity and topology of the sate space significanyly affect planning complexity. Highly connected spaces 
+        may have many solution paths, while sparse spaces may have few or no solutions.
+\end{itemize}
+\subsection{Classical Planning: Foundamental Assumptions}
+Classical planning makes several simplyfying assumptions that restrict the class of the problems
+considered but enable efficient algorithmic solutions.
+\begin{definition}{Classical Planning Framework}
+The classical planning framework relies on six key assumptions:
+\begin{enumerate}
+    \item Finitely many states
+    \item Finitely many actions
+    \item Deterministic transition function
+    \item Full observability
+    \item Instantaneous actions
+    \item No exogenous events
+\end{enumerate}
+\end{definition}
+\begin{enumerate}
+    \item \textbf{Finitely many states}: The state space \( S \) is finite, allowing exhaustive search techniques.
+        This assumption ensures that the planning is decidable and that search alogirhms will terminate
+        \vspace{1em}
+        \noindent
+        \newline
+        \textit{Jusitfication}: While real-world domains may have infinite state spaces (e.g. continuos 
+        variables), finite approximations are often sufficient for pratical purposes.
+    \item \textbf{Finitely many actions}: The action space \( A \) is finite, ensuring decidability. Each state
+        has a finite branching factor in the state space graph.
+        \vspace{1em}
+        \noindent
+        \newline
+        \textit{Jusification}: Even in complex domains, the number of distinct action type is 
+        typically manageable, though the number of ground actions (instantieted with specific objects)
+        may be LARGE
+    \item \textbf{Deterministic transition function}: For every state \( s \) and action \( a \), there 
+        is exactlu one resulting state \( \gamma(s,a) \). Actions have predictable, certain outcomes.
+        \vspace{1em}
+        \noindent   
+        \newline
+        \textit{Justification}: Determinism simplified reasoning about action effects. Non-deterministic 
+        planning requires more complex formalism (e.g., Markov Decision Processes)
+    \item \textbf{Full observability}: The planner has complete knowledge of the current state at all times.
+        There is no uncertainty about which state the system occupies.
+        \vspace{1em}
+        \noindent
+        \newline
+        \textit{Justification}: Full observability eliminates the need for belief state reasoning and sensing actions.
+        Partial observability requires more sophisticated planning approaches.
+    \item \textbf{Instantaneous actions}: Actions have no duration, they occur instantaneously. Temporal 
+        reasoning is not required.
+        \vspace{1em}
+        \noindent
+        \newline
+        \textit{Justification}: Ignoring action durations simplifies the planning model. Temporal planning
+        extends classical planning to handle durations and concurrent actions.
+    \item \textbf{No exogenous events}: Only the planning agent can change the world through deliberate actions. 
+        The environment remains static unless acted upon.
+        \vspace{1em}
+        \noindent
+        \newline
+        \textit{Justification}: Exogenous events (e.g., other agents, natural processes) introduce additional complexity.
+        Classical planning assumes a static world between actions.
+\end{enumerate}
+These assumptions, while restrective, capture a significant and important class of planning problems and provide a foundation
+for understanding more complex, realistic planning scenarios.
+\subsubsection{Relaxing Classical Assumptions}
+Modern planning research has devoloped extensions that relax these assumptions:
+\begin{itemize}
+    \item \textbf{Probabilistic planning}: Handles non-deterministic actions with probability 
+        distributions over outcomes
+    \item \textbf{Conformant planning}: Plans under partial observability without sensing 
+    \item \textbf{Contingent planning}: Generates conditional plans that include sensing actions 
+    \item \textbf{Temporal planning}: Reasons about actions durations and temporal constraints
+    \item \textbf{Multi-agent planning}: Coordinates plans among multiple agents
+\end{itemize}
+\subsection{The Planning Problem}
+Given a state transition system \( \Sigma = (S,A,\gamma) \) we can now formally define
+the planning problem.
+\begin{definition}{Planning Problem}
+A planning problem is a tuple \( P = (\Sigma, s_0, G) \) where:
+\begin{itemize}
+    \item \( \Sigma = (S,A,\gamma) \) is a state transition system
+    \item \( s_0 \in S \) in the \textbf{initial state}
+    \item \( G \subseteq S \) is a set of \textbf{goal states}
+\end{itemize}
+\end{definition}
+Alternatively, goals can be specified as a \textbf{goal formula} \( g \), a logical 
+expression that is satisfied by exactly those states in \( G \). This allows more compact and expressive goal 
+specifications.
+\subsubsection{Goal specification}
+Goals can be specified in several ways:
+\begin{itemize}
+    \item \textbf{Explicit goal states}: Enumerate the set \( G \) of accetable final states.
+        This is impratical for large state spaces.
+    \item \textbf{Goal formula}: A logical formula \( g \) such that 
+        \( G = {s \in S \;|\; s \models g}\). For example, in propositional 
+        logic : \( g = At(Robot,RoomB)\wedge Clean(RoomB) \)
+    \item \textbf{Goal conditions}: A set of propositions that must be true in the goal state.
+        This is the most common approach in classical planning.
+    \item \textbf{Utility functions}: In optimization settings, goals may be specified as utility 
+        functions to maximize or cost functions to minimize.
+\end{itemize}
+\begin{definition}{Solution Plan}
+A \textbf{solution} to a planning problem \( P = (\Sigma,s_0,G) \) is a 
+sequence of actions \( \pi = (a_1,a_2,\ldots,a_n) \) such that:
+\[
+  s_n = \gamma(\gamma(\ldots \gamma(\gamma(s_0,a_1),a_2)\ldots, a_{n-1}),a_n)\in G
+\]
+That is, executing the sequence of actions starting from the initial state \( s_0 \) results in a goal state.
+\end{definition}
+We can also write this more compactly using the notation \( \gamma^*(s,\pi) \) to denote
+the state reached by executing plan \( \pi \) from state s:
+\[
+  \gamma^*(s_0,\pi) \in G
+\]
+\subsubsection{Plan Quality}
+Not all solution plans are equally desirable. Common quality metrics include:
+\begin{itemize}
+    \item \textbf{Plan length}: Number of actions in the plan. Shorter plans are often preferred.
+    \item \textbf{Plan cost}: Sum of actions costs. Each action \( a \) may have an associated cost \( c(a) \).
+    \item \textbf{Makespan}: Total execution time (relevant in temporal planning).
+    \item \textbf{Resource consumption}: Amount of resources used during execution.
+\end{itemize}
+An \textbf{optimal plan} minimizes the chosen quality metric among all solutions plans.
+\section{Representation of Planning Problems}
+\subsection{The challenge of explicit representation}
+While the state transition system formalism is mathematically elegant, it faces a critical pratical 
+challenge: \textbf{the curse of dimensionality}. Real-world planning domains can have exponentially large sate
+spaces. For example:
+\begin{itemize}
+    \item A domain with \( n \) boolean variables has \( 2^n \) possible states 
+    \item A domain with \( k \) objects and \( m \) binary relations has up to \( 2^{mk^2} \) states
+    \item Enumerating all states and transitions explicitly is infeansible for even moderately-sized problems
+\end{itemize}
+\begin{example}{Blocks World Complexity}
+Consider a Blocks World domain with \( n \) blocks. The number of possible 
+configurations grows super-exponentially with \( n \). For \( n = 10 \) blocks,
+there are more than \( 10^13 \) possible configurations. Explicitly representing the transition 
+function would require storing information about trillions of state-action pairs.
+\end{example}
+This motivates the need for \textbf{compact, structured representation} that exploit regularities 
+in the domain to represent large state spaces and transition functions implicitly.
+\subsection{Action Schemas: Structured Representation}
+The classical approach to compact representation uses \textbf{action schemas} (also called action 
+template or operators). An action schema is a prametrized description of a family of related actions.
+\begin{definition}{Action Schema}
+An action schema consists of:
+\begin{itemize}
+    \item \textbf{Name and parameters}: A symbolic name and typed parameters, e.g., \( Move(x,y) \).
+    \item \textbf{Preconditions}: A logical formula Pre specifying when the action can be executed
+    \item \textbf{Effects}: A logical formula \( Eff \) specifying how the sate changes when the action in executed
+\end{itemize} 
+\end{definition}
+\textbf{Actions} are \textbf{ground instances} of action schemas, obtained by binding the parameters to specific objects in the 
+domain. For example, the schema \( Move(x,y) \) might generate ground actions \( Move(RoomA,RoomB) \), \( Move(RoomB,RoomC) \), etc.
+\subsubsection{Advantages of Action Schemas}
+Action schemas provide severeal benefits:
+\begin{itemize}
+    \item \textbf{Compactness}: A single schema can represent exponentially many ground actions 
+    \item \textbf{Generality}: Schemas capture the general structure of actions independent of specific objects 
+    \item \textbf{Scalability}: Adding new objects to the domain automatically generates new appliable actions 
+    \item \textbf{Knowledge reuse}: Schemas learned in one domain can be transferred to similar domains.
+\end{itemize}
+\subsection{State Representation: Propositional logic}
+In classical planning, states are typically represented using \textbf{propositional logic}:
+\begin{itemize}
+    \item A state is a set of \textbf{atoms} (propositional variables) that are true in that state
+    \item Atoms not in the set are assumed false (\textbf{closed-world assumption})
+    \item Action preconditions and effects are logical formula over these atoms 
+\end{itemize}
+The representation allows:
+\begin{itemize}
+    \item Compact encoding of structured states
+    \item Efficient reasoning about action applicability and effects 
+    \item Use of logical inference techniques for plan generation
+\end{itemize}
+\subsubsection{State Update Semantics}
+\begin{example}{STRIPS Assumption}
+When an action is executed, the state is updated according to the action's effects:
+\begin{itemize}
+    \item \textbf{Add list}: Atoms that become true after the action 
+    \item \textbf{Delete list}: Atoms that become false after the action
+    \item \textbf{Frame axioms}: Atoms not mentioned in the effects remain unchanged
+\end{itemize}
+The \textbf{STRIPS assumption} (named after the Stanford Research Institute Problem Solver) states
+that only atoms explicitly mentioned in the effects changem all other atoms persist unchanged.
+This simplifies reasoning about action effects.
+\end{example}
+\subsection{Example: Blocks World}
+Consider the classic \textbf{Blocks World} domain, one of the most studied domain in planning research
+\subsubsection{Domain Description}
+The Blocks World consists of:
+\begin{itemize}
+    \item A set of blocks that can be stacked on top of each other 
+    \item A table with unlimited space
+    \item A robot arm that can pick up and put down blocks
+\end{itemize}
+\begin{example}{Blocks World State Representation}
+\textbf{State predicates}:
+\begin{itemize}
+    \item \( \texttt{On}(x,y) \): Block \( x \) is directly on top of blocks \( y \).
+    \item \( \texttt{OnTable}(x) \): Block \( x \) is on the table 
+    \item \( \texttt{Clear}(x) \): Block \( x \) has no blocks on top of it 
+    \item \( \texttt{Holding}(x) \): The robot arm is holding block \( x \).
+    \item \( \texttt{ArmEmpty} \): The robot arm is not holding anything
+\end{itemize}
+\end{example}
+\subsubsection{Action Schemas}
+\textbf{PickUp}(x): Pick up block \( x \) from the table 
+\begin{align*}
+    &\text{Parameters: } x \text{(block)} \\
+    &\text{Precondition: } \texttt{Clear}(x) \wedge \texttt{OnTable}(x) \wedge \texttt{ArmEmpty} \\
+    &\text{Effect: } \texttt{Holding}(x) \wedge \lnot \texttt{OnTable}(x) \wedge \lnot \texttt{Clear}(x) \wedge \lnot \texttt{ArmEmpty}
+\end{align*}
+\textbf{PutDown}(x): Put down block \( x \) on the table
+\begin{align*}
+    &\text{Parameters: } x \text{(block)} \\
+    &\text{Preconditions: } \texttt{Holding}(x) \\
+    &\text{Effect: } \texttt{OnTable}(x) \wedge \texttt{Clear}(x) \wedge \texttt{ArmEmpty} \wedge \lnot \texttt{Holding}(x)
+\end{align*}
+\textbf{Stack}(x, y): Stack block \( x \) on top of block \( y \).
+\begin{align*}
+    &\text{Parameters: } x,y \text{(blocks)} \\
+    &\text{Preconditions: } \texttt{Holding}(x) \wedge \texttt{Clear}(x) \\
+    &\text{Effect: } \texttt{On}(x,y) \wedge \texttt{Clear}(x) \wedge \texttt{ArmEmpty} \wedge \lnot \texttt{Holding}(x) \wedge \lnot \texttt{Clear}(y)
+\end{align*}
+\textbf{Unstack}(x, y): Remove block \( x \) from on top of block \( y \).
+\begin{align*}
+    &\text{Parameters: } x,y \text{(block)} \\
+    &\text{Precondition: } \texttt{Holding}(x) \wedge \texttt{Clear}(x) \wedge \texttt{ArmEmpty} \\
+    &\text{Effect: } \texttt{Holding}(x) \wedge \texttt{Clear}(y) \wedge \lnot \texttt{On}(x,y) \wedge \lnot \texttt{Clear}(x) \wedge \lnot \texttt{ArmEmpty}
+\end{align*}
+
+\subsubsection{Example Problem Instance}
+\textbf{Initial state}: Blocks A, B, C are all on the table
+\[
+  s_0 = \left\{ \texttt{OnTable}(A), \texttt{OnTable}(B), \texttt{OnTable}(C), \texttt{Clear}(A), \texttt{Clear}(B), \texttt{Clear}(C), \texttt{ArmEmpty}\right\}
+\]
+\textbf{Goal}: Stack the blocks in the order A on B on C 
+\[
+  G = \left\{ \texttt{On}(A,B), \texttt{On}(B,C), \texttt{OnTable}(C)\right\}
+\]
+\textbf{Solution plan}:
+\begin{enumerate}
+    \item \texttt{PickUp}(B)
+    \item \texttt{Stack}(B,C)
+    \item \texttt{PickUp}(A)
+    \item \texttt{Stack}(A,B)
+\end{enumerate}
+
+\part{Advanced Planning Representation}
+\section{Reduction to Propositional Satisfiability}
+\subsection{Motivation}
+We continue our discussion of the formalization and representation of planning problems.
+A fundamental technique in automated planning is to \textbf{reduce the planning problem to the 
+stisfiability problem of propositional logic}. This reduction allows us to leverage powerful SAT
+solvers to find plans efficently.
+\begin{definition}{Reduction to SAT}
+The key idea is to encode:
+\begin{itemize}
+    \item The initial state as a propositional formula
+    \item The goal conditions as a propositional formula 
+    \item The action effects and preconditions as propositional formulas 
+    \item The constraint that actions must form a valid sequence
+\end{itemize}
+If the resulting formula is satisfiable, the satisfying assignment corresponds to a valid plan.
+\end{definition}
+\subsection{Example Domain: Dock Worker Robots (DWR)}
+To illustrate these concepts, we introduce the \textbf{Dock Worker Robots (DWR)} domain, a classic 
+planning benchmark that models container logistics at a port.
+\subsubsection{Domain description}
+The DWR world consists of:
+\begin{itemize}
+    \item \textbf{Docks}: Three docks \( d_1, d_2, d_3 \) arranged in a triangular configuration 
+    \item \textbf{Connectivity}: Docks are connected as follows: \( d_1 \leftrightarrow d_3, d_1 \leftrightarrow d_2, d_2 \leftrightarrow d_3 \).
+    \item \textbf{Piles}: Storage locations at docks where containers can be stacked 
+    \item \textbf{Containers}: Object that need to be moved between locations 
+    \item \textbf{Robots}: Mobile agents that can move containers between piles 
+\end{itemize}
+\begin{center}
+    \begin{tikzpicture}[
+        node distance=1.5cm,
+        every node/.style={circle, draw, minimum size=1.2cm}
+    ]
+    \node (d1) {$d_1$};
+    \node (d2) [right=of d1] {$d_2$};
+    \node (d3) [below=of d1] {$d_3$};
+
+    \draw[<->] (d1) -- (d2);
+    \draw[<->] (d1) -- (d3);
+    \draw[<->] (d2) -- (d3);
+    \end{tikzpicture}
+\end{center}
+
+\subsection{Initial State configuration}
+The initial state of our example problem is:
+\begin{itemize}
+    \item \textbf{At dock} \( d_1 \): Pile \( p_1 \) contains two containers: \( c_1 \) (on top) and \( c_2 \) (below)
+    \item \textbf{At dock} \( d_2 \):
+    \begin{itemize}
+        \item Pile \( p_2 \) contains one container: \( c_3 \).
+        \item Pile \( p_3 \) is empty 
+    \end{itemize}
+    \item \textbf{At dock} \( d_3 \): Pile \( p_4 \) is empty
+\end{itemize}
+
+RIPRENDERE APPUNTI FINO A SLIDE 46
+\section{Conflict-Driven Clause Learning (CDCL)}
+Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
+technique that combines depth-first search with intelligence learning from conflicts 
+to efficently solve large satisfiability problems.
+\subsection{CDCL Algorithm Overview}
+CDCL implements \textbf{depth-first search strategy} with intelligent backjumping (undo one or  more decision) 
+and clause learning:
+\begin{definition}{CDCL Components}
+\centering \textbf{CDCL} combines several key techniques:
+\begin{itemize}
+    \item \textbf{Unit propagation}: Efficient inference of forced assignments
+    \item \textbf{Conflict analysis}: Learning from failures to guide future search 
+    \item \textbf{Backjumping}: Intelligent backtracking to erliaer decision levels
+    \item \textbf{Clause learning}: Adding learned constraints to prevent repeated conflicts
+\end{itemize}
+\end{definition}
+\subsection{Backjumping: Generalized Backtracking}
+Backjumping is a generalization of the basic backtracking (undo one decison) mechanism that allows 
+the solver to jump back to erlier decision levels, not just the immediately preceding one.
+\begin{definition}{Backjumping vs Backtracking}
+\centering In \textbf{backjumping}, when a conflict occurs, the solver 
+analyzes the conflict cause to determine the earliest decisione level that contributed to conflict.
+It then jumps back to that level, rather than just the immediately preceding decision.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Advantage}: Backjumping can skip over irrelevant decision levels, significantly reducing 
+the search space compared to basic backtracking.
+\end{definition}
+\subsubsection{Conflict analysis example}
+COnsider a conflict clause \( C = L_1 \vee \ldots \vee L_k \) where all literals are currently false. The analysis 
+determines:
+\begin{itemize}
+    \item Why each literal \( L_i \) is false in the current trail \( \varGamma \).
+    \item The decision level at which each literal became false
+    \item The erliest decision level that contributed to the conflict
+\end{itemize}
+The solver then backjumps to that earliest relevant decision level, effectively skipping decision 
+levels that did not contribute to the conflict.
+\section{Binary Resolution}
+The theoretical foundation of conflict analysis relies on \textbf{binary resolution}, a foundamental inference rule in propositional logic
+\subsection{Resolution Rule}
+\begin{definition}{Binary Resolution}
+\centering Given two clauses containing complementary literals:
+\[
+  \frac{C \vee L \quad D \vee \lnot L}{(C \vee D)}
+\]
+\end{definition}
+The \textbf{resolvent} \( C \vee D \) is logically entailed by the two premises. This rule allows deriving new 
+clauses that preserve satisfiability.
+\subsection{Soundness of Resolution}
+Binary resolution is \textbf{sound}, the resolvent is logically entailed by the permise.
+\begin{theorem}{Resolution Soundness}
+\centering \( If {C \vee L, D \vee \lnot L} \models R where R is any formula, then {C \vee
+L, D \vee \lnot L} \models (C \vee D) \).
+\vspace{1em}
+\noindent
+\newline
+\textit{Proof}. Consider any interpretation \( v \):
+\begin{itemize}
+    \item \( If v \models L \), then since \( v \models D \vee \lnot L \), we must 
+        have \( v \models D \). Since \( v \models C \vee L \), we have \( v \models C \vee D \).
+    \item \( If v \models \lnot L \) then since \( v \models C \vee L \), we must have \( v \models C \). Since \( v \models D \vee \lnot L \),
+        we have \( v \models C \vee D \).
+\end{itemize}
+In both cases, \( v \models C \vee D \), so the resolvent is logically entailed by the premises.
+\end{theorem}
+\subsection{Application in Conflict Analysis}
+In conflict analysis, resolution is used to explain why conflicts occur and to determine which
+decision levels are responsible:
+\begin{itemize}
+    \item When a literal \( L_k \) in the conflict clause is false due to propagation (not a decision)
+    \item The propagation was justified by a clause \( D \vee \lnot L_k \).
+    \item By resolving the conflict clause with the justification clause, we can trace back the decision that ultimately caused the conflict.
+\end{itemize}
+\section{Explanation Mechanism}
+The explanation mechenism in CDCL traces the implications that led to a conflict,
+allowing the solver to learn more general constraints.
+\begin{theorem}{Explanation rule}
+\centering \[ \langle S \Vert \varGamma \Vert C \rangle \rightarrow \langle S \Vert \varGamma \Vert C \vee D \rangle \]
+if \( \lnot L \in \varGamma \) where \( \lnot L \) was propagated using the clause \( D \vee \lnot L \).
+\end{theorem}
+\subsection{Explanation Process}
+The explanation mechanism works as follows:
+\begin{enumerate}
+    \item Start with a conflict clause \( C = L_1 \vee \ldots \vee L_k \).
+    \item For each literal \( L_i \) that is false due to propagation (not a decision):
+    \begin{itemize}
+        \item Find the justification clause that forced \( \lnot L_i \) into the trail 
+        \item Resolve the current conflict clause with the justification clause 
+        \item Continue untile all literals in the conflict clause are explained by decision 
+    \end{itemize}
+    \item The final resolved clause contains only literals that were decided (not propagated)
+    \item This clause can be learned and added to the formula to prevent similar conflicts
+\end{enumerate}
+\part{SAT-Based Techniques}
+\section{Modern SAT Solving}
+\subsection{CDCL: An evolution of DPLL}
+CDCL (\textbf{Conflict-Driven Clause Learning}) represent an evolution of the DPLL decision procedure 
+for SAT. While CDCL maintains the same basic decision rule as DPLL, it introduces sophisticated conflict anaysis and learning mechanisms that 
+dramatically improve solver efficiency on real-world instances.
+\subsubsection{CDCL Transition Rules}
+The CDCL procedure employs the following transition rules in search mode:
+\begin{definition}{Decision rule}
+\[
+  \langle S \Vert \varGamma \rangle \rightarrow \langle S \Vert \varGamma, L^d \rangle
+\]
+if \( L \notin \varGamma \) and \( \lnot L \notint \varGamma \), where:
+\begin{itemize}
+    \item \( S \) is the set of clauses 
+    \item \( \vaGamma \) is the trail (sequence of assigned literals)
+    \item \( L^d \) is a decision literal (chosen by heuristic)
+\end{itemize}
+\end{definition}
+\begin{definition}{Propagation rule}
+\[
+  \langle S \Vert \varGamma \rangle \rightarrow \langle S \Vert \varGamma, L_{C \vee L} \rangle 
+\]
+if \( C \vee L \in S, L \notin \varGamma, \lnot L \notint \varGamma \), and \( \varGamma \models \lnot C \), where:
+\begin{itemize}
+    \item \( C \) is a disjunction of literals (all false under the current trail)
+    \item \( L \) is the unit literal that must be propagated 
+    \item The subscript \( C \vee L \) indicates the justification clause for the propagation
+\end{itemize}
+\end{definition}
+\begin{definition}{Success rule}
+\[
+  \langle S \Vert \varGamma \rangle \rightarrow "sat"
+\]
+if \( \varGamma \models S \) (i.e., the trail satisfies all clauses in the set)
+\end{definition}
+\begin{definition}{Conflict rule}
+\[
+  \langle S \Vert \varGamma \rangle \rightarrow \langle S \Vert \varGamma \Vert C \rangle 
+\]  
+if \( C \in S \) and \( \varGamma \models \lnot C \) (i.e., the trail conflicts with clause \( C \)), where
+\( C \) is the conflict clause that triggers transition to conflict analysis mode.
+\end{definition}
+This four rules define the behavior of CDCL in \textbf{search mode}, which is identical to the DPLL
+procedure. The key difference lies in how CDCL handles conflicts through its conflict analysis 
+and learning machanisms.
+\subsection{Decision Levels in CDCL}
+The trail \( \varGamma \) in CDCL is organized into \textbf{decision levels} that provides
+structure ti the search process:
+\begin{itemize}
+    \item The trail begins at \textbf{decision level 0} (empty trail)
+    \item Each decision literal opens a new decision level 
+    \item If the maximum decision level in \( \varGamma \) is \( n \), the next decision opens level \( n + 1 \).
+    \item All propagations following a decision remain at the same level untile the next decision
+\end{itemize}
+\subsubsection{Trail as a Stack Structure}
+The trail can be conceptualized as a \textbf{stack structure}:
+\begin{enumerate}
+    \item Initially, the stack is empty (decision level 0)
+    \item A decision literal is puhsed onto the stack, opening a new level
+    \item Unit propagations following the decision are pushed onto the stack at the same level 
+    \item Another decision is maade, opening the next level 
+    \item The process continues with alternating decision and propagations
+    \item During backtracking/backjumping, literals are popped from the stack until reaching the target decision level
+\end{enumerate}
+This organization enables efficient backjumping by allowing the solver to quickly identify and 
+return to relevant decision levels during conflict analysis.
+
+\subsection{Illustrative example}
+\begin{example}{Instance}
+\centering \( S = \left\{ P, \lnot P \vee Q \vee R, T \vee \lnot Q, \lnot R \vee Q \right\} \)
+\end{example}
+The inital propagation and decision sequence proceeds as follows·
+\[
+  \langle S \Vert \epsilon \rangle \xrightarrow{prop} \langle S \Vert P_P \rangle
+\]
+\end{document}
