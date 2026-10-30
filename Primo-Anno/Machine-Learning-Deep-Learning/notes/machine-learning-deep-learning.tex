@@ -2701,4 +2701,186 @@ the specific application and data characteristics
 \end{itemize}
 \textit{Note}. Both methods require careful tuning of their parameters (bandwidth for KDE, \( k \) for \( k \)-NN). Corss-validation is commonly used to select 
 these parameters in practice.
+\section{k-Nearest Neighbors (k-NN)}
+\subsection{Visual Comparison: k-NN vs. Parzen Windows}
+\begin{tcolorbox}[
+    colback=blue!15!white,
+    colframe=blue!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Key difference:}\\[0.6em]
+    \begin{itemize}
+        \item \textbf{Parzen Window}: Fixed volume \( V \) (radius \( R \)), variable \( k \)
+        \item \( \textbf{k} \)-\textbf{NN}: Fixed \( k \) (number of neighbors), variable volume \( V \) (radius \( R \))
+    \end{itemize}
+\end{tcolorbox}
+\textit{Observation}. In the visual comparison:
+\begin{itemize}
+    \item \textbf{Parzen Window}: Uses a fixed-size circle (radius \( R \)) around the query point (yellow cross). The number of points inside varies depending on local density 
+    \item \( \textbf{k} \)-\textbf{NN (e.g., 3-NN)}: The circle grows or shrinks to always include exactly \( k = 3 \) nearest neighbors. In dense regions, the circle is small; in sparse regions, it's large
+\end{itemize}
+\subsection{Parzen Window: Practical Consideration}
+\begin{tcolorbox}[
+    colback=orange!15!white,
+    colframe=orange!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{When to use Parzen Windows}\\[0.6em]
+    Parzen window is great for \textbf{low-dimensional data} (2-3 features, maybe up to 5)
+\end{tcolorbox}
+\begin{itemize}
+    \item In higher dimension, the method becomes \textbf{computationally expensive}, and the density estimates are \textbf{unreliable} because of the curse of dimensionality 
+    \item For this reason, in this year, we focus on other methods better suited for high-dimensional data
+\end{itemize}
+\textit{Note}. While Parzen windows provide a smooth density estimates, they suffer from the curse of dimensionality. As dimension increase, the fixed window size 
+becomes either too large (over-smoothing) or too small (too few samples), making the method impractical for modern high-dimensional datasets.
+\subsection{k-Nearest Neighbors Algorithm}
+The k-NN algorithm is one of the simplest and most intuitive machine learning algorithms
+\subsubsection{Basic principle}
+The volume is grown surrounding the estimation point \( \mathbf{x} \), until it enclose a total of \( k \) data points.
+\begin{center}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/k-NN.png}
+    \end{figure}
+\end{center}
+\begin{definition}{k-NN Density Estimation}{k-NN Density Estimation}
+\[
+  P(\mathbf{x}) \cong \frac{k}{NV}
+\]
+where:
+\begin{itemize}
+    \item \( V \) is the volume surrounding \( \mathbf{x} \).
+    \item \( N \) is the total number of examples 
+    \item \( k \) is the number of examples inside \( V \) (fixed)
+\end{itemize}
+\end{definition}
+\subsection{k-NN for Classification}
+\subsubsection{1-Nearest Neighbor (1-NN)}
+Given an unknown point \( \mathbf{x}^* \), we consider \( s_i \in \left\{ s_1, \ldots, s_N \right\} = S \) the nearest point (NN) of the point 
+\( \mathbf{x}^* \) if:
+\[
+  d(\mathbf{x}^*, s_i) = \min_{l} d(\mathbf{x}^*, s_l), \quad l = 1 \dots N
+\]
+where \( d(.) \) is a \textbf{distance measure} defined on the feature space.
+\vspace{1em}
+\noindent 
+\newline
+\textit{Observation}. If you interpret each point of set \( S \) as a prototype of a class, you can then see the equation above as a rule 
+of classification \textbf{1-NN} associating the sample \( \mathbf{x} \) to the class \( j \) to which the point \( s_i \) belongs.
+\begin{example}{Common Distance Measures}{Common Distance Measures}
+\begin{itemize}
+    \item \textbf{Euclidean distance}: \( d(\mathbf{x}, \mathbf{y}) = \sqrt{\sum_{i = 1}^{d} (x_i - y_i)^2} \)
+    \item \textbf{Manhattan distance}: \( d(\mathbf{x}, \mathbf{y}) = \sum_{i = 1}^{d} \;|\; x_i - y_i \;|\; \)    
+    \item \textbf{Minkowski distance}: \( d(\mathbf{x}, \mathbf{y}) = (\sum_{i = 1}^{d} \;|\; x_i - y_i \;|\;^P)^{\frac{1}{P}} \)
+\end{itemize}
+\end{example}
+\subsubsection{Generalizing to k-NN}
+Rule 1-NN can be generalised to define a \( k \)-\textbf{NN rule}, which consists of determining the \( k \) points belonging to the set \( S \) closest to 
+the observation \( \mathbf{x} \).
+\begin{definition}{k-NN Classification Rule}{k-NN Classification Rule}
+The classification rule \( k \)-NN associates observation \( \mathbf{x} \) with class \( i \) having the \textbf{largest number of elements} among 
+the nearest \( k \). We call \( U(\mathbf{x}) \) the set of \( k \) points closer to \( \mathbf{x} \).
+\end{definition}
+\subsubsection{Majority Voting}
+For example, with odd \( k \) and two classes, \( y_1 \) and \( y_2 \), the decision rule can choose the class with the most samples in 
+\( U(\mathbf{x}) \). This is called \textbf{majority voting}.
+\begin{tcolorbox}[
+    colback=blue!15!white,
+    colframe=blue!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Majority Voting}\\[0.5em]
+    Choose the class that appears most frequently among the \( k \) nearest neighbors.
+\end{tcolorbox}
+\begin{example}{3-NN Classification}{3-NN Classification}
+Suppose we have \( k = 3 \) and two classes (red and blue):
+\begin{itemize}
+    \item Query point \( \mathbf{x}^* \) has 3 nearest neighbors: 2 red, 1 blue
+    \item Majority voting: \( \mathbf{x}^* \) is classified as \textbf{red}
+\end{itemize}
+\end{example}
+\begin{tcolorbox}[
+    colback=yellow!15!white,
+    colframe=yellow!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Rule of Thumb}\\[0.5em]
+    \begin{itemize}
+        \item Start with \( k = \sqrt{N} \) where \( N \) is the number of training samples 
+        \item Use cross-validation to find the optimal \( k \)
+        \item For binary classification, use odd \( k \) to avoid ties
+    \end{itemize}
+\end{tcolorbox}
+\subsection{Advantages and Disadvantages of k-NN}
+\begin{table}[htbp]
+    \centering
+    \begin{tabular}{|p{0.44\textwidth}|p{0.44\textwidth}|}
+        \hline
+        \textbf{Advantages} & \textbf{Disadvantages} \\
+        \hline
+        $\bullet$ Simple and intuitive & $\bullet$ Computationally expensive at prediction time \\
+        $\bullet$ No training phase (lazy learning) & $\bullet$ Requires storing all training data \\
+        $\bullet$ Naturally handles multi-class problems & $\bullet$ Sensitive to irrelevant features \\
+        $\bullet$ Non-parametric (no assumptions about data distribution) & $\bullet$ Sensitive to the scale of features \\
+        $\bullet$ Can capture complex decision boundaries & $\bullet$ Curse of dimensionality \\
+        $\bullet$ Easy to update with new data & $\bullet$ Choosing optimal $k$ can be difficult \\
+        \hline
+    \end{tabular}
+    \caption{Advantages and disadvantages of k-NN}
+    \label{tab:knn-pros-cons}
+\end{table}
+\subsection{Practical Considerations}
+\subsubsection{Feature Scaling}
+\textit{Observation}. \( k \)-NN is \textbf{highly sensitive to feature scaling} because it relies on distance calculations. Features with larger ranges 
+will dominate the distance metrics.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Solution}: Always normalize or standardize features before applying \( k \)-NN:
+\begin{itemize}
+    \item \textbf{Min-Max Normalization}: Scale to [0,1]: \( x' = \frac{x - \text{ min}(x)}{\text{max}(x) - \text{ min}(x)} \) 
+    \item \textbf{Standardization}: Scale to mean 0, std 1: \( x' = \frac{x - \mu}{\sigma} \)
+\end{itemize}
+\subsubsection{Computational Complexity}
+\begin{itemize}
+    \item \textbf{Training time}: \( O(1) \) (no training, just store data)
+    \item \textbf{Prediction time}: \( O(Nd) \) where \( N \) is training set size, \( d \) is dimensionality 
+    \item For large datasets, use approximate nearest neighbor algorithms (e.g., KD-Trees, Ball trees LSH)
+\end{itemize}
+\textit{Note}. \( k \)-NN is called a \textbf{lazy learner} or \textbf{instance-based learner} because it doesn't learn a model during training.
+Instead, it memorizes the training data and performs all computation at prediction time. This makes training fast but prediction slow, especially for 
+large datasets.
+\subsection{Distance Metrics in k-NN}
+To calculate the distance, we usually use \textbf{Euclidean distance}.
+\begin{center}
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.8\textwidth]{images/euclideanDistance.png}
+    \end{figure}
+\end{center}
+\begin{definition}{Euclidean Distance Formula}{Euclidean Distance Formula}
+Given two points \textbf{p} = \( (p_1, p_2, \ldots, p_n) \) and \textbf{q} = \( (q_1, q_2, \ldots, q_n) \):
+\[
+  d(\mathbf{p},\mathbf{q}) = \sqrt{(q_1 - p_1)^2 + (q_2 - p_2)^2 + \ldots + (q_n - p_n)^2} = \sqrt{\sum_{i = 1}^{n} (q_i - p_i)^2}
+\]
+\end{definition}
+\textit{Observation}. The visual shows how the radius grows as \( k \) increases:
+\begin{itemize}
+    \item \textbf{1-NN}: Small circle, includes only the closest neighbor 
+    \item \textbf{2-NN}: Medium circle, includes 2 closest neighbors 
+    \item \textbf{3-NN}: Larger circle, includes 3 closest neighbors
+\end{itemize}
+The decision boundary depends on which class dominates within the circle.
+\section{Weighted k-NN}
+\subsubsection{The problem with Equal Weights}
+All the closest neighbors have the same weights, meaning that they are equally important to make a decision.
 \end{document}
