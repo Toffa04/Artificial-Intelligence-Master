@@ -78,6 +78,14 @@
 }
 \lstset{style=mystyle}
 
+\lstdefinestyle{ocamlpseudo}{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  xleftmargin=0pt
+}
+
 % ---------- Teoremi, definizioni, esempi (tcolorbox) ----------
 \usepackage[most]{tcolorbox}
 \tcbuselibrary{theorems}
@@ -173,7 +181,7 @@ has been to demonstrate machine intelligence throught the automated proving of m
 This capability represents a cornerstone of symbolic AI, where knowledge is rapresented symbolically and 
 stored in computer memory, and systematic procedures are applied to solve complex problems.
 
-\begin{theorem}{Theorem Proving}
+\begin{theorem}{Theorem Proving}{Theorem Proving}
     Traditionally require human-level mathematical reasoning and insight. The goal of automated 
     reasoning is to mecanize this process, creating algorithms and systems capable of performing 
     logical deduction without human intervention.
@@ -455,8 +463,8 @@ in the same formula, and distinct quantifiers use distinct bound variables.
 To assign meaning to syntactic formulas in first-order logic, we require a formal notion of 
 \textbf{interpretation}. An interpretation \( \mathcal{I} \) provides a semantic mapping from the syntactic elements 
 of a signature to concrete mathematical objects.
-\begin{definition}(Interpretation Components)
-\centering In the unsorted case, an interpretation consists of:
+\begin{definition}{Interpretation Components}{Interpretation Components}
+In the unsorted case, an interpretation consists of:
 \begin{itemize}
 	\item A non-empty set D called the \textbf{domain} (or universe of discourse)
 	\item An interpretation function \( \Phi \) that maps:
@@ -644,8 +652,7 @@ However, it would be true \( \mathbb{Z} \) or \( \mathbb{Q} \), demonstrating ho
 \section{Semantic Properties of Formulas}
 Having established the satisfaction relation, we now define fundamental semantic properties that classify formulas according 
 to their to their truth behavior across different interpretations.
-\begin{definition}{Semantic Properties of Formulas}
-\centering
+\begin{definition}{Semantic Properties of Formulas}{Semantic Properties of Formulas}
 \textbf{Satisfiability}
 \newline
 A formula \( F \) is \textbf{satisfiable} if there exists an interpretation \( \mathcal{I} \) such that \( \mathcal{I} \models F \).
@@ -682,8 +689,7 @@ Unsatisfiable formulas are false in every interpretation.
 In this case, we say that \( \mathcal{I} \) is a \textbf{countermodel} (or \textbf{counterexample}) for \( F \).
 \subsection{Relationship Between Semantic Properties}
 These semantic properties are intimately related through negation:
-\begin{theorem}{Validity and Unsatisfiability}
-\centering
+\begin{theorem}{Validity and Unsatisfiability}{Validity and Unsatisfiability}
 \textit{A formula F is valid if and only if \( \lnot F \) is unsatisfiable}.
 \vspace{1em}
 \noindent
@@ -697,8 +703,7 @@ Therefore, \( \lnot F \) is unsatisfiable.
 Conversely, if \( \lnot F \) is unsatisfiable, then for all interpretations \( \mathcal{I} \), we have \( \mathcal{I} \nvDash \lnot F \), which implies 
 \( \mathcal{I} \models F \). Therefore, \( F \) is valid.
 \end{theorem}
-\begin{theorem}{Satisfiability and Invalidity}
-\centering
+\begin{theorem}{Satisfiability and Invalidity}{Satisfiability and Invalidity}
 \textit{A formula F is satisfiable if and only if \( \lnot F \) is invalid}
 \vspace{1em}
 \noindent
@@ -717,8 +722,7 @@ Automated reasoning system must be capable of resolving three fundamental types 
 	\item \textbf{Logical consequence queries}: Does \( F \) follow logically from a set of hypotheses \( H \)?
 \end{itemize}
 \subsection{Definition of Logical Consequence}
-\begin{definition}{Logical Consequence}
-\centering
+\begin{definition}{Logical Consequence}{Logical Consequence}
 Let \( H = \left\{ \phi_1, \phi_2, \ldots, \phi_n \right\} \) be a set of formulas (the \textbf{hypotheses} or \textbf{premises}) and let 
 \( F \) be a formula (the \textbf{conclusion}). We say that \( F \) is a \textbf{logical consequence} of \( H \), written \( H \models F \), if:
 \[
@@ -730,8 +734,7 @@ means that \( \mathcal{I} \) satisfies all formulas in \( H \).
 \subsection{The deduction Theorem}
 The deduction theorem establishes a fundamental connection between logical consequence and validity, reducing the probem of checking entailment 
 to the problem of checking validity.
-\begin{definition}{Deduction theorem}
-\centering 
+\begin{definition}{Deduction theorem}{Deduction theorem}
 \textit{Let H be a set of formulas and F be a formula}.
 \newline
 \textit{Then}:
@@ -772,8 +775,7 @@ While this overloading may initially seem confusing, these three uses are smenti
 semantic relation.
 \subsection{Reduction to Unsatisfiability}
 A fundamental result connects logical consequence to unsatisfiability, providing another characterization of entailment.
-\begin{theorem}{Jey Theorem: Reduction to Unsatisfiability}
-\centering
+\begin{theorem}{Jey Theorem: Reduction to Unsatisfiability}{Jey Theorem: Reduction to Unsatisfiability}
 \textit{Let H be a set of formulas and F be a formula. Then:}
 \[
   H \models F \text{ iff } H \cup \left\{ \lnot F \right\} \text{ is unsatisfiable}
@@ -802,8 +804,7 @@ there is no interpretation that satisfies both \( H \) and \( \lnot F \). Theref
 this holds for all interpretations satisfying \( H \), we conclude that \( H \models F \).
 \section{Refutational Reasoning}
 \subsection{Proof by Contradiction}
-\begin{definition}{Refutational reasoning (Proof by contradiction)}
-\centering
+\begin{definition}{Refutational reasoning (Proof by contradiction)}{Refutational reasoning (Proof by contradiction)}
 \textbf{Refutational reasoning} (or \textbf{proof by refutation}) is a fundamental techinique in automated reasoning on the principle 
 of \textit{reductio ad absurdum}. To prove that a conclusion \( F \) follows from hupotheses \( H \), we assume the negation of the conclusion 
 and derive a contradiction.
@@ -902,8 +903,7 @@ This holds if and only if:
 Let \( \beta(y) = d' \) for some \( d' \in D \). Then we require \( (d,d') \in \Phi(R) \) for all \( d \in D \).
 \subsection{Existential Closure}
 The key observation is that the satisfiability of a formula with free variables is intimately connected to its \textbf{existential closure}.
-\begin{definition}{Existential Closure}
-\centering 
+\begin{definition}{Existential Closure}{Existential Closure}
 The existential closure of a formula \( F \), denoted \( \exists^* F \), is obtained by adding an existential quantifier for every free 
 variable in \( F \).
 \end{definition}
@@ -918,16 +918,14 @@ Returning to our example, if we consider the existential closure by quantifying 
 Under this interpretation, we need to verify that there exists some \( d' \in D \) such that for all \( d \in D \).
 \subsection{Satisfiability to Open Formulas}
 We now provide the complete definition of satisfiability that handles both closed and open formulas.
-\begin{definition}{Satisfiability - Complete Definition}
-\centering 
+\begin{definition}{Satisfiability - Complete Definition}{Satisfiability - Complete Definition}
 A formula \( F \) is \textbf{satisfiable} if:
 \begin{itemize}
 	\item \textbf{Case 1 (Closed formula)}: If \( F \) is a sentece (contains no free variables), then \( F \) is satisfiable if there exists an interpretation \( \mathcal{I} \) such that \( \mathcal{I} \models F \).
 	\item \textbf{Case 2 (Open formula)}: If \( F \) contains free variables, then \( F \) is satisfiable if there exists and interpretation \( \mathcal{I} \) and a variable assignment \( \beta \) such that \( \mathcal{I} \models_{\beta} F \).
 \end{itemize}
 \end{definition}
-\begin{theorem}{Satifiability and Existential Closure}
-\centering
+\begin{theorem}{Satifiability and Existential Closure}{Satifiability and Existential Closure}
 \textit{A formula F with free variables is satisfiable if and only if its existential closure \( \exists^* F \) is satisfiable}
 \vspace{1em}
 \noindent
@@ -948,8 +946,7 @@ This result demonstrates that when checking satisfiability of formulas with free
 variables as existentailly qunatified.
 \subsection{Universal Closure and Validity}
 Dually, we can consider the \textbf{universal closure} of a formula with free variables.
-\begin{theorem}{Validity and Universal Closure}.
-\centering 
+\begin{theorem}{Validity and Universal Closure}{Validity and Universal Closure}
 \textit{A formula F with free variables is valid if and only if its universal closure \( \forall^* F \) is valid}.
 \vspace{1em}
 \noindent
@@ -962,8 +959,7 @@ closure \( \forall^* F \) to be valid.
 \subsection{Computational Complexity of First-Order Logic}
 While certain restricted fragments of first-order logic admit decision procedures, the general case 
 present fundamental computational limitations:
-\begin{definition}{Decidability in First-Order Logic}
-\centering
+\begin{definition}{Decidability in First-Order Logic}{Decidability in First-Order Logic}
 \begin{itemize}
 	\item \textbf{Unsatisfiability} in first-order logic is \textbf{semidecidable} (recursively enumerable)
 	\item \textbf{Satisfiability} in first-order logic is \textbf{not even semidecidable}
@@ -1026,8 +1022,7 @@ To obtain decision procedures, we must restrict out attention to \textbf{decidab
 \textbf{first-order theories} - logical systems with additional structure that enable algorithmic reasoning.
 \section{First-Order Theories}
 \subsection{Definition of a First-Order Theory}
-\begin{definition}{First-Order Theory}
-\centering 
+\begin{definition}{First-Order Theory}{First-Order Theory}
 A \textbf{first-order theory} is a pair \( \mathcal{T} = \langle \sigma, \mathcal{A} \rangle \) where:
 \begin{itemize}
 	\item \( \sigma \) is a \textbf{signature} (defining the vocabulary of the theory)
@@ -1085,19 +1080,16 @@ This axioms states that \( f \) respects equality: equal inputs produce equal ou
 \]
 This axiom states that \( R \) resprects equality: the truth value of \( R \) depends only on the equivalence classes of its arguments.
 \subsection{Models of a Theory}
-\begin{definition}{\( \mathcal{T} \)-Model}
-\centering 
+\begin{definition}{\( \mathcal{T} \)-Model}{T-Model}
 A \( \mathcal{T} \)\textbf{-Model} is an interpretation \( \mathcal{I} \) such that \( \mathcal{I} \models \mathcal{A} \) (i.e., \( \mathcal{I} \) satisfies 
 all axiom in \( \mathcal{A} \)).
 \end{definition}
 \subsection{Satisfiability and Validity Relative to a Theory}
-\begin{definition}{\( \mathcal{T} \)-Satisfiability}
-\centering
+\begin{definition}{\( \mathcal{T} \)-Satisfiability}{T-Satisfiability}
 A formula \( G \) is \( \mathcal{T} \)\textbf{-satisfiable} if there exists a \( \mathcal{T} \)-model \( \mathcal{I} \) such that 
 \( \mathcal{I} \models G \).
 \end{definition}
-\begin{definition}{\( \mathcal{T} \)-Validity}
-\centering
+\begin{definition}{\( \mathcal{T} \)-Validity}{T-Validity}
 A formula \( G \) is \( \mathcal{T} \)\textbf{-valid} if for all \( \mathcal{T} \)-models \( \mathcal{I} \), we have \( \mathcal{I} \models G \).
 \vspace{1em}
 \noindent
@@ -1134,8 +1126,7 @@ must respect the additional constraints imposed by the theory's axioms.
 \section{Quantifiers-Free Fragments and Decidability}
 \subsection{The Quantifier-Free Fragment of \( \mathcal{T}_{E} \)}
 While the full theory of equality \( \mathcal{T}_{E} \) is undecidable, its \textbf{quantifier-free fragment} admits a decsion procedure.
-\begin{definition}{Quantifier-Free Fragment}
-\centering
+\begin{definition}{Quantifier-Free Fragment}{Quantifier-Free Fragment}
 The \textbf{quantifier-free fragment} of first-order logic consists of all formulas that do not contain quantifiers \( (\forall \text{ or } \exists) \).
 \end{definition}
 \vspace{1em}
@@ -1152,8 +1143,7 @@ using normal forms.
 \subsection{Normal Forms}
 To handle arbitrary quantifier-free formulas, we introduce two important normal forms that facilitate systematic resoning.
 \subsubsection{Negation Normal Form (NNF)}
-\begin{definition}{Negation Normal Form}
-\centering 
+\begin{definition}{Negation Normal Form}{Negation Normal Form}
 A formula is in \textbf{Negation Normal Form (NNF)} if:
 \begin{itemize}
 	\item The only logical connectives are \( \wedge, \vee, \text{ and }, \lnot \).
@@ -1169,8 +1159,7 @@ Any quantifier-free formula can be converted to NNF by applying the following eq
 	& \lnot \lnot H \equiv H && \text{(Double negation elimination)}
 \end{align*}
 \subsubsection{Disjunctive Normal Form (DNF)}
-\begin{definition}{Disjunctive Normal Form}
-\centering 
+\begin{definition}{Disjunctive Normal Form}{Disjunctive Normal Form}
 A formula is in \textbf{Disjunctive Normal Form (DNF)} if it is a disjunction of conjunctions of literals:
 \[
   \bigvee_{i = 1}^{k} (\bigwedge_{j = 1}^{n_i} L_{i,j})
@@ -1241,8 +1230,7 @@ for each disjunct independently.
 The decision procedure for quantifier-free \( \mathcal{T}_{E} \) assumes that the only predicate symbol in the formula is equality (=). However,
 formulas may contain additional predicate symbols. We now show how to elinate such predicates throught a satisfiability-preserving transformation.
 \subsubsection{The Transformation}
-\begin{definition}{Predicate Elimination}
-\centering
+\begin{definition}{Predicate Elimination}{Predicate Elimination}
 Given an occurence of a predicate symbol \( P \) of arity \( n \) applied to terms \( t_1, \ldots, t_n \), we eliminate \( P \) by introducing:
 \begin{itemize}
 	\item A fresh function symbol \( f_P \) (one for each predicate symbol \( P \neq = \))
@@ -1259,8 +1247,7 @@ The transformation replaces predicate applications with equality constraints:
 \textbf{Intuition}: The predicate \( P(t_1, \ldots, t_n) \) is true if and only if the term \( f_p(t_1, \ldots, t_n) \) evaluates to 
 the distinguished constant \( \bullet \).
 \subsubsection{Satisfiability Preservation}
-\begin{theorem}{Satisfiability Preservation}
-\centering 
+\begin{theorem}{Satisfiability Preservation}{Satisfiability Preservation} 
 \textit{Let F be a quantifier-free formula and let F' be the result of applying predicate elimination to F. 
 Then F is satisfiable if and only if F' is satisfiable in models with cardinality greater than 1}.
 \vspace{1em}
@@ -1335,8 +1322,7 @@ the function \( g \) to both sides (congruence). Then from \( f(x,x) = g(g(x)) \
 But we also have \( x = g(x) \), so by congruence on \( f \), we get \( f(x,x) = f(x,g(x)) \). However, we need to check whether 
 \( f(x,g(g(x))) = g(x) \) follows from the positive equalities, which would contradict \( f(x,g(g(x))) \neq g(x) \).
 \subsection{The congruence closure Decision Procedure}
-\begin{definition}{Congruence Closure Algorithm}
-\centering
+\begin{definition}{Congruence Closure Algorithm}{Congruence Closure Algorithm}
 The \textbf{congruence closure algorithm} is a decision procedure for satisfiability in the quantifier-free fragment 
 of the theory of equality. The algorithm operates as follows:
 \begin{enumerate}
@@ -1354,8 +1340,7 @@ that satisfies those equalities. Therefore, if a negative equality is violeted i
 every model.
 \subsection{Equivalence Relations and Partitions}
 Before describing the algorithm in detail, we recall fundamental properties of equivalence relations.
-\begin{definition}{Equivalence Relation}
-\centering 
+\begin{definition}{Equivalence Relation}{Equivalence Relation}
 An \textbf{equivalence relation} \( R \) on a set \( S \) is a binary relation that is:
 \begin{itemize}
 	\item \textbf{Reflexive}: \( \forall s \in S, sRs \).
@@ -1363,22 +1348,19 @@ An \textbf{equivalence relation} \( R \) on a set \( S \) is a binary relation t
 	\item \textbf{Transitive}: \( \forall s,t,u \in S, (sRt \wedge tRu) \Rightarrow sRu \).
 \end{itemize}
 \end{definition}
-\begin{definition}{Equivalence Class}
-\centering
+\begin{definition}{Equivalence Class}{Equivalence Class}
 Given an equivalence relation \( R \) on set \( S \), the \textbf{equivalence class} of an element \( s \in S \) is:
 \[
   [s]_R = \left\{s' \in S \;|\; s'Rs \right\}
 \]
 \end{definition}
-\begin{definition}{Quotient Set}
-\centering
+\begin{definition}{Quotient Set}{Quotient Set}
 The \textbf{quotient set} \( S/R \) is the set of all equivalence classes:
 \[
   S/R = \left\{ [s]_R \;|\; s \in S \right\}
 \]
 \end{definition}
-\begin{definition}{Partition Property}
-\centering 
+\begin{definition}{Partition Property}{Partition Property}
 \textit{An equivalence relation R on S induces a parittion of S. That is, for any two distinct equivalence classes 
 \( [s]_R \) and  \( [p]_R \)}:
 \[
@@ -1420,8 +1402,7 @@ where the equivalence class of \( s \) is:
 \]
 The element \( s \) is called a \textbf{representative} of the equivalence class \( [s]_R \).
 \subsubsection{Disjointness of Equivalence Classes}
-\begin{definition}{Disjoint Class}
-\centering
+\begin{definition}{Disjoint Class}{Disjoint Class}
 \textit{For any two equivalence classes \( [s_1]_R \) and \( [s_2]_R \), either they are identical or the 
 are disjoint}:
 \[
@@ -1468,8 +1449,7 @@ The quotient set is:
 \[
   S/R^* = \left\{ \left\{a,b,c \right\}, \left\{d\right\} \right\}
 \]
-\begin{definition}{Equivalence Closure}
-\centering
+\begin{definition}{Equivalence Closure}{Equivalence Closure}
 Given a binary relation \( R \) on set \( S \), the \textbf{equivalence closure} of \( R \), denoted \( R^* \), is the 
 \( \subseteq \)-smallest equivalence relation such that:
 \begin{enumerate}
@@ -1481,14 +1461,12 @@ Equivalently, \( R^* \) is the intersection of all equivalence relations contain
 The equivalence closure can be computed by iteratively applying reflexivity, symmetry, and transitivity rules 
 until a fixed point is reached.
 \subsubsection{Understanding the \( \subseteq \)-Smallest Property}
-\begin{definition}{Minimality of Equivalence Closure}
-\centering 
+\begin{definition}{Minimality of Equivalence Closure}{Minimality of Equivalence Closure}
 \textit{Let R be a binary relation and \( R^* \) be its equivalence closure. For any equivalence relation P such that
 \( R \subseteq P \), we have \( R^* \subseteq P \).}
 \end{definition}
 This means that \( R^* \) is the \textbf{smallest} equivalence relation containing \( R \) with respect to the subset ordering \( \subseteq \).
-\begin{definition}{Congruence Closure}
-\centering 
+\begin{definition}{Congruence Closure}{Congruence Closure}
 Given a binary relation \( R \), the \textbf{congruence closure} of \( R \), denoted \( R_{cong}^{*} \) is the 
 \( \subseteq \)-smallest relation such that:
 \begin{enumerate}
@@ -1541,8 +1519,7 @@ This relation partitions \( \mathbb{N} \) into four equivalence classes:
 		\node[orange!80!black] at (0.7,-1.0) {$[3]_4$};
 	\end{tikzpicture}
 \end{center}
-\begin{definition}{Refinement}
-\centering 
+\begin{definition}{Refinement}{Refinement} 
 \textit{The relation \( \equiv_4 \) is a \textbf{refinement} of \( \equiv_2 \). That is:}
 \[
   n \equiv_4 m \quad \Rightarrow \quad n \equiv_2 m
@@ -1613,8 +1590,7 @@ whether \( (s_i, t_i) \) belongs to the same equivalence class in \( \mathrm{CC}
 	\end{tikzpicture}
 \end{center}
 \subsubsection{Correctness of the Algorithm}
-\begin{theorem}{Soundness and Completeness}
-\centering
+\begin{theorem}{Soundness and Completeness}{Soundness and Completeness}
 \textit{The congruence closure algorithm is sound and complete for deciding satisfiability in the quantifier-free fragment 
 of \( \mathcal{T}_{E} \)}.
 \vspace{1em}
@@ -1763,4 +1739,590 @@ Both terms are in the same equivalence class, so \( (f(x,g(g(x))), g(x)) \in \ma
 \noindent
 \newline
 \textbf{Conclusion}: The formula \( F \) is \textbf{UNSATISFIABLE}.
+\section{Implementation of Congruence Closure on a DAG}
+\subsection{DAG Representation}
+The congruence closure algorithm can be implemented efficiently using a \textbf{Directed Acyclic Graph (DAG)} 
+representation of the terms.
+\vspace{1em}
+\noindent
+\newline
+Consider the formula:
+\[
+  F = \left\{ x = g(x), f(x,x) = g(g(x)) \right\} \cup \left\{ f(x,g(g(x))) \neq g(x) \right\} 
+\]
+The set of terms is:
+\[
+  S_F = \left\{ x, g(x), g(g(x)), f(x,x), f(x,g(g(x))) \right\}
+\]
+We represent these terms as a graph where:
+\begin{itemize}
+	\item Each term is a node 
+	\item Edges connect function symbols to their arguments 
+	\item We use \( g \) and \( g' \) to distinguish the two applications of function \( g \)  
+	\item We use \( f \) and \( f' \) to distinguish the two applications of function \( f \)
+\end{itemize}
+\begin{center}
+	\begin{tikzpicture}[
+		>=Stealth,
+		fn/.style  = {draw, rectangle, minimum size=0.8cm, thick},
+		var/.style = {draw, circle,    minimum size=0.8cm, thick},
+		lbl/.style = {font=\small} 
+	]
+		% nodi 
+		\node[fn]  (gp) at (0,3)     {$g'$};
+		\node[fn]  (fp) at (2.5,3)   {$f'$};
+		\node[fn]  (g)  at (0,1.5)   {$g$};
+		\node[fn]  (f)  at (5.5,1.5) {$f$};
+		\node[var] (x)  at (2.5,0)   {$x$};
+
+		% archi 
+		\draw[->] (gp) -- (g);
+		\draw[->] (fp) to[bend left=10] node[above, lbl] {$g(g(x))$} (gp);
+		\draw[->] (fp) to[bend right=15] (x);
+		\draw[->] (g) -- (x);
+		\draw[->] (f) to[bend right=20] (x);
+		\draw[->] (f) to[bend left=20]  (x);
+
+		% etichette dei termini
+		\node[lbl, anchor=south west] at (fp.north east) {$f(x,g(g(x)))$};
+		\node[lbl, right=0.3cm of g] {$g(x)$};
+		\node[lbl, right=0.3cm of f] {$f(x,x)$};
+		\node[lbl, below=0.1cm of x] {$x$};
+		
+	\end{tikzpicture}
+\end{center}
+The graph shoes the structure of the terms:
+\begin{itemize}
+	\item Node \( g \) has and edge to \( x \) (representing \( g(x) \))
+	\item Node \( f \) has two edges to \( x \) (representing \( f(x,x) \))
+	\item Node \( g' \) has and edge to \( g \) (representing \( g(g(x)) \)) 
+	\item Node \( f' \) has edges to \( x \) and \( g' \) (representing \( f(x,g(g(x))) \))
+\end{itemize}
+This is a graph representation of the term structure, which allows efficient implementation of the congruence 
+closure algorithm using union-find data structures to track equivalence classes of nodes.
+\begin{definition}{Node Data Structure}{Node Data Structure}
+Each mode in the DAG is represented by a data structure with the following fields:
+\begin{lstlisting}[style=ocamlpseudo]
+	type node = {
+		id: Id;
+		fn: String;
+		args: Id list;
+		mutable find: Id;
+		mutable ccpar: Id set;
+	}
+\end{lstlisting}
+For a node \( n \) of type \( \texttt{node} \), the fields have the following meaning:
+\begin{itemize}
+	\item \textbf{n.id}: The unique identifier of node \( n \)   
+	\item \textbf{n.fn}: The function symbol (or variable name) represented by this node 
+	\item \textbf{n.args}: The list of identifiers of the argument nodes (empty for variables and constants)
+	\item \textbf{n.find}: The identifier of the representative node of the equivalence class to which \( n \) belongs
+	\begin{itemize}
+		\item \textit{Initialization}: \texttt{n.find = n.id} (each node starts in its own equivalence class)
+	\end{itemize}
+	\item \textbf{n.ccpar}: The set of identifiers of the parent nodes of \( n \) (nodes that have \( n \) as an argument) and all nodes congruent to \( n \)
+\end{itemize}	
+\end{definition}
+This data structure supports the union-find operations needed for the congruence closure algorithm, where \texttt{find}
+implements the path to the representative of each equivalence class, and \texttt{ccpar} tracks congruence relationships
+for efficient propagation.
+\subsection{Basic Operations}
+We now define the basic operations on the DAG structure.
+\subsubsection{The NODE Function}
+The function \texttt{NODE} retrives a node given its identifier:
+\[
+  \texttt{NODE}: \texttt{Id} \rightarrow \texttt{Node}
+\]
+\[
+  \texttt{NODE}(i) = n \quad \text{ such that } \quad n.\texttt{id} = i
+\]
+\subsubsection{The FIND Operation}
+The \texttt{FIND} function takes an identifier and returns the identifier of the representative of the equivalence 
+class to which the node belongs:
+\[
+  \texttt{FIND} : \texttt{Id} \rightarrow \texttt{Id}
+\]
+\begin{lstlisting}[style=ocamlpseudo]
+let rec FIND i = 
+	let n = NODE i in 
+		if n.find = i then i 
+		else FIND n.find
+\end{lstlisting}
+This recursive function follows the \texttt{find} pointers until it reaches a node that is its own representative
+(i.e., \( n \).\texttt{find} = \( n \).\texttt{id}).
+\subsubsection{The UNION Operation}
+The \texttt{UNION} function merges two equivalence classes:
+\[
+  \texttt{UNION} : \texttt{Id} \times \texttt{Id} \rightarrow \texttt{void}
+\]
+\begin{lstlisting}[style=ocamlpseudo]
+let UNION i_1 i_2 = 
+	let n_1 = NODE (FIND i_1) in 
+	let n_2 = NODE (FIND i_2) in 
+	n_1.find <- n_2.find; 
+	n_2.ccpar <- n_2.ccpar U n_1.ccpar;
+	n_1.ccpar <- empty_set
+\end{lstlisting}
+The \texttt{UNION} operation performs the following steps:
+\begin{enumerate}
+	\item Find the representatives \( n_1 \) and \( n_2 \) of the two equivalence classes 
+	\item Make \( n_1 \) point to \( n_2 \) (merging the classes)
+	\item Transfer the \texttt{ccpar} set from \( n_1 \) to \( n_2 \)   
+	\item Clear the \texttt{ccpar} set of \( n_1 \)
+\end{enumerate}
+\textit{Note}. During execution, \( n \).\texttt{ccpar} \( \neq \varnothing \) if and only if \( n \) is a representative 
+(i.e., \( n \).\texttt{find} = \( n \).\texttt{id}). This invariant ensures that only representative nodes maintain the parent and 
+congruence information.
+\subsubsection{The CCPAR Function}
+The \texttt{CCPAR} function return the \texttt{ccpar} set of the representative of a given node:
+\[
+  \texttt{CCPAR}: \texttt{Id} \rightarrow \texttt{Id set}
+\]
+\begin{lstlisting}[style=ocamlpseudo]
+let CCPAR i = (NODE (FIND i)).ccpar	
+\end{lstlisting}
+This function first finds representative of node \( i \), then returns its \texttt{ccpar} set.
+\subsubsection{The CONGRUENT Function}
+The \texttt{CONGRUENT} function checks whether two nodes are congruent (i.e., they have the same function symbol 
+and their corresponding arguments are in the same equivalence classes):
+\[
+  \texttt{CONGRUENT}: \texttt{Id} \times \texttt{Id} \rightarrow \texttt{bool}
+\]
+\begin{lstlisting}[style=ocamlpseudo]
+let CONGRUENT i_1 i_2 = 
+	let n_1 = NODE i_1 in 
+	let n_2 = NODE i_2 in 
+	n_1.fn = n_2.fn &&
+	|n_1.args| = |n_2.args| &&
+	forall i in {1, ..., |n_1.args|}
+		FIND n_1.args[i] = FIND n_2.args[i]
+\end{lstlisting}
+Two nodes are congruent if:
+\begin{enumerate}
+	\item They have the same function symbol \( n_1.\texttt{fn} = n_2.\texttt{fn} \)   
+	\item They have the same number of arguments \( (\;|\;n_1.\texttt{args}\;|\; = \;|\;n_2.\texttt{args}\;|\;) \)   
+	\item Their corresponding arguments are in the same equivalence classes
+\end{enumerate}
+\subsubsection{The MERGE Function}
+\begin{definition}{MERGE Operation}{MERGE Operation}
+The \texttt{MERGE} function merges two equivalence classes and recursibely propagates congruence:
+\[
+  \texttt{MERGE}: \texttt{Id} \times \texttt{Id} \rightarrow \texttt{void}
+\]
+\begin{lstlisting}[style=ocamlpseudo]
+let rec MERGE i_1 i_2 = 
+	if FIND i_1 =/= FIND i_2 then 
+		begin
+			let P_1 = CCPAR i_1 in
+			let P_2 = CCPAR i_2 in 
+			UNION i_1 i_2;
+			foreach (t_1, t_2) in P_1 x P_2 do 
+				if FIND t_1 =/= FIND t_2 && CONGRUENT t_1 t_2
+				then MERGE t_1 t_2
+			done
+		end
+\end{lstlisting}
+The \texttt{MERGE} operation works as follows:
+\begin{enumerate}
+	\item Check if \( i_1 \) and \( i_2 \) are already in the same equivalence class; if so, do nothing 
+	\item Save the \texttt{ccpar} sets \( P_1 \) and \( P_2 \) of both nodes 
+	\item Perform \texttt{UNION} to merge the equivalence classes 
+	\item For each pair \( (t_1,t_2) \) in the Cartesian product \( P_1 \times P_2 \):
+	\begin{itemize}
+		\item If \( t_1 \) and \( t_2 \) are not already equivalent and are congruent 
+		\item Recursively merge them with \texttt{MERGE}
+	\end{itemize}
+\end{enumerate}
+\end{definition}
+This recursive propagation ensures that when two nodes become equivalent, all pairs of congruent parent nodes are also merged, maintaining the 
+congruence closure property
+\subsection{The Complete Congruence Closure Algorithm}
+We can now describe the complete congruence closure algorithm using the DAG-based implementation
+\subsubsection{Algorithm}
+\begin{theorem}{Complete Congruence Closure Algorithm (DAG-based)}{Complete Congruence Closure Algorithm (DAG-based)}
+Given a formula:
+\[
+  F = \left\{ s_1 = t_1, \ldots, s_n = t_n \right\} \cup \left\{ s_{n + 1} \neq t_{n + 1}, \ldots, s_{n + m} \neq t_{n + m} \right\}
+\]
+The algorithm proceeds as follows:
+\begin{algorithm}[H]
+	\caption{Complete Congruence Closure Algorithm (DAG-based)}
+	\begin{algorithmic}[2]
+		\Require Formula $F = F^+ \cup F^-$ where $F^+ = \left\{ s_1 = t_1, \ldots, s_n = t_n \right\}$ and
+		$F^- = \left\{ s_{n + 1} \neq t_{n + 1}, \ldots, s_{n + m} \neq t_{n + m} \right\}$
+		\State Construct the DAG for \( F \)
+		\For{$i = 1$ to $n$ \textbf{do}}
+			\State \texttt{MERGE}($s_i, t_i$)
+		\EndFor
+		\For{$i = n + 1$ to $n + m$ \textbf{do}}
+			\If{\texttt{FIND}($s_1$) = \texttt{FIND}($t_i$) \textbf{then}}
+				\State \Return UNSATISFIABLE 
+			\EndIf
+		\EndFor
+		\State \Return SATISFIABLE
+	\end{algorithmic}
+\end{algorithm}
+\end{theorem}
+\textbf{Steps}:
+\begin{enumerate}
+	\item \textbf{Construct the DAG}: Build the DAG representation of all terms in \( F \)   
+	\item \textbf{Process equalities}: For each equality \( s_i = t_i \) in \( F^+ \), call \texttt{MERGE}($s_i, t_i$) to merge the equivalence classes and propagate congruence 
+	\item \textbf{Check disequalities}: For each disequality $s_i \neq t_i$ in $F^-$, check if $s_i$ and $t_i$, are in the same equivalence class (i.e., \texttt{FIND}($s_i$) = \texttt{FIND}($t_i$))
+	\begin{itemize}
+		\item If yes, return UNSATISFIABLE
+	\end{itemize}
+	\item \textbf{Return result}: If no conflicts found, return SATISFIABLE
+\end{enumerate}
+\subsubsection{Complexity}
+\begin{definition}{Complexity Analysis}{Complexity Analysis}
+Let \( n \) be the number of nodes in the DAG. The complexity of the congruence closure algorithm is \( O(n^2) \) in the worst case, 
+where the quadratic factor comes from the potential number of congruence propagations that may occur during the \texttt{MERGE} 
+operations.
+\end{definition}
+\section{Worked Examples of Congruence Closure}
+In this section, we present detailed worked examples demonstrating the execution of the congruence closure algorithm 
+on concrete formulas. These examples illustrate the DAG construction, the initialization of node fields, and the step-by-step exectuion of 
+the \texttt{MERGE} operations.
+\subsection{Example 1: Simple Commutativity}
+\begin{example}{Congruence Closure with Commutativity}{Congruence Closure with Commutativity}
+Consider the formula without quantifiers:
+\[
+  F = \left\{ f(x,y) = f(y,x) \right\} \cup \left\{ f(a,y) = f(y,a) \right\}
+\]
+where \( a \) is a constant symbol.
+\end{example}
+\textbf{Step 1: Identify the set of subterms}
+\vspace{1em}
+\noindent
+\newline
+The set of all subterms appearing in \( F \) is:
+\[
+  S_F = \left\{ x,y,a,f(x,y),f(y,x),f(a,y)f(y,a) \right\}
+\]
+\textbf{Step 2: Construct the DAG}
+\vspace{1em}
+\noindent 
+\newline
+We construct a DAG where each node represents a unique subterm. Each node has the following fields:
+\begin{itemize}
+	\item \textbf{id}: A unique integer identifier 
+	\item \textbf{fn}: The function symbol (or variable/constant name) as a string 
+	\item \textbf{args}: List of identifiers of arugment nodes (empty for variables/constants)
+	\item \textbf{find}: Initially set to the node's own id 
+	\item \textbf{ccpar}: Set of parent node identifiers (initially contains all nodes that have this node as an argument)
+\end{itemize}
+The DAG structure ca ben visualized as:
+\[
+\begin{array}{cccc}
+	f_3 & f_4 & f_5 & f_6 \\
+	\textcolor{blue}{\downarrow} & \textcolor{blue}{\downarrow} & \textcolor{blue}{\downarrow} & \textcolor{blue}{\downarrow} \\
+	(x_0, y_1) & (y_1, x_0) & (a_2, y_1) & (y_1, a_2) 
+\end{array}
+\]
+\textbf{Step 3: Initialize node fields}
+\begin{definition}{Initial DAG Node Configuration}{Initial DAG Node Configuration}
+\texttt{Node} $f_3$: $\quad$ \texttt{id} = 3, \texttt{fn} = "f", \texttt{args} = [0, 1], \texttt{find} = 3, \texttt{ccpar} = \( \left\{\right\} \)
+\vspace{1em}
+\noindent
+\newline
+\texttt{Node} $x_0$: $\quad$ \texttt{id} = 0, \texttt{fn} = "x", \texttt{args} = [], \texttt{find} = 0, \texttt{ccpar} = \( \left\{3, 4\right\} \)
+\vspace{1em}
+\noindent
+\newline
+\texttt{Node} $f_4$: $\quad$ \texttt{id} = 4, \texttt{fn} = "f", \texttt{args} = [1, 0], \texttt{find} = 4, \texttt{ccpar} = \( \left\{\right\} \)
+\vspace{1em}
+\noindent
+\newline
+\texttt{Node} $y_1$: $\quad$ \texttt{id} = 1, \texttt{fn} = "y", \texttt{args} = [], \texttt{find} = 1, \texttt{ccpar} = \( \left\{3, 4, 5, 6\right\} \)
+\vspace{1em}
+\noindent
+\newline
+\texttt{Node} $f_5$: $\quad$ \texttt{id} = 5, \texttt{fn} = "f", \texttt{args} = [2, 1], \texttt{find} = 5, \texttt{ccpar} = \( \left\{\right\} \)
+\vspace{1em}
+\noindent
+\newline
+\texttt{Node} $a_2$: $\quad$ \texttt{id} = 2, \texttt{fn} = "a", \texttt{args} = [], \texttt{find} = 2, \texttt{ccpar} = \( \left\{5, 6\right\} \)
+\vspace{1em}
+\noindent
+\newline
+\texttt{Node} $f_6$: $\quad$ \texttt{id} = 6, \texttt{fn} = "f", \texttt{args} = [1, 2], \texttt{find} = 6, \texttt{ccpar} = \( \left\{\right\} \)
+\end{definition}
+\textbf{Key observation about initialization}:
+\begin{itemize}
+	\item Each node's \texttt{find} intially points to itself 
+	\item The \texttt{ccpar} field of each leaf node (variables/constants) contains the ids of all funcion nodes that have it as an argument 
+	\item Function nodes initially have empty \texttt{ccpar} sets
+\end{itemize}
+\textbf{Step 4: Process the equality} \( f(x,y) = f(y,x) \)   
+\vspace{1em}
+\noindent
+\newline
+We exectue \texttt{MERGE}(3,4) corresponding to the equality \( f(x,y) = f(y,x) \):
+\begin{enumerate}
+	\item Check if \texttt{FIND}(3) \( \neq \) \texttt{FIND}(4): YES (they are 3 and 4 respectively)
+	\item Save parent sets: \( P_1 = \texttt{CCPAR}(3) = \varnothing, P_2 = \texttt{CCPAR}(4) = \varnothing \)   
+	\item Execute \texttt{UNION}(3, 4):
+	\begin{itemize}
+		\item Set node 4's \texttt{find} field to 3 
+		\item Merge \texttt{ccpar} sets (both empty in this case)
+	\end{itemize}
+	\item Check Cartesian products \( P_1 \times P_2 = \varnothing \times \varnothing = \varnothing \)   
+	\item No further merges needed
+\end{enumerate}
+After this operation, nodes \( f_3 \) and \( f_4 \) are in the same equivalence class.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Step 5: Check the disequality (if any)}
+\vspace{1em}
+\noindent
+\newline
+In this example, we only have equalities. The formula \( f(a,y) = f(y,a) \) represents another equality that could 
+be processed similarly. Since \( f(a,y) \) and \( f(y,a) \) (nodes 5 and 6) remain in distinct equivalence classes after 
+processing the first equality, the formula is \textbf{SATISFIABLE} - there is no contradiction.
+\subsection{Example 2: Cyclic Function Application with Disequality}
+\begin{example}{Detecting Unsatisfiability through Congruence Closure}{Detecting Unsatisfiability through Congruence Closure}
+Consider the formula:
+\[
+  F = \left\{f^3(a) = f^5(a) \right\} \cup \left\{f(a) \neq a \right\}
+\]
+where we use the notation \( f^n(a) \) to denote \( n \) applications of function \( f \) to constant \( a \). 
+Explicity:
+\begin{itemize}
+	\item \( f^3(a) = f(f(f(a))) \)    
+	\item \( f^5(a) = f(f(f(f(f(a))))) \)
+\end{itemize}
+\end{example}
+\textbf{Step 1: Identify the set of subterms}
+\vspace{1em}
+\noindent
+\newline
+The set of all subterms is:
+\[
+  S_F = \left\{a,f(a),f^2(a),f^3(a),f^4(a),f^5(a)\right\}
+\]
+\textbf{Step 3: Construct the DAG}
+\vspace{1em}
+\noindent
+\newline
+We build a chain-like DAG where each node represents successive applications of \( f \):
+\[
+  f^5(a) \rightarrow f^4(a) \rightarrow f^3(a) \rightarrow f^2(a) \rightarrow f(a) \rightarrow a 
+\]
+\textbf{Step 3: Initialize node fields}
+\begin{definition}{Initial DAG Configuration}{Initial DAG Configuration}
+\texttt{Node} 5: \texttt{id} = 5, \texttt{fn} = "f", \texttt{args} = [4], \texttt{find} = 5, \texttt{ccpar} = \( \left\{\right\} \)   
+\newline 
+\texttt{Node} 4: \texttt{id} = 4, \texttt{fn} = "f", \texttt{args} = [3], \texttt{find} = 4, \texttt{ccpar} = \( \left\{5\right\} \)   
+\newline 
+\texttt{Node} 3: \texttt{id} = 3, \texttt{fn} = "f", \texttt{args} = [2], \texttt{find} = 3, \texttt{ccpar} = \( \left\{4\right\} \)   
+\newline 
+\texttt{Node} 2: \texttt{id} = 2, \texttt{fn} = "f", \texttt{args} = [1], \texttt{find} = 2, \texttt{ccpar} = \( \left\{3\right\} \)   
+\newline 
+\texttt{Node} 1: \texttt{id} = 1, \texttt{fn} = "f", \texttt{args} = [0], \texttt{find} = 1, \texttt{ccpar} = \( \left\{2\right\} \)   
+\newline 
+\texttt{Node} 0: \texttt{id} = 0, \texttt{fn} = "a", \texttt{args} = [], \texttt{find} = 0, \texttt{ccpar} = \( \left\{1\right\} \)   
+\end{definition}
+\textbf{Step 4: Process the equality} \( f^3(a) = f^5(a) \)   
+\vspace{1em}
+\noindent
+\newline
+The equality \( f^3(a) = f^5(a) \) implies that after three applications of \( f \), we get the same result as after 
+five applications. This creates a cycle in the equivalence structure.
+\vspace{1em}
+\noindent
+\newline
+We execute \texttt{MERGE}(3,5). However, the congruence closure algorithm will propagate this equality through the structure,
+ultimately establishing relationships between multiple nodes.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Logical Implications of the equality}:
+\vspace{1em}
+\noindent
+\newline
+From \( f^3(a) = f^5(a) \), by applying the congruence rule repeatedly, we can derive:
+\begin{center}
+	\begin{align*}
+		& f^3(a) = f^5(a) \\
+		& f^4(a) = f^6(a) = f(f^5(a)) = f(f^3(a)) \\
+		& f^2(a) = f^4(a) \text{ (by applying \( f^{-1 } \) conceptually)}\\
+		& f(a) = f^3(a) \\
+		& a = f^2(a) 
+	\end{align*}
+\end{center}
+More precisely, the algorithm establishes these equivalences through congruence propagation.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Step 5: Detailed execution trace}
+\vspace{1em}
+\noindent
+\newline
+We now trace the execution of \texttt{MERGE}(3,5) and observe how congruence propagates:
+\begin{theorem}{Execution Trace}{Execution Trace}
+\textbf{Call: MERGE(3,5)}
+\vspace{1em}
+\noindent
+\newline
+Since \( f^3(a) = f^5(a) \), we need to merge nodes 3 and 5. 
+\begin{enumerate}
+	\item \texttt{FIND}(3) = 3, \texttt{FIND}(5) = 5 (different, so proceed)
+	\item \( P_1 = \texttt{CCPAR}(3) = \left\{4\right\}, P_2 = \texttt{CCPAR}(5) = \varnothing \)   
+	\item \texttt{UNION}(3,5): merge the equivalence classes 
+	\item Check \( P_1 \times P_2 = \left\{4\right\} \times \varnothing = \varnothing \) (no propagation yet)
+\end{enumerate}
+However, the equality \( f^3(a) = f^5(a) \) implies \( f^2(a) = f^4(a) \) by the congruence property.
+\vspace{1em}
+\noindent
+\newline
+This triggers further merges.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Call: MERGE(3, 0)} (establishing \( f^3(a) = a \))
+\begin{enumerate}
+	\item \( P_1 = \texttt{CCPAR}(3) = \left\{4\right\}, P_2 = \texttt{CCPAR}(0) = \left\{1\right\} \)    
+	\item \texttt{UNION}(3, 0)
+	\item Check \( P_1 \times P_2 = \left\{4\right\} \times \left\{1\right\} = \left\{(4,1)\right\} \)   
+	\item \texttt{CONGRUENT}(4,1)?
+	\begin{itemize}
+		\item Same symbol: YES (\( f = f \))
+		\item Same arity: YES (both unary)
+		\item Arguments equivalent: \texttt{FIND}(3) = \texttt{FIND}(0) after union: YES
+	\end{itemize}
+	\item Result: TRUE \( \Rightarrow \) call \texttt{MERGE}(4,1)
+\end{enumerate}
+\vspace{1em}
+\noindent
+\newline
+\textbf{Call: MERGE(4, 1)} (establishing \( f^4(a) = f(a) \))
+\begin{enumerate}
+	\item \( P_1 = \texttt{CCPAR}(4) = \left\{5\right\}, P_2 = \texttt{CCPAR}(1) = \left\{2\right\} \)    
+	\item \texttt{UNION}(4, 1)
+	\item Check \( P_1 \times P_2 = \left\{5\right\} \times \left\{2\right\} = \left\{(5,2)\right\} \)   
+	\item \texttt{CONGRUENT}(5,2)?
+	\begin{itemize}
+		\item Same symbol: YES
+		\item Same arity: YES 
+		\item Arguments equivalent: \texttt{FIND}(4) = \texttt{FIND}(1): YES
+	\end{itemize}
+	\item Result: TRUE \( \Rightarrow \) call \texttt{MERGE}(5,2)
+\end{enumerate}
+\vspace{1em}
+\noindent
+\newline
+\textbf{Call: MERGE(5, 2)} (establishing \( f^5(a) = f^2(a) \))
+\begin{enumerate}
+	\item \( P_1 = \texttt{CCPAR}(5) = \varnothing, P_2 = \texttt{CCPAR}(2) = \left\{3\right\} \)    
+	\item \texttt{UNION}(5, 2)
+	\item Check \( P_1 \times P_2 = \varnothing \times \left\{3\right\} = \varnothing \)   
+	\item No further propagation
+\end{enumerate}
+The congruence closure process continues, eventualy establishing that all nodes \( \left\{0,1,2,3,4,5\right\} \) are 
+in the same equivalence class, meaning:
+\[
+  a = f(a) = f^2(a) = f^3(a) = f^4(a) = f^5(a)
+\]
+\end{theorem}
+\textbf{Step 6: Check the disequality} \( f(a) \neq a \)   
+\vspace{1em}
+\noindent
+\newline
+After processing all equalities through congruence closure, we check the disequality constraint:
+\begin{itemize}
+	\item We have \( f(a) \neq a \) in \( F^- \)   
+	\item Check: \texttt{FIND}(1) = \texttt{FIND}(0)?
+	\item After congruence closure: YES (they are in the same equivalence class)
+	\item \textbf{Conclusion}: The disequality is violated!
+\end{itemize}
+\textbf{Result}: The formula is \textbf{UNSATISFIABLE}. The quality \( f^3(a) = f^5(a) \) forces a cycle that 
+ultimately implies \( f(a) = a \), which contradicts the disequality constraint \( f(a) \neq a \).
+\section{Complexity Improvements and Optimiazions}
+The basic congruence closure algorithm presented earlier has complexity \( O(n^2) \) for \( n \) nodes in 
+the DAG. However, several optimizations have been developed to improve the practical and theoretical performance 
+of the algorithm.
+\subsection{Hisotical Development}
+\subsubsection{Nelson-Oppen Algorithm (1980)}
+The original congruence closure algorithm by Nelson and Oppen (1980) operates on a graph \( G = (V,E) \) where:
+\begin{itemize}
+	\item \( \;|\; V \;|\; = n \) (number of nodes/vertices)
+	\item \( \;|\; E \;|\; = e \) (number of edges)
+\end{itemize}
+\begin{definition}{Nelson-Oppen Complexity}{Nelson-Oppen Complexity}
+The Nelson-Oppen algorithm has complexity \( O(n^2) \) for \( O(n) \) calls to \texttt{MERGE}
+\end{definition}
+This quadratic complexity in the number of edges can be prohibitive for large formulas with many equalities.
+\subsubsection{Downey-Sethi-Tarjan Improvements (1980-1982)}
+Downey, Sethi and Tarjan developed several optimiazions that significantly improved the complexity of congruence 
+closure Algorithms
+\begin{definition}{Improved Complexity}{Improved Complexity}
+The Downey-Sethi-Tarjan optimizations reduce the complexity to \( O(e log e) \) for \( O(n) \) calls to \texttt{MERGE}
+\end{definition}
+This represent a substantial improvement, especially for sparse graphs where \( e \) is much smaller than \( n^2 \).
+\subsection{Key Optimization}
+The improvements introduced by Downey, Sethi and Tarjan focus on two main aspects of the algorithm:
+\subsubsection{Optimiazion 1: Avoiding Recursion in FIND}
+\textbf{Original recursive implementation}:
+\begin{lstlisting}[style=ocamlpseudo]
+let rec FIND i = 
+	let n = NODE i in 
+		if n.find = i then i 
+		else FIND n.find
+\end{lstlisting}
+\textbf{Optimized non-recursive implmentation}
+\begin{lstlisting}[style=ocamlpseudo]
+let FIND i = (NODE i).find
+\end{lstlisting}
+\textit{Note}. This optimization is correct only if the \texttt{UNION} operation is modified appropriately. When 
+node \( i_1 \) becomes the representative of the merged equivalence class, the \texttt{find} field of \textbf{all nodes}
+in \( i_2 \)'s class must be updated to point directly to \( i_1 \).
+\vspace{1em}
+\noindent
+\newline
+This eliminates the need for path trasversal during \texttt{FIND} operations, reducing the cost from \( O(h) \) (where
+\( h \) is the height of the union-find tree) to \( O(1) \).
+\subsubsection{Optimiazion 2: Union by Size Heuristic}
+When mergin two equivalence classes via \texttt{UNION}($i_1,i_2$), we must choose which representative becomes
+the representative of the merged class. Two effective heuristic are:
+\begin{definition}{Union Heuristic}{Union Heuristic}
+\textbf{Heuristic 1: Union by Equivalence Class Size}
+\vspace{1em}
+\noindent
+\newline
+Choose as the representative of the new class the representative of the \textbf{larger equivalence class:}
+\begin{itemize}
+	\item Compare \( \;|\;[i_1]\;|\; \text{ and } \;|\;[i_2]\;|\; \) (sizes of the equivalence classes)
+	\item Make the representative of the larger class the new representative
+\end{itemize}
+\textbf{Heuristic 2: Union by CCPAR Size}
+\vspace{1em}
+\noindent
+\newline
+Choose as the representative the node whose \texttt{ccpar} field has \textbf{more members}:
+\begin{itemize}
+	\item Compare \( \;|\;i_1.\texttt{ccpar}\;|\; \text{ and } \;|\;i_2.\texttt{ccpar}\;|\; \)
+	\item Make the representative with the larger \texttt{ccpar} set the new representative
+\end{itemize}
+\end{definition}
+\textbf{Rationale}: These heuristics ensure that the union-find tree remains balanced, preventing degenerate cases where 
+the tree becomes a long chain. By always attaching the samller structure to the larger one, we maintain logarithmic depth in the 
+union-find structure.
+\subsection{Implementation Note}
+The \texttt{CCPAR} function must retrive the \texttt{ccpar} set of the representative node:
+\begin{lstlisting}[style=ocamlpseudo]
+let CCPAR i = (NODE (FIND i)).ccpar
+\end{lstlisting}
+This ensure that we always access the \texttt{ccpar} information from the current representative of the equivalence 
+class, which is essential for correctness after multiple \texttt{UNION} operations.
+\subsection{Practical Impact}
+These optimiazions have significant practical impact:
+\begin{itemize}
+	\item \textbf{Reduced time complexity}: From \( O(e^2) \) to \( O(e log e) \)    
+	\item \textbf{Better cache locality}: Non-recursive \texttt{FIND} reduces function call overhead
+	\item \textbf{Balanced structures}: Union heuristics prevent worst-case tree depths 
+	\item \textbf{Scalability}: Enables congruence closure on much larger formulas 
+\end{itemize} 
+These improvements make congruence closure practical for real-world applications in automated theorem proving,
+program verification, and satisfiability modulo theories (SMT) solvers.
 \end{document}
