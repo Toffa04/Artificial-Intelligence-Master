@@ -3153,4 +3153,202 @@ If there are undetermined cases (ties), there are some alternatives:
     \item \textbf{Nearest average sample}: Assign \( \mathbf{x} \) to the class (among those 'tie') that has the nearest average sample (calculated between the \( k_i \) sample)
     \item \textbf{Least distance}: Assign \( \mathbf{x} \) to the class that has the \( k_i \) samples with least distance from it
 \end{enumerate}
+\begin{example}{Handling a Tie}{Handling a Tie}
+Suppose \( k = 4 \) and we have:
+\begin{itemize}
+    \item 2 neighbors from class A at distances: 1.5, 2.0
+    \item 2 neighbors from class B at distances: 1.2, 3.5
+\end{itemize}
+\textbf{Solutions}:
+\begin{itemize}
+    \item \textbf{Arbitrary}: Randomly choose A or B 
+    \item \textbf{Nearest average}:
+    \begin{itemize}
+        \item Class A average: (1.5 + 2.0) / 2 = 1.75
+        \item Class B average: (1.2 + 3.5) / 2 = 2.35
+        \item Choose class A (smaller average distance)
+    \end{itemize}
+    \item \textbf{Least distance}: Choose class B (has the closest neighbor at 1.2)
+\end{itemize}
+\text{Note}. The best strategy for handling ties depends on your specific problem:
+\begin{itemize}
+    \item \textbf{Nearest average}: Good when you want to consider all neighbors equally 
+    \item \textbf{Least distance}: Good when you believe the closest neighbor is most important 
+    \item \textbf{Best practice}: Use odd \( k \) to aovid ties altogether in binary classification
+\end{itemize}
+\end{example}
+\subsection{k-NN: Pros and Cons}
+\subsubsection{Advantages (Pros)}
+\begin{itemize}
+    \item \textbf{Almost no assumptions about the data}
+    \begin{itemize}
+        \item Non-parametric method 
+        \item Doesn't assume any particular distribution 
+        \item Works with any data strucutre
+    \end{itemize}
+    \item \textbf{Non-parametric}
+    \begin{itemize}
+        \item No model parameters to learn 
+        \item Flexible and adaptive to data 
+    \end{itemize}
+    \item \textbf{There is no training phase, cost is 0}
+    \begin{itemize}
+        \item Instant "training" - just store the data 
+        \item Easy to update with new data
+        \item No convergence issue 
+    \end{itemize}
+    \item \textbf{Allow us to construct non-linear class boundaries and are therefore more flexible}
+    \begin{itemize}
+        \item Can capture complex decision boundaries 
+        \item Not limited to linear seprability 
+        \item Adapts to local data structure 
+    \end{itemize}
+\end{itemize}
+\begin{tcolorbox}[
+    colback=green!15!white,
+    colframe=green!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{k-NN gives locally defined decision boudaries between classes}\\[0.6em]
+    Unlike global methods (e.g., linear classifier), k-NN creates decision boundaries that adapt to the local 
+    structure of the data, allowing for complex, non-linear separations.
+\end{tcolorbox}
+\textit{Obseravation}. The figure shows how \( k \)-NN can create complex, non-linear decision boundaries 
+(shown in red) that follow the natural clustering of the data. The decision boundary is not a simple line or hyperplane, but rather a complex 
+curve that adapts to the local density and distribution of each class (label 1,2 and 3)
+\vspace{1em}
+\noindent
+\newline
+On the right, we see the resulting decision regions where each color represents the area classified as a particular label.
+The boundaries are highly non-linear and follow the intricate patterns in the data
+\subsubsection{Disadvantages (Cons)}
+\begin{itemize}
+    \item \textbf{Need to handle missing data}
+    \begin{itemize}
+        \item Cannot compute distances with missing values 
+        \item Requires imputation or special handling
+    \end{itemize}
+    \item \textbf{The distance metric should be chosen carefully}
+    \begin{itemize}
+        \item Different metrics can give very different results 
+        \item Must consider feature correlations and scales 
+        \item May need domain knowledge
+    \end{itemize}
+    \item \textbf{Sensitive to class outliers} (e.g., mislabeled training instances)
+    \begin{itemize}
+        \item Outliers can create incorrect local decision boundaries
+        \item No mechanism to detect or remove bad training examples 
+    \end{itemize}
+    \item \textbf{Sensitive to many irrelevant attributes} (which influence the distance)
+    \begin{itemize}
+        \item All features contribute equally to distance
+        \item Irrelevant features add noise 
+        \item Feature selection is crucial
+    \end{itemize}
+    \item \textbf{Computationally expensive}:
+    \begin{itemize}
+        \item \textbf{Poor scalability}: For each new example, we have to perform as many comparisons as there are labeled data 
+        \item \textbf{It is necessary to store all data points}: Therefore, the method is more appropriate when the number of samples \( N \) is low 
+        \item Memory requirements grow linearly with dataset size 
+        \item Prediction time is \( O(Nd) \) where \( N \) is training size, \( d \) is dimensionality 
+    \end{itemize}
+\end{itemize}
+\begin{tcolorbox}[
+    colback=green!15!white,
+    colframe=green!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Scalability issue}\\[0.6em]
+    \( k \)-NN does not scale well to large datasets. For a dataset with millions of samples, making 
+    a single prediction requires computing distances to all training points, which becomes prohibitively
+    expensive
+\end{tcolorbox}
+\textit{Note}. The main trade-off with \( k \)-NN is between flexibility and computational cost:
+\begin{itemize}
+    \item \textbf{Pros}: Simple, flexible, no training, handles non-linear boundaries 
+    \item \textbf{Cons}: Slow predictions, high memory, sensitive to irrelevant features and outliers
+\end{itemize}
+\( k \)-NN works best for:
+\begin{itemize}
+    \item Small to medium-sized datasets 
+    \item Problems where decision boundaries are complex and non-linear 
+    \item Applications where training time is critical but prediction time is less important 
+    \item Situations where new data arrives frequently (easy to update)
+\end{itemize}
+\subsection{How k-NN Was Born: PDF Estimation}
+\( k \)-NN has a theoretical foundation in probability density function (PDF) estimation. Let's explore this connection.
+\subsubsection{Going back to PDF Estimation}
+Recall from our earlier discussion of density estimation:
+\begin{itemize}
+    \item Instead of fixing \( V \) as in the case of kernels (Parzen windows), we \textbf{fix the value of} \( k \) and enlarge the radius of the sphere to include \( k \) samples 
+    \item Let's see the \textbf{a-priori probability}:
+    \begin{itemize}
+        \item Given a class \( y_i \), the frequency of occurence of samples \( N_j \) of class \( j \) is generally simply measured in relation to the total number of samples \( N \), i.e.,
+        \[
+          P(y_j) \equiv \hat{p}(y_j) = \frac{N_j}{N}
+        \]
+    \end{itemize}
+\end{itemize}
+\textit{Observation}. This is the empirical estimate of the prior probability: the proportion of training samples that belong to class \( j \).
+\subsubsection{Density Estimation and Nearest-Neighbor Rule}
+Consider 2 classes, \( y_i \) and \( y_j \) containing \( N_i \) and \( N_j \) samples, \( N = N_i + N_j \).
+\vspace{1em}
+\noindent
+\newline
+The local density estimation for \( y_i \) is calculated as (and similarly for \( y_j \)):
+\[
+  \hat{p}(\mathbf{x}\;|\;y_i) = \frac{1}{V} \frac{k_i}{N_i}
+\]
+such that the ratio of \( k_i(k_j) \) points to the total \( N_i (N_j) \) belonging to the class \( y_i (y_j) \) contained 
+in the volume \( V \).
+\begin{definition}{Deriving k-NN from Bayes Rule}{Deriving k-NN from Bayes Rule}
+The Bayes rule says \( p(\mathbf{x}\;|\;y_i)P(y_i) > p(\mathbf{x}\;|\;y_j)P(y_j) \), then 
+\[
+  \hat{p}(\mathbf{x}\;|\;y_i)\hat{p}(y_i) > \hat{p}(\mathbf{x}\;|\;y_j)\hat{p}(y_j)
+\]
+\[
+  \Rightarrow \frac{1}{V} \frac{k_i}{N_i} \cdot \frac{N_i}{N} > \frac{1}{V} \frac{k_j}{N_j} \cdot \frac{N_j}{N}
+\]
+\[
+  \Rightarrow \frac{1}{VN_i} k_iN_i > \frac{1}{VN_j} k_jN_j
+\]
+\[
+  \Rightarrow k_i > k_j
+\]
+\end{definition}
+\begin{tcolorbox}[
+    colback=magenta!15!white,
+    colframe=magenta!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{The k-NN Rule}\\[0.6em]
+    Classify \( \mathbf{x} \) to class \( y_i \) if \( k_i > k_j \), i.e., if there are more neighbors from class \( i \) than
+    from class \( j \) in the volume \( V \) around \( \mathbf{x} \).
+\end{tcolorbox}
+\textit{Observation}. This derivation shoes that \( k \)-NN is actually implementing a Bayesian decision rule using local density estimates! 
+The key insight is:
+\begin{itemize}
+    \item We estimate \( p(\mathbf{x}\;|\;y_i) \) locally using \( k \) nearest neighbors 
+    \item We estimate \( P(y_i) \) using the proportion of class \( i \) in the training set 
+    \item The Bayes rule simplifies to: choose the class with the most neighbors in the local region 
+\end{itemize}
+\textit{Note}. This theoretical foundation explains why \( k \)-NN works:
+\begin{itemize}
+    \item It's approximating the optimal Bayes clasifier 
+    \item It uses local density information to make decision 
+    \item The quality of the approximation depends on:
+    \begin{itemize}
+        \item Choice of \( k \) (too small = noisy estimates, too large = onversmoothing)
+        \item Density of training data (more data = better estimates)
+        \item Dimensionality (curse of dimensionality affects density estimation)
+    \end{itemize}
+\end{itemize}
+As the number of training samples \( N \to \infty \) and \( k \to \infty \) (but \( k/N \to 0 \)), the \( k \)-NN
+classifier approaches the optimal Bayes classifier.
 \end{document}
