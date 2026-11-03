@@ -2880,7 +2880,277 @@ Given two points \textbf{p} = \( (p_1, p_2, \ldots, p_n) \) and \textbf{q} = \( 
     \item \textbf{3-NN}: Larger circle, includes 3 closest neighbors
 \end{itemize}
 The decision boundary depends on which class dominates within the circle.
-\section{Weighted k-NN}
+\subsection{Weighted k-NN}
 \subsubsection{The problem with Equal Weights}
 All the closest neighbors have the same weights, meaning that they are equally important to make a decision.
+\begin{tcolorbox}[
+    colback=magenta!15!white,
+    colframe=magenta!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Issue}: Therefore, the algorithm is very senstivie of the number of \( k \).
+\end{tcolorbox}
+\subsubsection{Solution: Distance-Based Weighting}
+This can be reduced by \textbf{weighing the contribution of neighbors based on distance} \( w = 1/d(\mathbf{x}^*,s_i) \),
+such that the \textbf{closet} neighbor would have more \textbf{importance}.
+\begin{definition}{Weighted k-NN}{Weighted k-NN}
+Instead of simple majority voting, each neighbor contributes with weight:
+\[
+  w_i = \frac{1}{d(\mathbf{x}^*,s_i)}
+\]
+The class with the highest weighted sum is chosen:
+\[
+  \text{class}(\mathbf{x}^*) = \arg\max_{c} \sum_{i \in U(\mathbf{x}^*)} w_i \cdot \nVdash (y_i = c)
+\]
+where \( \nVdash (y_i = c) \) is 1 if neighbor \( i \) belongs to class \( c \), and 0 otherwise.
+\end{definition}
+\begin{example}{Weighted vs. Unweighted k-NN}{Weighted vs. Unweighted k-NN}
+Consider \( k = 3 \) with neighbors at distance 1,2 and 5:
+\begin{itemize}
+    \item \textbf{Unweighted}: Each neighbor gets weight 1 
+    \item \textbf{Wighted}: Neighbors get weights \( w_1 = 1/1 = 1.0 \), \( w_2 = 1/2 = 0.5 \), \( w_3 = 1/5 = 0.2 \).
+\end{itemize}
+The closest neighbor has much more influence in the wighted version.
+\end{example}
+\subsection{Importance of Feature Scaling (Revisited)}
+\subsubsection{Why k is Sensitive}
+The choice of \( k \) is important because:
+\begin{itemize}
+    \item if \( k \) is too \textbf{small}, the approach is \textbf{sensitive to noise}
+    \item if \( k \) is too \textbf{large}, the neighborhood can include examples belongin to \textbf{other classes}
+\end{itemize}
+\begin{tcolorbox}[
+    colback=yellow!15!white,
+    colframe=yellow!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Critical Requirement}\\[0.6em]
+    To operate correctly the attributes must have the \textbf{same value scale} and must therefore 
+    be \textbf{normalized} in the preprocessing phase.
+\end{tcolorbox}
+\textit{Observation}. Without normalization, features with larger ranges will dominate the distance calculation, 
+making features with smaller ranges essentially irrelevant to the classification decision.
+\subsection{Mahalanobis Distance}
+\subsubsection{When Euclidean Distance is not Enought}
+Normalizing the scale may not be sufficient when there are different data distributions.
+\begin{tcolorbox}[
+    colback=magenta!15!white,
+    colframe=magenta!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    In such cases instead of using Euclidean distance, one can also try using \textbf{Mahalanobis distance}
+\end{tcolorbox}
+\subsubsection{Definition}
+The Mahalanobis distance is a measure of the distance between \textbf{a point and a distribution}.
+It's a generalized form of the Euclidean distance that accounts for \textbf{correlations between variables} and 
+\textbf{different variances} along different axes.
+\begin{definition}{Mahalanobis Distance formula}{Mahalanobis Distance formula}
+\[
+  D = \sqrt{(\mathbf{x} - \mu)^{T\Sigma^{-1}}(\mathbf{x} - \mu)}
+\]
+where:
+\begin{itemize}
+    \item \( \mathbf{x} \) is the \( n \)-dimensional vector representing the point's coordinates 
+    \item \( \mu \) is the \( n \)-dimensional vector representing the mean of the distribution 
+    \item \( \Sigma \) is the \( n \times n \) covariance matrix of the distribution 
+    \item \( \Sigma^{-1} \) is the inverse of the covariance matrix 
+\end{itemize}
+\end{definition}
+\textit{Observation}. When the covariance matrix is the identity matrix (i.e., features are uncorrelated and have 
+unit variance), the Mahalanobis distance reduces to the Euclidean distance.
+\subsubsection{When to Use Mahalanobis distance}
+\begin{itemize}
+    \item \textbf{Correlated Features}: Changes in one feature are associated with changes in antoher.
+    \item \textbf{Unequal Variances}: MD normalizes the distance based on the variances of the features, 
+        preventing features with larger variances from dominating the distance calculation 
+    \item \textbf{Outlier Detection}: Outliers often have a large MD from the rest of the data points, 
+        especially if they deviate from the normal covariance pattern.
+    \item \textbf{In high dimensional spaces}: ED can be problematic (\textit{curse of dimensionality}). Incorporating 
+        information about the covariance structure, can mitigate this issue to some extent.
+\end{itemize}
+\begin{example}{Mahalanobis Distance in Practice}{Mahalanobis Distance in Practice}
+Consider a 2D dataset where:
+\begin{itemize}
+    \item Feature 1 has variance 1 
+    \item Feature 2 has variance 100
+    \begin{center}
+        \begin{tabular}{ |c|c| }
+            \hline 
+            \textbf{Euclidean Distance} & \textbf{Mahalanobis Distance} \\
+            \hline 
+            Assumes features are independent & Accounts for correlations between features \\
+            \hline 
+            Treats all directions equally & Accounts for different variances along different axes \\
+            \hline 
+            Sensitive to feature scaling & Automatically accounts for different scales \\
+            \hline
+            Simple and fast to compute & More computationally expensive (requires covariance matrix) \\
+            \hline 
+            Works well when features are uncorrelated and have similar variance & Better when features are correlated or have different variances \\
+            \hline 
+            Distance from point to point & Distance from point distribution \\
+            \hline
+        \end{tabular}
+    \end{center}
+    \item Features are positively correlated
+\end{itemize}
+\end{example}
+\textbf{Euclidean distance} would be dominated by Feature 2 due to its large variance.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Mahalanobis distance} would:
+\begin{itemize}
+    \item Normalize for the different variances 
+    \item Account for the correlation structure 
+    \item Provide a more meaningful distance measure
+\end{itemize}
+\textit{Note}. Computing Mahalanobis distance requires estimating the covariance matrix \( \Sigma \), which can be challenging when:
+\begin{itemize}
+    \item The number of features is large relative to the number of samples 
+    \item The covariance matrix is singular (not invertible)
+    \item There is insufficient data to reliably estimate correlations
+\end{itemize}
+In such cases, regularization techniques or dimensionality reduction may be needed before applying Mahalanobis distance.
+\subsubsection{Visual Example: Euclidean vs. Mahalanobis Distance}
+\begin{example}{Comparing Distance Metrics}{Comparing Distance Metrics}
+Consider a datsaset centroid at \( (\overline{x}, \overline{y}) = (3.1,3.0) \) and two data points:
+\begin{itemize}
+    \item \textbf{Data point 1}: (5,5) (yellow/orange point)
+    \item \textbf{Data point 2}: (5,1) (blue point)
+\end{itemize}
+\textbf{Using Euclidean distance}:
+\vspace{1em}
+\noindent
+\newline
+Distance from centroid to Data point 1:
+\[
+  d_1 = \sqrt{(5 - 3.1)^2 + (5 - 3.0)^2} = \sqrt{1.9^2 + 2.0^2} = \sqrt{3.61 + 4.00} = 2.76
+\]
+Distance from centroid to Data point 2:
+\[
+  d_2 = \sqrt{(5 - 3.1)^2 + (1 - 3.0)^2} = \sqrt{1.9^2 + (-2.0)^2} = \sqrt{3.61 + 4.00} = 2.76
+\]
+\end{example}
+\begin{tcolorbox}[
+    colback=magenta!15!white,
+    colframe=magenta!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Based on Euclidean distance, both points have the same distance to the centroid!}
+\end{tcolorbox}
+\textit{Observation.} However, looking at the scatter plot, we can see that the green points (the cluster)
+are elongated along a diagonal direction. Data point 1 lies along this diagonal trend, while Data point 2 
+deviates significantly from it.
+\vspace{1em}
+\noindent
+\newline
+Euclidean distance treats all directions equally and doesn't account for the correlation structure of the data.
+\begin{example}{Using Mahalanobis Distance}{Using Mahalanobis Distance}
+When we apply Mahalanobis distance to the same scenario:
+\begin{itemize}
+    \item \( \mathbf{MD}_1 = \mathbf{2.26} \) (Data point 1 to centroid)
+    \item \( \mathbf{MD}_2 = \mathbf{6.45} \) (Data point 2 to centroid)
+\end{itemize}
+\end{example}
+\begin{tcolorbox}[
+    colback=orange!15!white,
+    colframe=orange!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Why is \( \textbf{MD}_1 \) so different from \( \textbf{MD}_2 \)?}\\[0.6em]
+    Because MD takes into account the \textbf{correlation} in the data
+\end{tcolorbox}
+\textbf{Interpretation}:
+\begin{itemize}
+    \item Data point 1 follows the natural diagonal trend of the cluster \( \rightarrow \) smaller Mahalanobis distance 
+    \item Data point 2 deviates from the correlation pattern \( \rightarrow \) larger Mahalanobis distance
+\end{itemize}
+\textit{Note}. This example illustrates why Mahalnobis distance is superior when features are correlated:
+\begin{itemize}
+    \item \textbf{Euclidean distance}: Treats both points as equally distant (2.76)
+    \item \textbf{Mahalanobis distance}: Correctly identifies that point 2 is much farther from the distribution (6.45 vs 2.26)
+\end{itemize}
+Mahalanobis distance accounts for the sahep and orientation of the data distribution, not just row coordinate distances.
+\subsection{How to select k in k-NN}
+Choosing the right value of \( k \) is crucial for \( k \)-NN performance. Here are practical strategies:
+\subsubsection{Common Heuristics}
+\begin{itemize}
+    \item \textbf{Common values}: Often 3, 5, 7 
+    \item \textbf{Choose an odd number} to avoid ties (\textit{undetermined cases})
+    \item \textbf{Use your training and validation data} to decide \( k \):
+    \begin{itemize}
+        \item Change \( k \) from \( k = 1 \) until the validation performance decreases
+        \item Pay attention not to \textbf{underfit} and \textbf{overfit} the data 
+        \item Finilize the decision of \( k \) and use the same \( k \) to classify the test data
+    \end{itemize}
+    \item \textbf{A typical choice} is \( k \approx \sqrt{N} \) where \( N \) is the number of training samples
+\end{itemize}
+\begin{tcolorbox}[
+    colback=yellow!15!white,
+    colframe=yellow!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{Validation-Based Selection}\\[0.6em]
+    The most reliable method is to use cross-validation:
+    \begin{enumerate}
+        \item Try different values of \( k \) (e.g., \( 1, 3, 5, 7, 9, 11, \ldots \))
+        \item Evaluate performance on validation set for each \( k \)   
+        \item Select the \( k \) that gives the best validation performance 
+        \item Use this optimal \( k \) on the test set
+    \end{enumerate}
+\end{tcolorbox}
+\begin{center}
+    \begin{figure}[H]
+        \includegraphics[width=0.8\textwidth]{images/visualUnderstanding.png}
+    \end{figure}
+\end{center}
+\begin{tcolorbox}[
+    colback=blue!15!white,
+    colframe=blue!15!white,
+    boxrule=0pt,
+    arc=0pt,
+    halign=center
+]
+    \textbf{What is the role of} \( k \)? \textbf{How does it relate to overfitting and underfitting?}
+\end{tcolorbox}
+\begin{itemize}
+    \item \( k = 1 \) (left): Very complex, kagged decision boundary 
+    \begin{itemize}
+        \item High variance, low bias 
+        \item \textbf{Overfitting}: Captures noise in the training data 
+        \item Sensitive to outliers
+    \end{itemize}
+    \item \( k = 3 \) (middle): Moderate complexity, smoother boundaries 
+    \begin{itemize}
+        \item Balanced bias-variance trade-off 
+        \item \textbf{Underfitting}: May miss important patterns 
+        \item Too much smoothing
+    \end{itemize}
+\end{itemize}
+\textit{Observation}: As \( k \) increases:
+\begin{itemize}
+    \item Decision boundaries become smoother and simpler 
+    \item The model becomes less sensitive to individual data point 
+    \item Risk shifts from overfitting (small \( k \)) to underfitting (large \( k \))
+\end{itemize}
+\subsubsection{Handling Ties (Undetermined Cases)}
+If there are undetermined cases (ties), there are some alternatives:
+\begin{enumerate}
+    \item \textbf{Arbitrary choice}: Randomly select one of the tied classes 
+    \item \textbf{Nearest average sample}: Assign \( \mathbf{x} \) to the class (among those 'tie') that has the nearest average sample (calculated between the \( k_i \) sample)
+    \item \textbf{Least distance}: Assign \( \mathbf{x} \) to the class that has the \( k_i \) samples with least distance from it
+\end{enumerate}
 \end{document}
