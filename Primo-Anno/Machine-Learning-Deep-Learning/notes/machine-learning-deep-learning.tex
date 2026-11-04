@@ -3351,4 +3351,376 @@ The key insight is:
 \end{itemize}
 As the number of training samples \( N \to \infty \) and \( k \to \infty \) (but \( k/N \to 0 \)), the \( k \)-NN
 classifier approaches the optimal Bayes classifier.
+
+\part{Decision Trees and Ensemble Methods}
+!!! FARE CAPITOLO DECISION TREES 
+
+
+
+
+\part{Linear Discriminant Functions and Classiification Methods}
+\section{Linear Discriminant functions}
+The objective of this lecture is to present methods for learning \textbf{linear discriminant} functions 
+of the form:
+\[
+  g(x) = w^Tx + w_0 \Leftrightarrow \begin{cases}
+    & g(x) > 0 \quad x \in \omega_1 \\
+    & g(x) < 0 \quad x \in \omega_2 \\
+  \end{cases}
+\]
+where:
+\begin{itemize}
+    \item \( \omega \) is the \textbf{weight vector}
+    \item \( \omega_0 \) is the \textbf{threshold weight} or \textbf{bias}
+    \item \( \mathbf{x} = [x_1, \ldots,x_n], \mathbf{w} = [w_1, \ldots, w_n] \)
+\end{itemize}
+For a problem with 2 classes, the goal is to create a \textbf{linear function} g(x) that separates the 
+examples belonging to the two classes.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Note}: \( g(x) = 0 \Rightarrow \) either class
+\begin{center}
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.8\textwidth]{images/linearFunction.png}
+    \end{figure}
+\end{center}
+\subsection{Larning the Linear Discriminant Function}
+Suppose we have a set of \( m \) samples \( \mathbf{x}_1, \ldots, \mathbf{x}_m \) some tagged \( \omega_1 \) and others 
+tagged \( \omega_2 \).
+\vspace{1em}
+\noindent
+\newline
+We want to use these samples to determine the weights \( \mathbf{w} \) and \( \omega_0 \) of the linear discriminating function.
+\vspace{1em}
+\noindent
+\newline
+Suppose also that there is a solution for which the probability of error is very low.
+Thus, a resonable approach is to look for a weight vector that classifies all of the samples correctly or that the 
+probability of making a mistake is zero.
+\vspace{1em}
+\noindent
+\newline
+If such a \textbf{weight vector} exists, the samples are said to be \textbf{linear separable}
+\begin{center}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/weightVector.png}
+    \end{figure}
+\end{center}
+\subsection{Linear Separability}
+Data are \textbf{linearly separable} if there exists a linear boundary (hyperplane) that perfectly 
+separates the two classes.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Examples}:
+\begin{itemize}
+    \item \textbf{Linearly separable}: Classes that can be separated by a straight line (in 2D) or hyperplane (in higher dimensione)
+    \item \textbf{NOT Linearly separable}: Classes that cannot be separated by any linear boundary
+\end{itemize}
+\begin{center}
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.8\textwidth]{images/linearSep.png}
+    \end{figure}
+\end{center}
+\subsection{Properties of Linear Discriminant Functions}
+Linear Discriminant functions are:
+\begin{itemize}
+    \item \textbf{Optimal for Gaussian distributions with equal covariance}: When the data follows Gaussian distributions with equal covariance matrices, the optimal decision boundary is linear 
+    \item \textbf{May not be oprimal for other data distributions}, but they are very simple to use 
+    \item \textbf{Knowledge of class densities is not required} when using linear discriminant functions 
+    \begin{itemize}
+        \item Therefore, we can say that this is a \textbf{non-parametric approach}
+    \end{itemize}
+\end{itemize}
+\textbf{Note}. With unequal covariance, the optimal decision boundary is quadratic rather than linear.
+\begin{center}
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.8\textwidth]{images/decisionBoundary.png}
+    \end{figure}
+\end{center}
+\section{Linear Classifiers}
+Every linear discriminant functiond defines a linear classifier 
+\vspace{1em}
+\noindent
+\newline
+But not every linear classifier is necessarily described in the form of a "discriminant function" (although in practice, 
+the terms are often used interchangeably)
+\subsection{Decision Boundary}
+The linear discriminant function is defined as:
+\[
+  g(x) = w^Tx + w_0 \Leftrightarrow \begin{cases}
+    & g(x) > 0 \quad x \in \omega_1 \\
+    & g(x) < 0 \quad x \in \omega_2 \\
+  \end{cases}
+\]
+The \textbf{decsion boundary} is defined by \( g(x) = w^T x + w_0 = 0 \):
+\begin{itemize}
+    \item In 2D, is a \textbf{line}
+    \item In 3D, is a \textbf{plane}
+    \item In nD, is a \textbf{hyperplane}
+\end{itemize}
+\begin{center}
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.7\textwidth]{images/examples.png}
+    \end{figure}
+\end{center}
+\subsection{The Role of Weights}
+The training data is used to learn \( \mathbf{w} \).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Important}. Onlu \( \mathbf{w} \) is needed to classify the new data point.
+\vspace{1em}
+\noindent
+\newline
+The equation \( \mathbf{w}^T \mathbf{x}_i = 0 \) defines a hyperplane passing through the origin of the feature space, haveing \( \mathbf{w} \) as a normal vector.
+\begin{itemize}
+    \item \( \mathbf{w} \) determines the orientation of the decsion boundary 
+    \item \( w_0 \) determines the location of the decision surface
+\end{itemize}
+\begin{center}
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.8\textwidth]{images/hyperplane.png}
+    \end{figure}
+\end{center}
+\subsection{Which Hyperplanes?}
+If the solution vector exists (if there is a hyperplane) then:
+\begin{itemize}
+    \item Which hyperpplane a linear classifier choose when the data is linearly separable?
+    \item The solutoin vector is not unique!
+\end{itemize}
+\begin{center}
+    \begin{figure}[H]
+        \centering 
+        \includegraphics[width=0.8\textwidth]{images/hyperplanes2.png}
+    \end{figure}
+\end{center}
+\subsection{Optimization Approaches}
+There are different approaches to find the optimal weight vector:
+\subsubsection{Unit-Length Weight Vector}
+One possibility is to seek a \textbf{unit-length weight vector} that maximizes the minimum distance 
+from the samples to the separating plane.
+\subsubsection{Minimum-Length Weight Vector}
+Another possibility is to seek the \textbf{minimum-length weight vecotor} satisfying:
+\[
+  \mathbf{w}^T \mathbf{x}_i \geq b, \quad \forall i
+\]
+where \( b \) is a positive constant called the \textbf{margin}.
+\vspace{1em}
+\noindent
+\newline
+These techniques attempt to find a solution vector closer to the "middle" of the solution region:
+\begin{itemize}
+    \item In this way, the resulting solution is more likely to classify new test samples correctly
+\end{itemize}
+\subsection{The Margin}
+\begin{definition}{Margin}{Margin}
+The \textbf{margin} of a classifier is the distance to the closest points of either class.
+\vspace{1em}
+\noindent
+\newline
+A larger margin generally leads to better generalization perfromance on unseen data.
+\end{definition}
+\section{Multi-Class Problem}
+In case of a multi-class (C-class) problem:
+\begin{definition}{Mulit-Class Classification Strategies}{Mulit-Class Classification Strategies}
+\textbf{One-vs-Rest Classifier}
+\vspace{1em}
+\noindent
+\newline
+C-1 classifier \( g_i(x) \) are constructed, one for each class \( C_i \) versus non-\( C_i \).
+\vspace{1em}
+\noindent
+\newline
+\textbf{One-vs-One Classifiers}
+\vspace{1em}
+\noindent
+\newline
+\( C(C - 1)/2 \) binary classifiers (one-vs-one), and then classify a test sample following a \textbf{majority voting}
+\vspace{1em}
+\noindent
+\newline
+\textbf{Ambiguity Regions}
+\vspace{1em}
+\noindent
+\newline
+Both approaches lead to areas of \textbf{ambiguity}.
+\end{definition}
+\begin{center}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/multiClass.png}
+    \end{figure}
+\end{center}
+\section{LDF: Augmented Feature Vector}
+LDF: \( g(x) = w^T x + w_0 \)   
+\begin{definition}{Augmented Feature Vector Transformation}{Augmented Feature Vector Transformation}
+We can write it as:
+\[
+  g(\mathbf{x}) = [w_0 \quad w^T] \binom{1}{\mathbf{x}} = \mathbf{a}^T \mathbf{y} = g(\mathbf{y}) 
+\]
+where:
+\begin{itemize}
+    \item \( \mathbf{a} \) is the \textbf{new weight vector}
+    \item \( \mathbf{y} \) is the \textbf{new feature vector} (called the \textbf{augmented feature vector})
+\end{itemize}
+We added a dummy dimension to get a completely equivalent new \textbf{homogeneous} problem.
+\newline
+\textbf{Old problem}: \( g(\mathbf{x}) = w^t\mathbf{x} + w_0 \), with \( \mathbf{x} = [x_1, \ldots, x_d] \)   
+\newline
+\textbf{New problem}: \( g(\mathbf{y}) = \mathbf{a}^T \mathbf{y} \) with \( \mathbf{y} = [1, x_1, \ldots, x_d] \) 
+\end{definition}
+\textbf{Feature augmenting is done only for simpler notation}.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Note}. Throughout these lecture notes we replace \( \mathbf{a} \) with \( \mathbf{w} \) for simplicity, since they both refer to weights.
+\section{LDF: Training Error}
+For the rest of the lecture, assumes we have 2 classes.
+\vspace{1em}
+\noindent
+\newline
+We will use samples (training data) to determine weights \( \mathbf{a} \) (or indicated with \( \mathbf{w} \)) in the discriminant function \( g(\mathbf{y}) = \mathbf{a}^T \mathbf{y} \).
+\subsection{Criterion for Determining Weights}
+What should be our criterion for determining \( \mathbf{a} \)?
+
+!!DA FARE DA 102 A 106
+
+\section{Perceptron}
+Let's learn a \textbf{binary classifier} with linear discriminant function.
+\begin{theorem}{Important note}{Important note}
+From this point to the rest, \( \mathbf{w} \) and \( \mathbf{x} \) are used for 
+\textbf{augmented feature vector} for semplicity, instead of using \( \mathbf{a} \) and \( \mathbf{y} \).
+\end{theorem}
+To do so, we need to choose a \( J(\mathbf{w}) \) such taht the gradinet descent can solve it, in this way we 
+can find the miimum of \( J(\mathbf{w}) \).
+\subsection{Perceptron Criterion Function}
+\begin{definition}{Perceptron Criterion function}{Perceptron Criterion function}
+A good choiche is the \textbf{Perceptron criterion function}:
+\[
+  J(\mathbf{w}) = - \sum_{i \in X} \mathbf{w}^T \mathbf{x}_i
+\]
+where \( X \) is a set of \textbf{samples misclassified} by \( \mathbf{w} \).
+\newline
+\textbf{Key property}: \( J(\mathbf{w}) \) is non-negative since \( \mathbf{w}^T \mathbf{x}_i < 0 \) for all misclassified samples.
+\end{definition}
+\textbf{Important}: Do not forget to "normalize" the training set by replacing all examples from class \( \omega_2 \) with their negatives.
+\subsection{Convergence Limitation}
+We want to use gradient descent to solve the \( J(\mathbf{w}) \) so that it can converge, however, for such data (not linearly separable), we cannot converge.
+\begin{center}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/perceptron.png}
+    \end{figure}
+\end{center}
+\subsection{Perceptron Gradient Descent}
+To find the minimum of \( J(\mathbf{x}) \), we use gradient descent, which is defined by:
+\begin{itemize}
+    \item \( i \)-th component of the gradient of \( J(\mathbf{x}) \) is equal to \( \partial J/\partial w_i \), thus:
+    \[
+      J(\mathbf{w}) = - \sum_{i \in X} \mathbf{w}^T \mathbf{x}_i \quad \Rightarrow \quad \nabla J = - \sum_{i \in X} \mathbf{x}_i
+    \]
+\end{itemize}
+Note that this does not depend on \( \mathbf{w} \).
+\begin{theorem}{Perceptron Rule}{Perceptron Rule}
+The update rule becomes:
+\[
+  \mathbf{w}_{k + 1} = \mathbf{w}_k + p_k \cdot \sum_{i \in X} \mathbf{x}_i, \quad \text{ when } p_k = \frac{1}{k}
+\]
+\end{theorem}
+\textbf{Historical note}: Perceptron is the first \textbf{Neural Network}, which was then evolved to more complex 
+versions such as \textbf{Multilayer Perceptron}.
+\subsection{Perceptron Example (Non-Separable Scenario)}
+Suppose we have 2 features and 5 samples for 2 classes:
+\begin{itemize}
+    \item Class 1: [2,1], [4,3], [3,5]
+    \item Class 2: [1,3], [5,6]
+\end{itemize}
+These samples are not separable with a line, stille we wil try to get approximate sepration by a line.
+\vspace{1em}
+\noindent
+\newline
+Obtain the augmented features and normalize thte data, by doing so we obtain:
+\[
+\begin{bmatrix} 1 \\ 2 \\ 1 \end{bmatrix},
+\begin{bmatrix} 1 \\ 4 \\ 3 \end{bmatrix},
+\begin{bmatrix} 1 \\ 3 \\ 5 \end{bmatrix},
+\begin{bmatrix} -1 \\ -1 \\ -3 \end{bmatrix},
+\begin{bmatrix} -1 \\ -5 \\ -6 \end{bmatrix}
+\]
+\begin{center}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/perceptronModel.png}
+    \end{figure}
+\end{center}
+\subsection{Applying the Perceptron Method}
+Let's apply the perceptron method:
+\begin{itemize}
+    \item Initial weights \( [1 \quad 1 \quad 1] \)    
+    \item This is a line \( x_1 + x_2 + 1 = 0 \)      
+    \item Fixed learning rate \( p(k) = 1 \)
+\end{itemize}
+\textbf{Iteration 1}:
+\begin{align*}
+    & \mathbf{w}_{1}^{T} \mathbf{x}_1 \Rightarrow [1\,1\,1][1\,2\,1]^T > 0 \\
+    & \mathbf{w}_{1}^{T} \mathbf{x}_2 \Rightarrow [1\,1\,1][1\,4\,3]^T > 0 \\
+    & \mathbf{w}_{1}^{T} \mathbf{x}_3 \Rightarrow [1\,1\,1][1\,3\,5]^T > 0 \\
+\end{align*}
+\begin{align*}
+    & \mathbf{w}_{1}^{T} \mathbf{x}_4 \Rightarrow [1\,1\,1][-1\,-1\,-3]^T = -5 < 0 \\
+    & \text{Update w!!! } \mathbf{w}_2 = [1\,1\,1] + [-1\,-1\,-3] = [0\,0\,2] \\
+\end{align*}
+\textbf{Continue iteration}:
+\[
+    \mathbf{w}_{2}^{T} \mathbf{x}_5 \Rightarrow [0\,0\,-2][-1\,-5\,-6]^T > 0
+\]
+\textbf{Iteration 2}:
+\[
+  \mathbf{w}_{2}^{T} \mathbf{x}_1 \Rightarrow [0\,0\,-2][1\,2\,1]^T < 0
+\]
+Update w again!!!
+\[
+  \mathbf{w}_3 = [0\,0\,-2] + [1\,2\,1] = [1\,2\,-1]
+\]
+\[
+  \ldots
+\]
+\[
+  \ldots
+\]
+\begin{definition}{Non-Convergence Result}{Non-Convergence Result}
+We can continue this forever since there is no solution vector \( \mathbf{w} \) satisfying the perceptron rule.
+\newline 
+The data is \textbf{not linearly separable}, so the perceptron algorithm will not converge to a solution.
+\end{definition}
+\subsection{Need for Relaxation}
+We want to learn something like this, but our Perceptron constraints does not allow!
+\vspace{1em}
+\noindent
+\newline 
+\textbf{Solution}: Let's apply some \textbf{relaxation}.
+\subsection{Perceptron Summary}
+\begin{definition}{Perceptron Convergence Properties}{Perceptron Convergence Properties}
+\begin{itemize}
+    \item If classes are \textbf{linearaly separable}, the perceptron rule is \textbf{guaranteed to converge} to a valid solution 
+    \begin{itemize}
+        \item Some versions of the perceptron rule use a \textbf{variable learning rate} \( p(k) \); for now, we fixed it as \( \frac{1}{k} \).
+    \end{itemize}
+    \item However, if the two classes are \textbf{not linearly separable}, the perceptron rule will \textbf{not converge}
+    \begin{itemize}
+        \item Since no weight vector \( \mathbf{w} \) can correctly classify every sample in a non-serparable 
+            dataset, the corrections in the perceptron rule will never cease 
+        \item One ad-hoc solution to this problem is to enforce convergence by using variable learning rates \( p(k) \) taht approach zero as \( k \to \infty \)   
+        \item We will see once we introduce NN architectures
+    \end{itemize}
+\end{itemize}
+\end{definition}
 \end{document}
