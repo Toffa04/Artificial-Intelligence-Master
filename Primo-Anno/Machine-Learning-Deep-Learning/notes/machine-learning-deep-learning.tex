@@ -3455,6 +3455,186 @@ tree with routing functions:
 \]
 These routing functions partition the 2D space into axis-aligned rectangular regions, with each region corresponding 
 to a lead node that predicts a specific class.
+\section{Learning Decision Tree}
+\subsection{The learning problem}
+Given a training set \( \mathcal{D} = \left\{(\mathbf{x}_1,y_1),\ldots,(\mathbf{x}_n,y_n)\right\} \), we want to find a 
+tree \( t^* \in \mathcal{T} \) from the set of all possible decision trees \( \mathcal{T} \) that best fits the data.
+\begin{theorem}{The challenge}{The challenge}
+This optimization problem has many solutions and cam be \textbf{NP-hard} in general. Thus, we need to impose constraints, such as:
+\begin{itemize}
+    \item Finding the most compact tree 
+    \item Using greedy algorithms that find locally optimal splits 
+    \item Limiting tree depth or complexity
+\end{itemize}
+\end{theorem}
+\subsection{Tree Learning Framework}
+To learn a decision tree, we need to specify:
+\begin{enumerate}
+    \item \( \mathcal{H}_{\textbf{leaf}} \) set of leaf prediction functions (e.g., constant functions)
+    \item \( \Phi \): A set of possible splitting functions \( \phi \subseteq \left\{L,R\right\}^{\mathcal{X}} \)    
+    \item \textbf{Tree-growing strategy}: A recursive algorithm that partitions the training set and decides whether to grow leaves or non-terminal nodes
+\end{enumerate}
+\textbf{Two popular Algorithms}:
+\begin{itemize}
+    \item \textbf{ID3}: (Iterative Dichotomiser 3): Developed by Ross Quinlan
+    \item \textbf{CART}(Classification and Regression Tree): Developed by Breiman et al.
+\end{itemize}
+\subsection{Tree Growing Strategy}
+The tree-growing process works recursively:
+\begin{enumerate}
+    \item Start with all training examples at the root 
+    \item Find the best splitting function \( \phi \in \Phi \) that partitions the data
+    \item For each resulting subset:
+    \begin{itemize}
+        \item If the subset is pure or meets stopping criteria, create a leaf node 
+        \item Otherwise, recursively apply the splitting process
+    \end{itemize}
+\end{enumerate}
+\section{ID3 and CART Algorithms}
+\subsection{Example: Playing Tennis Dataset}
+Consider a classi example with 14 training samples and 4 attributes:
+\begin{center}
+    \begin{tabular}{ |c|c|c|c|c|c| }
+        \hline 
+        \textbf{Day} & \textbf{Outlook} & \textbf{Temperature} & \textbf{Humidity} & \textbf{Wind} & \textbf{PlayTennis} \\
+        \hline
+        D1 & Sunny & Hot & High & Weak & No \\
+        \hline
+        D2 & Sunny & Hot & High & Strong & No \\
+        \hline 
+        D3 & Overcast & Hot & High & Weak & Yes \\
+        \hline 
+        D4 & Rain & Mild & High & Weak & Yes \\
+        \hline 
+        D5 & Rain & Cool & Normal & Weak & Yes \\
+        \hline 
+        D6 & Rain & Cool & Normal & Strong & No \\
+        \hline
+        D7 & Overcast & Cool & Normal & Strong & Yes \\ 
+        \hline
+        D8 & Sunny & Mild & High & Weak & No \\
+        \hline
+        D9 & Sunny & Cool & Normal & Weak & Yes \\
+        \hline 
+        D10 & Rain & Mild & Normal & Weak & Yes \\
+        \hline 
+        D11 & Sunny & Mild & Normal & Strong & Yes \\ 
+        \hline 
+        D12 & Overcast & Mild & High & Strong & Yes \\
+        \hline 
+        D13 & Overcast & Hot & Normal & Weak & Yes \\
+        \hline 
+        D14 & Rain & Mild & High & Strong & No \\
+        \hline 
+    \end{tabular}
+\end{center}
+\begin{itemize}
+    \item 14 training samples 
+    \item 4 attributes (features) 
+    \item 9 samples with class "Yes"
+    \item 5 samples with class "No"
+\end{itemize}
+\subsection{Choosing the Best Attribute}
+The fundamental question in building a decision tree is: \textbf{How do we pick the best attribute to split on?}
+\vspace{1em}
+\noindent 
+\newline 
+Consider two possible splits on the root node:
+\vspace{1em}
+\noindent 
+\newline 
+\textbf{Split 1: Outlook attribute}
+\begin{itemize}
+    \item Sunny: 2 Yes / 3 No
+    \item Overcast: 4 Yes / 0 No (pure!)
+    \item Rain: 3 Yes / 2 No
+\end{itemize}
+\textbf{Split 2: Wind attribute}
+\begin{itemize}
+    \item Weak: 6 Yes / 2 No 
+    \item Strong: 3 Yes / 3 No
+\end{itemize}
+\textbf{Which split is better?}
+\vspace{1em}
+\noindent 
+\newline 
+The \textbf{Outlook} split is better because:
+\begin{itemize}
+    \item It produces one pure subset (Overcast: 4 Yes / 0 No)
+    \item Pure subsets mean we are completely certain about the classification 
+    \item The Weak wind subset (6 Yes / 2 No) is better that Strong (3 Yes / 3 No), but neigher is pure
+\end{itemize}
+\subsection{Measuring Purity}
+We need a formal way to measure the "purity" of a split. Key properties:
+\begin{itemize}
+    \item \textbf{Pure set} (4 Yes / 0 No): Completely certain (100\% confidence)
+    \item \textbf{Impure set} (3 Yes / 3 No): completely uncertain (50\% confidence)
+    \item The measure should be \textbf{symmetric}: 4 Yes / 0 No is as pure as 0 Yes / 4 No
+\end{itemize}
+There are different ways to measure purity, with \textbf{entropy} being the most popular.
+\section{Entropy and Information Gain}
+\subsection{Entropy}
+For binary classification problems with positive and negative classes:
+\begin{itemize}
+    \item \( p(+) \) is the proportion of positives in a subset 
+    \item \( p(-) \) is the proportion of negatives in a subset
+\end{itemize}
+\begin{definition}{Entropy formula}{Entropy formula}
+The entropy of a subset \( S \) is:
+\[
+  H(S) = -p(+)\log_2p(+) - p(-)\log_2p(-)
+\]
+\end{definition}
+\textbf{Important properties}:
+\begin{itemize}
+    \item Entropy measures uncertainty or impurity 
+    \item Higher entropy = more impure = more uncertain 
+    \item Lower entropy = more pure = more certain 
+\end{itemize}
+\subsubsection{Entropy Examples}
+\textbf{Impure subset (3 Yes / 3 No)}:
+\begin{align*}
+    & p(+) = 0.5, \quad p(-) = 0.5 \\
+    & H(s) = -0.5\log_2(0.5) - 0.5\log_2(0.5) \\
+    & & = -0.5 \times (-1) - 0.5 \times (-1) \\
+    & & = 0.5 + 0.5 = 1.0
+\end{align*}
+\textbf{Pure subset (4 Yes / 0 No)}:
+\begin{align*}
+    & p(+) = 1.0, \quad p(-) = 0.0 \\
+    & H(S) = -1.0\log_2(1.0) - 0.0\log_2(0.0) \\
+    & & = -1.0 \times 0 - 0 \\
+    & & = 0.0
+\end{align*}
+\textbf{Interpretation}:
+\begin{itemize}
+    \item Maximum entropy (1.0) for the impure set (50/50 split)
+    \item Minimum entropy (0.0) for the pure set (100\% one class)
+    \item Higher numbers correspond to less pure subsets!
+\end{itemize}
+\subsection{Information Gain}
+We want to have many items in pure sets after splitting. We calculate the \textbf{expected drop in entropy} after each 
+split.
+\begin{definition}{Information Gain Formula}{Information Gain Formula}
+The information gain of attribute \( A \) on set \( S \) is:
+\[
+  \text{Gain}(S,A) = H(S) - \sum_{v\in \text{Values}(A)} \frac{\;|\;S_v\;|\;}{\;|\;S\;|\;} H(S_v)
+\]
+Where:
+\begin{itemize}
+    \item \( H(S) \) is the entropy of the original set 
+    \item Values(\( A \)) are the possible values of attribute \( A \)    
+    \item \( S_v \) is the subset of \( S \) where \( x_A = v \)    
+    \item \( \;|\;S_v\;|\;\diagup \;|\;S\;|\; \) weights each subset by its size
+\end{itemize}
+\end{definition}
+\textbf{Interpretaion}:
+\begin{itemize}
+    \item Information gain is the \textbf{mutual information} between attribute \( A \) and class labels 
+    \item It measures how muhc uncertainty is reduced by knowing attribute \( A \)   
+    \item We want to \textbf{maximize information gain}
+    \item Higher gain = better attribute for splitting
+\end{itemize}
 
 \part{Linear Discriminant Functions and Classiification Methods}
 \section{Linear Discriminant functions}
