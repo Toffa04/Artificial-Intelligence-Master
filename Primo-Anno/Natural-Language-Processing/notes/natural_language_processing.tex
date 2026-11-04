@@ -1,186 +1,134 @@
 \documentclass[a4paper]{article}
 
-\usepackage{import}
+% ---------- Encoding, lingua, font ----------
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
 \usepackage[italian]{babel}
-\usepackage{amsmath, amssymb}
-\usepackage{booktabs,xltabular}
-\usepackage{amsfonts}
-\usepackage{subcaption}
-\usepackage{amsthm}
-\usepackage{cancel}
-\usepackage{mdframed}
-\usepackage{makecell}
-\usepackage{float}
-\usepackage[dvipsnames]{xcolor}
-\usepackage{listings}
-\usepackage{gensymb}
-\usepackage{graphicx}
-\usepackage[table]{xcolor}
-\usepackage{booktabs}
-\usepackage{tabularx}
-% \usepackage{bodeplot}
-\usepackage{tikz}
-\usetikzlibrary{shapes, arrows, automata, petri, decorations.markings, decorations.pathreplacing, positioning, calc, quotes}
-\usepackage{circuitikz}
-% \usepackage[label=corner]{karnaugh-map}
-\graphicspath{{./figures/}}
-
-% Prevent overfull hbox warnings
+\renewcommand{\familydefault}{\sfdefault}
 \emergencystretch=1.5em
+\usepackage{enumitem}   % nel preambolo
 
-% Set default font to sans-serif
-\renewcommand{\familydefault}{\sfdefault} 
-% \usepackage{eulervm}
+% ---------- Colori (UNA sola volta, prima di tikz/tcolorbox) ----------
+\usepackage[dvipsnames,table]{xcolor}
+\definecolor{head}{HTML}{DCE6F2}
+\definecolor{rowgray}{HTML}{F2F2F2}
 
-\usepackage{forest}
-
+% ---------- Matematica ----------
+\usepackage{amsmath, amssymb, amsfonts, amsthm}
 \usepackage{mathtools}
 \DeclarePairedDelimiter\ceil{\lceil}{\rceil}
 \DeclarePairedDelimiter\floor{\lfloor}{\rfloor}
+\usepackage{cancel}
+\usepackage{gensymb}
 
-% \usepackage{ntheorem}
-
+% ---------- Tabelle, figure, utilità ----------
+\usepackage{booktabs, xltabular, tabularx, makecell}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{graphicx}
 \usepackage{import}
 \usepackage{pdfpages}
-% \usepackage{transparent}
-\usepackage{xcolor}
-
-\usepackage{hyperref}
-\hypersetup{
-    colorlinks=false,
-}
-
-% Code blocks
-\definecolor{codegreen}{rgb}{0,0.6,0}
-\definecolor{codegray}{rgb}{0.5,0.5,0.5}
-\definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.95}
-
-\lstdefinestyle{mystyle}{
-	backgroundcolor=\color{backcolour},
-	commentstyle=\color{codegreen},
-	keywordstyle=\color{magenta},
-	numberstyle=\tiny\color{codegray},
-	stringstyle=\color{codepurple},
-	basicstyle=\ttfamily\footnotesize,
-	breakatwhitespace=false,
-	breaklines=true,
-	captionpos=b,
-	keepspaces=true,
-	numbers=left,
-	numbersep=5pt,
-	showspaces=false,
-	showstringspaces=false,
-	showtabs=false,
-	tabsize=2
-}
-
-\definecolor{head}{HTML}{1F3A5F}
-\definecolor{rowgray}{HTML}{EEF2F7}
+\usepackage{xifthen}
+\pdfminorversion=7
+\pdfsuppresswarningpagegroup=1
+\graphicspath{{./figures/}}
 
 \renewcommand{\arraystretch}{1.5}
 \newcolumntype{Y}{>{\raggedright\arraybackslash}X}
 
+% ---------- TikZ / pgfplots ----------
+\usepackage{tikz}
+\usetikzlibrary{shapes, arrows, automata, petri, decorations.markings,
+                decorations.pathreplacing, positioning, calc, quotes}
+\usepackage{circuitikz}
+\usepackage{forest}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.18, width=10cm}
+
+\tikzset{
+    place/.style={circle, thick, draw=black, minimum size=6mm},
+    state/.style={circle, thick, draw=black, fill=white, minimum size=6mm},
+}
+
+% ---------- Palette (solo quella nuova) ----------
+\definecolor{thmcol}{HTML}{2563EB}   % blu     - teoremi
+\definecolor{lemcol}{HTML}{7C3AED}   % viola   - lemmi
+\definecolor{defcol}{HTML}{059669}   % verde   - definizioni
+\definecolor{excol}{HTML}{EA580C}    % arancio - esempi
+\definecolor{remcol}{HTML}{6B7280}   % grigio  - osservazioni
+
+% ---------- Listings (riusa la palette nuova) ----------
+\usepackage{listings}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{remcol!8},
+    commentstyle=\color{defcol},
+    keywordstyle=\color{thmcol},
+    numberstyle=\tiny\color{remcol},
+    stringstyle=\color{lemcol},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false, breaklines=true, captionpos=b,
+    keepspaces=true, numbers=left, numbersep=5pt,
+    showspaces=false, showstringspaces=false, showtabs=false, tabsize=2
+}
 \lstdefinestyle{terminal}{
     backgroundcolor=\color{black},
     basicstyle=\ttfamily\color{green},
-    frame=single,
-    breaklines=true,
-    showstringspaces=false
+    frame=single, breaklines=true, showstringspaces=false
 }
-
 \lstset{style=mystyle}
 
-\usepackage{color}
-\usepackage{import}
-\usepackage{pdfpages}
-% \usepackage{transparent}
-\usepackage{xcolor}
+% ---------- Teoremi, definizioni, esempi (tcolorbox) ----------
+\usepackage[most]{tcolorbox}
+\tcbuselibrary{theorems}
 
-% Example frame
+\tcbset{
+  thmstyle/.style={
+    enhanced, breakable, sharp corners,
+    boxrule=0pt, frame hidden,
+    borderline west={3pt}{0pt}{#1},
+    colback=#1!6,
+    colbacktitle=#1!14, coltitle=#1!60!black,
+    fonttitle=\bfseries,
+    titlerule=0pt,
+    separator sign none,
+    description delimiters parenthesis,
+    before skip=12pt, after skip=12pt,
+    left=8pt, right=8pt, top=4pt, bottom=4pt,
+    overlay unbroken and first={\tikzset{external/export=false}},
+    overlay middle and last={\tikzset{external/export=false}},
+  }
+}
+
+\newtcbtheorem[number within=section]{theorem}{Teorema}{thmstyle=thmcol}{thm}
+\newtcbtheorem[use counter from=theorem]{lemma}{Lemma}{thmstyle=lemcol}{lem}
+\newtcbtheorem[use counter from=theorem]{definition}{Definizione}{thmstyle=defcol}{def}
+\newtcbtheorem[use counter from=theorem]{example}{Esempio}{thmstyle=excol}{ex}
+\newtcolorbox{remark}[1][]{thmstyle=remcol, title={Osservazione}, #1}
+
+% ---------- Esercizi (mdframed) ----------
+\usepackage{mdframed}
 \theoremstyle{definition}
-\newmdtheoremenv[%
-	linecolor=gray,leftmargin=0,%
-	rightmargin=0,
-	innertopmargin=8pt,%
-	innerbottommargin=8pt,
-	ntheorem]{example}{Esempio}[section]
+\newmdtheoremenv[
+    linecolor=gray, leftmargin=0, rightmargin=0,
+    innertopmargin=8pt, innerbottommargin=8pt
+]{exercise}{Esercizio}[section]
 
-% Important definition frame
-\theoremstyle{definition}
-\newmdtheoremenv[%
-	linecolor=gray,leftmargin=0,%
-	rightmargin=0,
-	backgroundcolor=gray!40,%
-	innertopmargin=8pt,%
-	innerbottommargin=8pt,
-	ntheorem]{definition}{Definizione}[section]
-
-% Exercise frame
-\theoremstyle{definition}
-\newmdtheoremenv[%
-	linecolor=gray,leftmargin=0,%
-	rightmargin=0,
-	innertopmargin=8pt,%
-	innerbottommargin=8pt,
-	ntheorem]{exercise}{Esercizio}[section]
-
-% Theorem frame
-\theoremstyle{definition}
-\newmdtheoremenv[%
-  linecolor=gray,leftmargin=0,%
-  rightmargin=0,
-  innertopmargin=8pt,%
-  innerbottommargin=8pt,
-  ntheorem]{theorem}{Teorema}[section]
-
-\theoremstyle{definition}
-\newmdtheoremenv[%
-  linecolor=white,leftmargin=0,%
-  rightmargin=0,
-  innertopmargin=8pt,%
-  innerbottommargin=8pt,
-  ntheorem]{define}{Definizione utile}[section]
-
-% figure support
-\usepackage{import}
-\usepackage{xifthen}
-\pdfminorversion=7
-\usepackage{pdfpages}
-% \usepackage{transparent}
+% ---------- Figure svg ----------
 \newcommand{\incfig}[1]{%
-	\def\svgwidth{\columnwidth}
-	\import{./figures/}{#1.pdf_tex}
+    \def\svgwidth{\columnwidth}
+    \import{./figures/}{#1.pdf_tex}
 }
 
-% FSM tikz
-\tikzset{
-    place/.style={
-        circle,
-        thick,
-        draw=black,
-        minimum size=6mm,
-    },
-        state/.style={
-        circle,
-        thick,
-        draw=black,
-        fill=white,
-        minimum size=6mm,
-    },
-}
+% ---------- Hyperref (sempre per ultimo, prima di externalize) ----------
+\usepackage{hyperref}
+\hypersetup{colorlinks=false}
 
-\pdfsuppresswarningpagegroup=1
-
-\usepackage{pgfplots}
-\pgfplotsset{compat=1.18,width=10cm}
-
-% Save plots as pdf and reuse them without compiling every time
+% ---------- Externalize ----------
 \usetikzlibrary{external}
 \tikzexternalize[prefix=figures/tikz/, optimize=false]
+\tikzexternaldisable
+
 
 
 \begin{document}
@@ -219,7 +167,7 @@ express and communicate meanings.
 \subsection{How did language emerge?}
 Two question must be distinguished:
 \begin{itemize}
-    \item \textbf{The evolutionary origin of the human capacity for language:} how biological, cognitive and 
+    \item \textbf{fThe evolutionary origin of the human capacity for language:} how biological, cognitive and 
         social evolution made language possibile.
     \item \textbf{The historical development of particular language:} how language changes, differentiate, interact
         and give rise to language families
@@ -298,81 +246,307 @@ of their orthographic systems and form-sound correspondences.
 
 \subsection{Ambiguity}
 Ambiguity occurs when the same linguistic expression permits two or more distinct analyses or interpretations.
-
-
-\section{Language as Data}
-PARTO DALLA SLIDE 13 DEL SECODNO PPT 
-\subsection{What can be used to describe a language?}
-\begin{itemize}
-    \item Lexical resources 
-    \item Grammatical resources 
-    \item Phonological and writing resources
-    \item Empirical language resources
-    \item Documentantion resources 
-\end{itemize}
-
-\rowcolors{2}{rowgray}{white}
-\begin{tabularx}{\textwidth}{>{\bfseries}p{3.6cm} Y Y}
-    \rowcolor{head}
-    \color{white}\bfseries Resource & 
-    \color{white}\bfseries
-\end{tabularx}
-RICOPIARE TABELLE
-\subsection{What is a Corpus?}
-A corpus is not merely a large collection of texts. Its scientific value depends on what containes,
-how its components are distributed and which population of linguistic events it is intended to represent.
-
-RICOPIARE TABELLE
-
-\section{Linguistic units}
-\subsection{Units of language}
-\begin{itemize}
-    \item Documents, paragraphs and sentences 
-    \item Token and types 
-    \item World forms and lemmas
-    \item Morphemes and subword unit 
-    \item Vocabulary and out-of-vocabolary items
-    \item Linguistic units as modelling decision
-\end{itemize}
-\subsection{Document, paragraph, sentece}
-\begin{itemize}
-    \item A \textbf{document} is a complete textual object treated as a unit within a dataset,
-        also may be an article, book, email, review, post, transcript or webpage
-    \item A \textbf{paragraph} is an intermediate textual unit grouping senteces that contribute to a locally coherent topic or functions
-    \item A \textbf{sentence} is grammatically organized linguistic unit conventionally marked in marking by punctuation
-\end{itemize}
+\textbf{RECUPERARE FINO A SLIDE 66 NLP.pdf}
+\part{Language Modeling}
+\section{Introduction to N-grams}
+\subsubsection{Probabilistic Language Models}
+A \textbf{Language Model} (LM) is a model that assigns probabilities to sequences of words.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Goal}: Compute the probability of a sentence or sequence of words:
 \[
-  \text{document }\supset \text{paragraph }\supset \text{sentences} 
+  P(W) = P(w_1,w_2,w_3,w_4,w_5, \ldots, w_n)
 \]
-\subsection{Word form and lemmas}
-\begin{itemize}
-    \item A \textbf{word forms} is the observable form in which a word occurs in a text 
-    \item A \textbf{lemma} is the conventioanl base form used to group related inflected word forms 
-    \item Different word forms may therefore correspond to the same lemma.
-    \item Word forms preserve grammatical information such as tense, number, person and case 
-    \item Lemmas abstract away from inflection and identify the underlying lexical unit 
-    \item \textbf{Lemmatization} is the process of assigning the appropriate lemma to a word form
-\end{itemize}
-\subsection{Morphemes and subword unit}
-A \textbf{morpheme} is the smallest linguistic unit conventionally associated with a meaning or grammatical function, a word 
-may contain one or more morphemes:
+\textbf{Related task}: Probability of an upcoming word:
 \[
-  \text{cats } \rigtharrow \text{ cat } + \text{ -s}
+  P(w_5 \;|\; w_1,w_2,w_3,w_4)
+\]
+A model that computes either of these is called a \textbf{language model}.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Terminology note}: Better term would be "the grammar" but \textbf{language model} or 
+\textbf{LM} is standard.
+\subsubsection{Why Probabilistic Language Models?}
+Language models are fundamental for many NLP applications.
+\subsubsection{Machine Translation}
+A language model helps choose the most natural translation.
+\begin{example}{Natural translation}{Natural translation}
+\begin{itemize}
+    \item P(high winds tonite) > P(large winds tonite)
+\end{itemize}
+"High winds" is a more common collocation than "large winds"
+\end{example}
+\subsubsection{Spell Correction}
+\begin{example}{Spell Correction}{Spell Correction}
+"The office is about fifteen minutes from my house"
+\[
+  P(\text{about fifteen \textbf{minutes} from }) > P(\text{about fifteen \textbf{minutes} from})
+\]
+Both "minutes" and "minutes" are valid words, but the context makes "minutes" much more likely.
+\end{example}
+\subsubsection{Speech Recognition}
+Many word sequences sound similar when spoken.
+\begin{example}{Speech Recognition}{Speech Recognition}
+\[
+  P(I \text{saw a van }) \gg P(\text{eyes awe of an})
+\]
+The labguage model helps disambiguate between phonetically similar sequences
+\end{example}
+\subsubsection{Other Applications}
+\begin{itemize}
+    \item \textbf{Summarization}
+    \item \textbf{Question-answering}
+    \item \textbf{Dialogue systems}
+    \item \textbf{Text generation}
+    \item And many more!
+\end{itemize}
+\subsection{How to Compute P(W)}
+How do we compute the probability of a word sequence?
+\begin{example}{How to compute}{How to compute}
+How to compute this joint probability:
+\[
+  P(\text{its, water, is, so, transparent, that})
+\]
+\end{example}
+\subsubsection{Naive approach: Counting}
+We could how many times this exact sequence appears in a corpus:
+\[
+    P(W) = \frac{\text{Count}(w_1,w_2,\ldots,w_n)}{\text{Total number of word sequences of lenght } n}
+\]
+\textbf{Problems}:
+\begin{itemize}
+    \item \textbf{Data sparsity}: Most sequences never appear in any corpus
+    \item \textbf{Combinatorial explosion}: Number of possible sequences grows exponentially 
+    \item \textbf{No generalization}: Can't handle novel sequences
+\end{itemize}
+\subsubsection{Chain Rule of Probability}
+\textbf{Reminder}: Recall the definition of conditional probabilities:
+\[
+  p(B \;|\; A) = \frac{P(A,B)}{P(A)}
+\]
+Rewriting this: \( P(A \;|\; B) = P(A) \cdot P(B \;|\; A) \)
+\vspace{1em}
+\noindent 
+\newline
+\textbf{Generalizing to more variables}:
+\[
+  P(A,B,C,D) = P(A) \cdot P(B \;|\; A) \cdot P(C \;|\; A,B) \cdot P(D \;|\; A,B,C)  
+\]
+\textbf{The chain rule in general}:
+\[
+  P(x_1,x_2,x_3,\ldots,x_n) = P(x_1) \cdot P(x_2 \;|\; x_1) \cdot P(x_3 \;|\; x_1,x_2) \ldots P(x_n \;|\; x_1, \ldots, x_{n - 1})
+\]
+\textbf{Intuition}: Break down the joint probability into conditional probabilities.
+\vspace{1em}
+\noindent
+\newline
+The \textbf{chain rule} decomposes a joint probability:
+\[
+  P(w_1,w_2,\ldots,w_n) = P(w_1) \cdot P(w_2 \;|\; w_1) \cdot P(w_3 \;|\; w_1, w_2) \ldots P(w_n \;|\; w_1, \ldots, w_{n - 1})
+\]
+Or more compactly:
+\[
+  P(W) = \prod_{i = 1}^{n} P(w_1 \;|\; w_1,\ldots,w_{i - 1})
+\]
+\textbf{Example}: For "its water is so transparent that":
+\begin{center}
+    \begin{align*}
+        &P(\text{its, water, is, so, transparent, that}) & = P(\text{its}) \\
+        & & \times P(\text{water} \;|\; \text{its}) \\
+        & & \times P(\text{its} \;|\; \text{its, water}) \\
+        & & \times P(\text{so} \;|\; \text{its, water, is}) \\
+        & & \times P(\text{transparent} \;|\; \text{its, water, is, so}) \\
+        & & \times P(\text{that} \;|\; \text{its, water, is, so, transparent}) \\
+    \end{align*}
+\end{center}
+\textbf{Why this helps}: Conditional probabilities like \( P(\text{water} \;|\; \text{its}) \) are easier to estimate from data.
+\subsubsection{How to Estimate These Probabilities}
+\textbf{Could we just count and divide?}
+\vspace{1em}
+\noindent
+\newline
+\textbf{No!} The problem remains:
+\begin{itemize}
+    \item \textbf{Too many possible sentences}: The number of possible word sequences is astronomical 
+    \item \textbf{Insufficient data}: We'll never see enough data to estimate probabilities for all possible sequences 
+    \item Even with the Chain Rule, long contexts like \( P(\text{transparent} \;|\; \text{its, water, is, so}) \) are still extremely rare
+\end{itemize}
+\subsection{Neural Language Models}
+While N-gram models are simple and interpretable, they suffer from funamental limitations.
+Neural language models address these issues using deep learning to capture complex 
+patterns in language.
+\subsubsection{Limitations of N-gram Models}
+N-gram models have several critical limitations:
+\begin{itemize}
+    \item \textbf{Curse of dimensionality}: The number of parameters grows exponentially with \( n \)   
+    \item \textbf{Data sparsity}: Most N-grams never appear in training data 
+    \item \textbf{Lack of generalization}: Cannot handle unseen combinations of words 
+    \item \textbf{Fixed context}: Limited by the Markov assumption 
+    \item \textbf{No semantic understanding}: Treats words as discrete symbols
+\end{itemize}
+\subsubsection{From N-grams to Neural Networks}
+Neural language models use continuous vector representation (embeddings) instead of discrete symbols:
+\begin{definition}{Key innovation: Word Embeddings}{Key innovation: Word Embeddings}
+\textbf{Dense vector representations} capture semantic and syntactic relationship between words. 
+\newline
+\textbf{Example}: Words like "cat", "dog", "kitten" have similar vector representations because they are semantically related.
+\end{definition}
+\subsubsection{Feedforward Neural Language Models}
+The first neural language models used feedforward netwroks to predict the next word.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Architecture}:
+\begin{enumerate}
+    \item \textbf{Input}: Concatenated embeddings of context words 
+    \item \textbf{Hidden layers}: Learn complex transformations 
+    \item \textbf{Output}: Probability distribution over vocabulary
+\end{enumerate}
+\textbf{Mathematica formulation}:
+\[
+  P(w_i \;|\; w_{i - n + 1}, \ldots, w_{i - 1}) = \text{softmax}(W \cdot \tanh(U \cdot \mathbf{x} + b) + c)
+\]
+Where \( \mathbf{x} \) is the concatenated embedding vector of the context words.
+\subsubsection{Recurrent Neural Language Models}
+\begin{definition}{RNN Language Models}{RNN Language Models}
+RNNs process sequeces by maintaining a \textbf{hidden state} that captures information 
+from previous timesteps:
+\[
+  h_t = \tanh(W_{hh}h_{t-1} + W_{xh}x_t + b)
 \]
 \[
-  \text{unhappiness } \rightarrow \text{ un- } + \text{ happy } + \text{ -ness}
+  P(w_t \;|\; w_{1:t - 1}) = \text{ softmax}(W_{hy}h_t + c)
 \]
+\end{definition}
+\textbf{Advantages}:
 \begin{itemize}
-    \item \textbf{Free morphemes} can occur independently: \texttt{cat}, \texttt{happy}.
-    \item \textbf{Bound morphemes} occur only as parts of words: \texttt{un-}, \texttt{-s}, \texttt{-ness}
-    \item Morphemes may express lexical meaning or grammatical information
-    \item A \textbf{subword unit} is a unit smaller then a word used by a computional model.
-    \item Subword units may be learned statistically from data and do not necerssarily correspond to linguistic morphemes.
+    \item \textbf{Variable length}: Can handle sequences of any length 
+    \item \textbf{Memory}: Hidden state captures long-range dependencies 
+    \item \textbf{Shared parameters}: Same network process entire sequence
 \end{itemize}
-\subsection{Vocabulary and out-of vocabulary items} 
-
-\section{Introduction to ML measures}
-\subsection{From predictions to outcomes}
-To evaluate a system, compare the excpected correct answer produced by the system.
-
+\subsubsection{Long Short-Term Memory (LSTM)}
+Standard RNNs suffer from \textbf{vanishing gradients}, making it difficult to learn long-range dependencies. LSTMs solve this 
+problem.
+\begin{theorem}{LSTM Architecture}
+LSTMs use \textbf{gates} to control information flow:
+\begin{itemize}
+    \item \textbf{Forget gate}: Decides what information to discard 
+    \item \textbf{Input gate}: Decides what new information to store 
+    \item \textbf{Output gate}: Decides what to output based on current state
+\end{itemize}
+\textbf{LSTM equations}:
+\[
+  \mathbf{f}_t = \sigma(W_f \cdot [h_{t - 1}, x_t] + b_f)
+\]
+\[
+  \mathbf{i}_t = \sigma(W_i \cdot [h_{t - 1}, x_t] + b_i)
+\]
+\[
+  \widetilde{C_t} = \tanh(W_C \cdot [h_{t - 1}, x_t] + b_C) 
+\]
+\[
+  C_t = \mathbf{f}_t \odot C_{t - 1} + \mathbf{i}_t \odot \widetilde{C_t} 
+\]
+\[
+  \mathbf{o}_t = \sigma(W_o \cdot [h_{t - 1},x_t] + b_o)
+\]
+\[
+  h_t = \mathbf{o}_t \odot \tanh(C_t)
+\]
+\end{theorem}
+\subsubsection{Transformers: The modern Era}
+The transformer architecture revolutionized NLP by eliminating recurrence entirely and using 
+\textbf{self-attention} mechanisms.
+\begin{definition}{Attention Mechanism}{Attention Mechanism}
+\textbf{Self-Attention} allows the model to weigh the importance of different words in the context when 
+predicting the next word.
+\newline
+\textbf{Key idea}: Instead of processing words sequentially, attend to all words simultaneously.
+\end{definition}
+\subsubsection{Self-Attention Details}
+The attention mechanism computes three vectors for each word:
+\begin{itemize}
+  \item \textbf{Query (Q)}: What we're looking for 
+  \item \textbf{Key (K)}: What we can offer 
+  \item \textbf{Value (V)}: The actual content
+\end{itemize}
+\textbf{Attention weights}:
+\[
+  \text{Attention}(Q,K,V) = \text{softmax}(\frac{QK^T}{\sqrt{d_k}})V
+\]
+\subsubsection{Multi-Head Attention}
+Transformers use multiple attention heads to capture different types of realtionships:
+\[
+  \text{MutilHead}(Q,K,V) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h)W^O
+\]
+\[
+  \text{where} \text{head}_i = \text{Attention}(QW_{i}^{Q}, KW_{i}^{K}, VW_{i}^{V})
+\]
+\subsubsection{Transformer Architecture}
+The complete Transformer consists of:
+\begin{enumerate}
+  \item \textbf{Positional encoding}: Adds position information since attention is permutation-invariant 
+  \item \textbf{Multi-head attention}: Captures realtionships between all words
+  \item \textbf{Feedforward networks}: Processes each position independently 
+  \item \textbf{Layer normalization and residual connection}: For stable training
+\end{enumerate}
+\subsubsection{BERT: Bidrectional Encoder Representations from Transformers}
+BERT revolutionized NLP by introducing bidirectional context understanding.
+\begin{definition}{BERT Key Innovation}{BERT Key Innovation}
+\begin{itemize}
+  \item \textbf{Bidirectional}: Unlike previous models, BERT sees both left and right context 
+  \item \textbf{Masked Language Modeling}: Predicts randomly masked words in a sentence
+  \item \textbf{Next Sentence Prediction}: Learns relationships between sentences 
+\end{itemize}
+\end{definition}
+\subsubsection{GPT: Generative Pre-Trained Transformer}
+The GPT series popularized autoregressive language modeling with transformer.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Key features}
+\begin{itemize}
+  \item \textbf{Left-to-right generation}: Predicts next word given all previous words 
+  \item \textbf{Scale}: GPT-3 has 175 billion parameters 
+  \item \textbf{Few-shot learning}: Can perform tasks with minimal examples
+\end{itemize}
+\subsubsection{Language Model Evaluation}
+Modern language models are evaluated on:
+\begin{itemize}
+  \item \textbf{Perplexity}: Measures how well the model predicts test data 
+  \item \textbf{Downstream tasks}: Question answering, translation, summarization 
+  \item \textbf{Zero-shot performance}: Performance on unseen tasks
+\end{itemize}
+\subsubsection{Perplexity}
+Perplexity measures how "surprised" a language model is by new text:
+\[
+  \text{Perplexity}(W) = 2^{-\frac{1}{N}log_2P(W)} = (\prod_{i = 1}^{N} P(w_i \;|\; w_{1:i - 1}))^{-\frac{1}{N}}
+\]
+\textbf{Lower perplexity} indicates a better language model.
+\subsubsection{From Language Models to Applications}
+Neural language models power many modern NLP applications:
+\begin{itemize}
+  \item \textbf{Machine translation}: Neural machine translation systems 
+  \item \textbf{Text generation}: Creative writing, code generation, chatbots 
+  \item \textbf{Summarization}: Extractive and abstractive summarization 
+  \item \textbf{Question answering}: Reading comprehension systems 
+  \item \textbf{Sentiment analysis}: Understanding emotional content
+\end{itemize}
+\subsubsection{The future of Language Models}
+Current research directions include:
+\begin{itemize}
+  \item \textbf{Larger models}: Scaling beyond GPT-3
+  \item \textbf{Efficiency}: Making models faster and more memory-efficient 
+  \item \textbf{Multimodal}: Combining text with images, audio, video 
+  \item \textbf{Interpretability}: Understanding what models learn 
+  \item \textbf{Ethics}: Bias mitigation and responsible AI
+\end{itemize}
+\textbf{Key insight}: The field moved from simple statistical models to sophisticated nerual architectures 
+that can understand and generate human-like language with remarkable fluency.
+\part{Advanced Topics in NLP}
+\section{Transformer Applications}
+Beyond language modeling, transformers have revolutionized many NLP tasks.
+\subsection{Machine Translation}
 \end{document}
