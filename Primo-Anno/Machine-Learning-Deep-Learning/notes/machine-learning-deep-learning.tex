@@ -3353,10 +3353,108 @@ As the number of training samples \( N \to \infty \) and \( k \to \infty \) (but
 classifier approaches the optimal Bayes classifier.
 
 \part{Decision Trees and Ensemble Methods}
-!!! FARE CAPITOLO DECISION TREES 
-
-
-
+\section{Introduction to Decision Trees}
+Decision trees are fundamental machine leraning models that provide both powerful predictive capabilities and  high interpretability.
+They are tree-structured prediction models that make decision by routing data through a hierarchy of test.
+\subsection{Decision Tree Structure}
+A decision tree is composed of two types of nodes:
+\begin{itemize}
+    \item \textbf{Non-terminal nodes}: These nodes have 2 or more children and implement a \textbf{routing function}.
+        They perform tests on the input features to decide which branch to follow.
+    \item \textbf{Leaf nodes (terminal nodes)}: These nodes have no children and implement a \textbf{prediction funciton}. They provide the final output of the model.
+\end{itemize}
+\begin{definition}{key Structural Properties}{key Structural Properties}
+\begin{itemize}
+    \item There are no cycles in the tree structure 
+    \item All nodes have at most 1 parent 
+    \item There is exactly one node with no parent, called the \textbf{root node}
+    \item The tree forms a directed acyclic graph (DAG)
+\end{itemize}
+\end{definition}
+\subsection{How decision Trees Work}
+A decision tree takes an input \( x \in \mathcal{X} \) and routes it through its nodes until it reaches a leaf node, where a prediction is made.
+\vspace{1em}
+\noindent
+\newline
+\textbf{The process}:
+\begin{enumerate}
+    \item The input enters at the root node 
+    \item Each node represents a test on a variable (feature)
+    \item An edge to a child node represents the outcome of the test 
+    \item The routing continues until a leaf node is reached 
+    \item At the lead, a prediction is made based on the prediction function
+\end{enumerate}
+\subsection{Decision Tree Inference: Non-terminal Nodes}
+Each non-terminal node can be formally represented as Node(\(\phi, t_L, t_R \)), where:
+\begin{itemize}
+    \item \( \phi: \mathcal{X} \to \left\{ L,R \right\} \) is a \textbf{routing function}
+    \item \( t_L \) is the left child subtree 
+    \item \( t_R \) is the right child subtree
+\end{itemize}
+When an input \( \mathbf{x} \) reaches the node:
+\begin{itemize}
+    \item If \( \phi(\mathbf{x}) = L \), the input goes to the left child \( t_L \)    
+    \item If \( \phi(\mathbf{x}) = R \), the input goes to the right child \( t_R \)
+\end{itemize}
+\textbf{Note}: We assume binary trees here, but the concept generalizes to tree with more than two children.
+\subsection{Decision Tree Inference: Leaf Nodes}
+Each leaf node can be represented as Leaf(\( h \)), where:
+\begin{itemize}
+    \item \( h \in \mathcal{F}_{\text{task}} \) is a \textbf{prediction function} (typically a costant)
+    \item Depending on the task 
+    \begin{itemize}
+        \item For \textbf{classification}: \( h \in \mathcal{Y} \) (a class label)
+        \item For \textbf{regression}: \( h \in \mathbb{R} \) (a continuous value)
+    \end{itemize}
+\end{itemize}
+Once \( \mathbf{x} \) reaches the leaf, the final prediction is given by \( h(\mathbf{x}) \).
+\subsection{Formal Decision Tree Function}
+The complete decision tree function can be defined recursively:
+\[
+f_t(\mathbf{x}) =
+\begin{cases}
+  h(\mathbf{x}) & \text{if } t = \text{Leaf}(\dots) \\
+  f_{t_{\phi(\mathbf{x})}}(\mathbf{x}) & \text{if } t = \text{Node}(\phi, \dots)
+\end{cases}
+\]
+\textbf{Interpretation}:
+\begin{itemize}
+    \item If we are at a leaf nodem return the prediction \( h(\mathbf{x}) \)   
+    \item If we are at a non-terminal node, apply the routing function \( \phi(\mathbf{x}) \) to determine which child to visti, then recursively apply the tree function to that child
+\end{itemize}
+\subsection{Decision Tree Inference Example}
+Consider a 2D classification problem with classes \( \xi \in \left\{ +, \times, \circ, \bigtriangleup, \square \right\} \). We can build a decision 
+tree with routing functions:
+\[
+  \phi_1(x,y) = 
+  \begin{cases}
+    L & \text{if } y \geq 3 \\
+    R & \text{else} \\
+  \end{cases}
+\] 
+\[
+  \phi_2(x,y) = 
+  \begin{cases}
+    L & \text{if } x \leq 3 \\
+    R & \text{else} \\
+  \end{cases}
+\]
+\[
+  \phi_3(x,y) = 
+  \begin{cases}
+    L & \text{if } x \leq 2 \\
+    R & \text{else} \\
+  \end{cases}
+\]
+\[
+  \phi_4(x,y) = 
+  \begin{cases}
+    L & \text{if } x \leq 4 \\
+    R & \text{else}
+  \end{cases}
+\]
+These routing functions partition the 2D space into axis-aligned rectangular regions, with each region corresponding 
+to a lead node that predicts a specific class.
 
 \part{Linear Discriminant Functions and Classiification Methods}
 \section{Linear Discriminant functions}
