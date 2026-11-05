@@ -4001,4 +4001,46 @@ We want to learn something like this, but our Perceptron constraints does not al
     \end{itemize}
 \end{itemize}
 \end{definition}
+\section{The Relaxation Method}
+\subsection{Relaxation Criterio Function (1)}
+The \( J(\mathbf{w}) \) takes the form:
+\[
+  J_q(\mathbf{w}) = \sum_{i \in \mathcal{X}}(\mathbf{w}^T \mathbf{x}_i)^2
+\]
+\begin{itemize}
+    \item Alos, this function takes into account the \textbf{misclassified samples}, and it is minimized when \( \mathbf{w} \) is the solution vector 
+    \item Its main difference is that its \textbf{gradient is now continuos}, whereas the gradinet of the perceptron function \( J \) is not 
+    \item So, such a function is suitable ofr fidining smooth surfaces, but this may lead to problems
+    \begin{itemize}
+        \item In fact, in this way, the points very far from the origin \( (0,0,\ldots,0) \) (i.e., with large feature magnitudes == outliers) are weighted a lot
+    \end{itemize}
+\end{itemize}
+\subsection{Relaxation Criterio Function (2)}
+Another option for \( J(\mathbf{w}) \) is:
+\[
+  J(\mathbf{w}) = \frac{1}{2} \sum_{i \in X} \left\{ \frac{(\mathbf{w}^T \mathbf{x}_i - b)^2}{\parallel \mathbf{x}_i \parallel^2} \right\}
+\]
+where \( b \geq 0 \) margin (e.g., b = 1) and \( \mathbf{w}^T \mathbf{x}_i \leq b \).
+\begin{itemize}
+    \item Dividing by \( \parallel \mathbf{x}_i \parallel^2 \) ensures that samples \textbf{contribute roughly equally}, regardless of their distance from the origin 
+\end{itemize}
+The gradient descent becomes:
+\[
+  \mathbf{w}_{k + 1} = \mathbf{w}_k - \rho_k \sum_{i \in X} \left\{ \frac{(\mathbf{w}^T \mathbf{x}_i -b)\mathbf{x}_i}{\parallel \mathbf{x}_i \parallel^2}
+\]
+with \( \mathbf{x}_i \) that verify \( \mathbf{w}^T \mathbf{x}_i \leq b \) and \( \mathbf{w} \) is calculated with the usual rule.
+\vspace{1em}
+\noindent
+\newline
+\( J(\mathbf{w}) > 0 \) always, and \( J(\mathbf{w}) = 0 \) if \( \mathbf{w}^T \mathbf{x}_i \geq b \forall \mathbf{x}_i \).
+\section{Minimum Squared Error (MSE) Solution}
+The classical MSE criterion provides an alternative to the perceptron rule.
+\begin{definition}{Key Difference: Perceptron vs MSE}
+\textbf{Perceptron rule:} Only consider \textbf{misclassified samples}, since these are the only ones that violate the \( J(\mathbf{w}) \).
+\newline 
+\textbf{MSE criterion}: Looks for a solution involving \textbf{all of the samples} (not just the misclassified ones)
+\begin{itemize}
+    \item The goal is to verify \( \mathbf{w}^T \mathbf{x}_i = b_i \) where the \( b_i \) are some arbitrarily specified \textbf{positive constants}
+\end{itemize}
+\end{definition}
 \end{document}
