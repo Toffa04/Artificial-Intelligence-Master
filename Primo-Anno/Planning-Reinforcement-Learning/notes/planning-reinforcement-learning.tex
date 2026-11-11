@@ -701,11 +701,13 @@ and \( d_1 \) is its current value.
 \textbf{Comparison with classical representation}:
 \begin{center}
     \begin{tabular}{ |c|c| }
+        \hline
         \textbf{Classical} & \textbf{State Variable} \\
         \hline
         \( \texttt{loc}(r_1,d_1) \) = true & \( \texttt{loc}(r_1) = d_1 \) \\
         \( \texttt{loc}(r_1,d_2) \) = false & \\
         \( \texttt{loc}(r_1,d_3) \) = false & \\
+        \hline
     \end{tabular}
 \end{center}
 \textbf{Advantages of state variables}:
@@ -761,6 +763,217 @@ The fundamental insight is that regardless of the representation formalism chose
   \textbf{A state is fundamentalyy a Boolean assignment}
 \]
 Wheter we use propositional atoms or state variables, we are ultimately assigning truth values (or equivalently, values from finite domains) to a set of variables.
+\section{Action Schemas in DWR}
+\subsection{Structure of Action Schemas}
+An \textbf{action schema} \( \alpha \) is a template for generating ground actions. It consists of:
+\begin{definition}{Action Schema Components}{Action Schema Components}
+An action schema \( \alpha \) has the following components:
+\begin{itemize}
+    \item \textbf{Name and parameters}: \( \alpha \) = \( \texttt{name}(z_1, z_2, \ldots, z_k ) \) where \( z_i \) are typed parameters 
+    \item \textbf{Preconditions}: \( \text{Pre}(\alpha) = \left\{ p_1,p_2, \ldots, p_n \right\} \) where each \( p_i \) is a literal 
+    \item \textbf{Effects}: \( \text{Eff}(\alpha) = \left\{ q_1,q_2, \ldots, q_m \right\} \) where each \( q_i \) is a literal 
+    \item \textbf{Cost}: \( c(\alpha) \in \mathbb{N}_0 \) (typically a non-negative integer)
+\end{itemize}
+\end{definition}
+\textbf{Important constraint}: The parameters \( z_i \) of \( \alpha \) can appear in the precodition literals \( p_j \) and effect 
+literals \( q_j \). The arguments in these literals can be either:
+\begin{itemize}
+    \item \textbf{Constants}: Specific objects from the domain 
+    \item \textbf{Parameters}: Variables that will be instantiated 
+\end{itemize}
+No arbitrary free variables are allowed - all variables must be parameters of the action schema. 
+\begin{definition}{Ground Action}{Ground Action}
+A \textbf{ground action} \( a \) is obtained by substituting all parameters \( z_i \) in action schema \( \alpha \) with specific 
+constants from the domain. The action \( a \) is an \textbf{instance} of \( \alpha \)
+\end{definition}
+\subsection{Example: Take/Load Action}
+Consider the action of a robot taking a container from a pile. We define the action schema:
+\[
+  \alpha : \texttt{take}(r,c,c',p,d)
+\]
+\textbf{Parameters}:
+\begin{itemize}
+    \item \( r \): robot (type \texttt{Robot})
+    \item \( c \): container to take (type \texttt{Container})
+    \item \( c' \): container below \( c \) (type \( \texttt{Container} \cup \left\{ \texttt{nil} \right\} \))
+    \item \( p \): pile (type \texttt{Pile})
+    \item \( d \): dock (type \texttt{Dock})
+\end{itemize}
+\subsubsection{Correcting Static Relations}
+Before defining the preconditions, we note that there are \textbf{two rigid (static) relations} in the DWR domain:
+\begin{enumerate}
+    \item \( \texttt{adjacent}: \texttt{Docks} \times \texttt{Docks} \) - specifies which docks are connected 
+    \item \( \texttt{at}: \texttt{Piles} \times \texttt{Docks} \) - specifies which pile is located at which dock
+\end{enumerate}
+Both relations are rigid because the physical layout of the port does not change during plan execution.
+\subsubsection{Preconditions}
+For the \texttt{take} action to be executable, the following conditions must hold:
+\[
+  \mathrm{Pre}(\texttt{take}(r,c,c',p,d)) = 
+    \left\{
+    \begin{array}{l}
+        \texttt{loc}(r) = d \\
+        \texttt{at}(p,d) \\
+        \texttt{pos}(c) = p \\
+        \texttt{on}(c) = c' \\
+        \texttt{top}(p) = c \\
+        \texttt{cargo}(r) = \texttt{nil}
+    \end{array}
+    \right\}
+\]
+\textbf{Interpretation}:
+\begin{itemize}
+    \item The robot \( r \) is at dock \( d \)   
+    \item The pile \( p \) is located at dock \( d \) (static relation)
+    \item Container \( c \) is positioned at pile \( p \)    
+    \item Container \( c \) is on top of container \( c' \) (or \( c' \) is \texttt{nil} if \( c \) is at the bottom)
+    \item Container \( c \) is the top container of pile \( p \)    
+    \item The robot \( r \) is not carrying anything
+\end{itemize}
+\subsubsection{Effects}
+When the \texttt{take} action is executed, the following changes occur:
+\[
+  \mathrm{Eff}(\texttt{take}(r,c,c',p,d)) = 
+    \left\{
+    \begin{array}{l}
+        \texttt{cargo}(r) = c \\
+        \texttt{top}(p) = c' \\
+        \texttt{pos}(c) = r
+    \end{array}
+    \right\}
+\]
+\textbf{Interpretation}:
+\begin{itemize}
+    \item The robot \( r \) is now carrying container \( c \)    
+    \item The top of pile \( p \) is now \( c' \) (the container that was below $c$)
+    \item The position of container \( c \) is now the robot \( r \)
+\end{itemize}
+\subsection{Action Applicability}
+\begin{definition}{Action Applicability}{Action Applicability}
+A ground action \( a \) is \textbf{applicable} (or \textbf{executable}) in state \( s \) id all preconditions of \( a \) are 
+satisfied in \( s \):
+\[
+  a \text{ applicable in } s \quad \Leftrightarrow \quad s \models \mathrm{Pre}(a)
+\]
+\end{definition}
+\subsubsection{Examples}
+Consider two ground actions:
+\vspace{1em}
+\noindent
+\newline
+\textbf{Example 1}: \( a_1 = \texttt{take}(r_1,c_1,c_2,p_1,d_1) \)  
+\vspace{1em}
+\noindent
+\newline
+In the initial state \( s_0 \) where:
+\begin{itemize}
+    \item $\texttt{loc}(r_1) = d_1$
+    \item $\texttt{at}(p_1,d_1)$
+    \item $\texttt{pos}(c_1) = p_1$
+    \item $\texttt{on}(c_1) = c_2$
+    \item $\texttt{top}(c_1) = c_1$
+    \item $\texttt{cargo}(r_1) = \texttt{nil}$
+\end{itemize}
+All preconditions are satisfied, so \( a_1 \) is \textbf{executable/applicable} in \( s_0 \).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Example 2}: \( a_2 = \texttt{take}(r_2,c_3,\texttt{nil},p_4,d_3) \)    
+\vspace{1em}
+\noindent
+\newline
+This action requires:
+\begin{itemize}
+    \item $\texttt{loc}(r_2) = d_3$
+    \item $\texttt{at}(p_4,d_3)$
+    \item $\texttt{pos}(c_3) = p_4$
+    \item $\texttt{top}(p_4) = c_3$
+\end{itemize}
+However, in \( s_0 \), we have \( \texttt{pos}(c_3) = p_2 \) (not $p_4$) and $\texttt{loc}(r_2) = d_2$ (not $d_3$). Therefore, 
+$a_2$ is \textbf{not executable/not applicable} in $s_0$.
+\section{State Transition Function}
+\subsection{Formal Definition}
+The \textbf{state transition function} \( \gamma \) defines how actions transform states:
+\[
+  \gamma : \text{ State } \times \text{ Action } \rightarrow \text{ State}
+\]
+where \( \gamma(s,a) \) computes the successor state obtained by executing ground action \( a \) in state \( s \).
+\subsection{Computing the Successor State}
+Given a state \( s \) and a ground action \( a \) (which is a ground instance of an action schema \( \alpha \)), the 
+successor state \( \gamma(s,a) = s'\) is defined if and only if:
+\begin{enumerate}
+    \item \( s \models p \) for all \( p \in \mathrm{Pre}(a) \) (all preconditions are satisfied)
+    \item \( s' \) is consistent (the resulting state contains no contradictions)
+\end{enumerate}
+The successor state \( s' \) is computed as:
+\[
+  s' = \left\{ q \;|\; q \in \mathrm{Eff}(a) \right\} \cup \left\{ q \;|\; s \models q, \lnot q \notin \mathrm{Eff}(a), q \notin \mathrm{Eff}(a) \right\}
+\]
+\textbf{Interpretation}: The new state consists of:
+\begin{itemize}
+    \item All literals in the effects of $a$
+    \item All literals from $s$ that are not affected by $a$ (neither the literal nor its negation appears in the effects)
+\end{itemize}
+\subsection{Goal States}
+While the initial state is a specific assignment, goals are typically specified more flexibly.
+\begin{definition}{Goal Formula}{Goal Formula}
+A \textbf{goal formula} \( G \) is a conjunction of literals specifying desired properties of goal states.
+\end{definition}
+\begin{definition}{Goal States}{Goal States}
+The set of \textbf{goal states} is:
+\[
+  S_g = \left\{ s \;|\; s \models G \right\}
+\]
+That is, all assignments that satisfy the goal formula \( G \).
+\end{definition}
+\subsection{Comparing Representations: Simplified DWR example}
+Let us compare the classical and state variable representations using a simplified version of the DWR domain with three actions schema 
+\subsubsection{Classical Representation}
+In the classical representation, we use propositional atoms to represent facts:
+\vspace{1em}
+\noindent
+\newline
+\textbf{Action 1}: \( \texttt{take}(r,c,l) \) - robot \( r \) takes container \( c \) at location $l$
+\begin{align*}
+    &\mathrm{Pre}: & \texttt{loc}(r,l) \wedge \texttt{pos}(c,l) \wedge \lnot \texttt{loaded}(r) \\
+    &\mathrm{Eff}: & \texttt{pos}(c,r) \wedge \lnot \texttt{pos}(c,l) \wedge \texttt{loaded}(r)
+\end{align*}
+\textbf{Action 2}: \( \texttt{move}(r,l,m) \) - robot \( r \) moves from location \( l \) to location $m$ 
+\begin{align*}
+    &\mathrm{Pre}: & \texttt{loc}(r,l)\\
+    &\mathrm{Eff}: & \texttt{loc}(r,m)\wedge \lnot \texttt{loc}(r,l)\\
+\end{align*}
+\textbf{Action 3}: \( \texttt{put}(r,c,l) \) - robot \( r \) puts down container \( c \) at location \( l \)    
+\begin{align*}
+    &\mathrm{Pre}: & \texttt{loc}(r,l) \wedge \texttt{pos}(c,r)\\
+    &\mathrm{Eff}: & \texttt{pos}(c,l) \wedge \lnot \texttt{pos}(c,r) \wedge \lnot \texttt{loaded}(r)\\
+\end{align*}
+\subsubsection{State Variable Representation}
+In the state variable representation, we use functional notation with assignments:
+\vspace{1em}
+\noindent
+\newline
+\textbf{Action 1}: \( \texttt{take}(r,c,l) \)   
+\begin{align*}
+    &\mathrm{Pre}: & \texttt{loc}(r) = l \wedge \texttt{pos}(c) = l \wedge \lnot \texttt{loaded}(r) \\
+    &\mathrm{Eff}: & \texttt{pos}(c) \leftarrow r \wedge \texttt{loaded}(r) \\
+\end{align*}
+\textbf{Action 2}: \( \texttt{move}(r,l,m) \)    
+\begin{align*}
+    &\mathrm{Pre}: & \texttt{loc}(r) = l \\
+    &\mathrm{Eff}: & \texttt{loc}(r) \leftarrow m 
+\end{align*}
+\textbf{Action 3}: \( \texttt{put}(r,c,l) \)   
+\begin{align*}
+    &\mathrm{Pre}: & \texttt{loc}(r) = l \wedge \texttt{pos}(c) = r\\
+    &\mathrm{Eff}: & \texttt{pos}(c) \leftarrow l \wedge \lnot \texttt{loaded}(r)
+\end{align*}
+\subsubsection{Key Differences}
+\begin{itemize}
+    \item \textbf{Classical}: Requires explicit deletion of old values (e.g., \( \lnot \texttt{loc}(r,l) \) when moving) 
+    \item \textbf{State Variable}: Implicit deletion through reassignment (e.g., \( \texttt{loc}(r) \leftarrow m \) automatically removes the old location) 
+    \item \textbf{Compactness}: State variables are more concise for multi-valued attributes
+\end{itemize}
 RIPRENDERE APPUNTI FINO A SLIDE 46
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
