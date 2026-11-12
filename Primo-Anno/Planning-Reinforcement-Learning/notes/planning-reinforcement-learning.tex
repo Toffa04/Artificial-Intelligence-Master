@@ -974,6 +974,38 @@ In the state variable representation, we use functional notation with assignment
     \item \textbf{State Variable}: Implicit deletion through reassignment (e.g., \( \texttt{loc}(r) \leftarrow m \) automatically removes the old location) 
     \item \textbf{Compactness}: State variables are more concise for multi-valued attributes
 \end{itemize}
+\section{Planning as Satisfiability (SAT)}
+\subsection{Recap: Core Concepts}
+Before introducting the SAT encoding, let us recap the fundamental concepts:
+\begin{itemize}
+    \item \textbf{State}: A Boolean assignment to propositional (ground) literals
+    \item \textbf{Action}: Characterized by:
+    \begin{itemize}
+        \item \textbf{Preconditions}: A set (or conjunction) of literals 
+        \item \textbf{Effects}: A set (or conjuction) of literals
+    \end{itemize}
+\end{itemize}
+\subsection{Temproal Instantiation of Variables}
+To encode planning problems as SAT, we introduce a temporal dimensio to our propositional variables.
+\begin{definition}{Temporal Instantiation}{Temporal Instantiation}
+Let \( \mathcal{X} \) be the set of propositional variables describing the domain. The \textbf{temporal instantiation} 
+of \( \mathcal{X} \) at time \( t \) is:
+\[
+  \mathcal{X}\symbol{64}t = \left\{ x\symbol{64}t \;|\; x \in \mathcal{X} \right\} \quad \text{ for } t \geq 0
+\] 
+where \( x\symbol{64}t \) is a propositional variable representing the truth value of \( x \) at time step \( t \).
+\end{definition}
+\textbf{Intuition}: Since a plan is a sequence of actions \( (a_0,a_1,a_2, \ldots, a_{n - 1}) \) of length \( n \), 
+we need to track truth value of each proposition at each time step from \( 0 \) to \( n \).
+\subsection{The Bounded Planning Problem}
+\begin{definition}{Bounded Planning Problem}{Bounded Planning Problem}
+Given a planning problem \( P = \langle \Sigma, I, G \rangle \), the \textbf{bounded planning problem} asks:
+\vspace{0.5em}
+\noindent
+\newline
+\textit{Does there exists a plan solving P with length exactly n?}
+\end{definition}
+This is a decision problem parametrized by the plan length \( n \).
 RIPRENDERE APPUNTI FINO A SLIDE 46
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
