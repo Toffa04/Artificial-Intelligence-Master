@@ -1067,6 +1067,25 @@ Since we don't know the optimal plan length in advance, we use \textbf{iterative
       \EndWhile
     \end{algorithmic}
 \end{algorithm}
+\textbf{Process}:
+\begin{enumerate}
+    \item Try \( n = 1 \): Check if \( \Phi_{1} \) is satisfiable 
+    \item If not, try \( n = 2 \): Check if \( \Phi_2 \) is satisfiable 
+    \item If not, try \( n = 3 \): Check if \( \Phi_3 \) is satisfiable 
+    \item Continue until a satisfiable formula is found 
+\end{enumerate}
+\textbf{Advantages}:
+\begin{itemize}
+    \item Finds shortest plan (optimal in number of steps)
+    \item Leverage highly opimized SAT solvers 
+    \item Scales well for many planning domains 
+\end{itemize}
+\textbf{Challenges}:
+\begin{itemize}
+    \item Formula size grows with $n$ 
+    \item May need to try many values of \( n \) before finding a solution 
+    \item Encoding frame axioms can be expensive 
+\end{itemize}
 RIPRENDERE APPUNTI FINO A SLIDE 46
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
