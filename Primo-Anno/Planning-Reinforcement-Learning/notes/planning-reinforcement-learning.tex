@@ -5,6 +5,8 @@
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
 \usepackage[italian]{babel}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
 \renewcommand{\familydefault}{\sfdefault}
 \emergencystretch=1.5em
 
@@ -74,6 +76,34 @@
     frame=single, breaklines=true, showstringspaces=false
 }
 \lstset{style=mystyle}
+
+% ---------- Listings (riusa la palette nuova) ----------
+\usepackage{listings}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{remcol!8},
+    commentstyle=\color{defcol},
+    keywordstyle=\color{thmcol},
+    numberstyle=\tiny\color{remcol},
+    stringstyle=\color{lemcol},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false, breaklines=true, captionpos=b,
+    keepspaces=true, numbers=left, numbersep=5pt,
+    showspaces=false, showstringspaces=false, showtabs=false, tabsize=2
+}
+\lstdefinestyle{terminal}{
+    backgroundcolor=\color{black},
+    basicstyle=\ttfamily\color{green},
+    frame=single, breaklines=true, showstringspaces=false
+}
+\lstset{style=mystyle}
+
+\lstdefinestyle{ocamlpseudo}{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  xleftmargin=0pt
+}
 
 % ---------- Teoremi, definizioni, esempi (tcolorbox) ----------
 \usepackage[most]{tcolorbox}
@@ -1006,6 +1036,37 @@ Given a planning problem \( P = \langle \Sigma, I, G \rangle \), the \textbf{bou
 \textit{Does there exists a plan solving P with length exactly n?}
 \end{definition}
 This is a decision problem parametrized by the plan length \( n \).
+\subsection{SAT Encoding}
+The bounded planning problem can be encoded as a propositional satisfiability problem.
+\begin{theorem}{Planning as SAT}{Planning as SAT}
+\textit{For a planning problem P and bound n, there exists a propositional formula} \( \Phi_{n} \) \textit{such that}:
+\[
+  \Phi_{n} \textit{is satisfiable} \quad \Leftrightarrow \quad \textit{there exists a plan of length n for P}
+\]
+\end{theorem}
+The formula \( \Phi_{n} \) encodes:
+\begin{enumerate}
+    \item \textbf{Initial state}: \( I\symbol{64}0 \) (the initial state holds at time 0)
+    \item \textbf{Goal state}: \( G\symbol{64}n \) (the goal holds at time $n$)
+    \item \textbf{Action preconditions and effects}: For each time step \( t \in \left\{0,1, \ldots, n - 1 \right\} \), exactly one action is executed and its effects are correctly applied
+    \item \textbf{Frame Axioms}: Variables not affected by actions remain unchanged
+\end{enumerate}
+\subsection{Solving Planning via Iterative Deepening}
+Since we don't know the optimal plan length in advance, we use \textbf{iterative deepening}:
+\begin{algorithm}[H]
+    \caption{Planning via SAT with Iterative Deepening}
+    \begin{algorithmic}[1]
+      \State \( n \leftarrow 1 \)
+      \While{true}
+        \State Construct formula \( \Phi_{n} \)
+        \If{\( \Phi_{n} \) is satisfiable}
+          \State Extract plan from satisfying assignment
+          \State \Return plan
+        \EndIf
+        \State \( n \leftarrow n + 1 \)
+      \EndWhile
+    \end{algorithmic}
+\end{algorithm}
 RIPRENDERE APPUNTI FINO A SLIDE 46
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
