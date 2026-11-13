@@ -1086,6 +1086,144 @@ Since we don't know the optimal plan length in advance, we use \textbf{iterative
     \item May need to try many values of \( n \) before finding a solution 
     \item Encoding frame axioms can be expensive 
 \end{itemize}
+\part{SAT Solvers and Planning}
+\section{The Boolean Satisfiability Problem}
+\subsection{Definition and Scope}
+The \textbf{Boolean Satisfiability Problem (SAT)} is one of the most fundamental problems in computer science and forms 
+the foundation for many automated reasoning techniques, including planning 
+\begin{definition}{SAT Problem}{SAT Problem}
+The SAT problem asks: Given a propositional formula, does there exists an interpretation (truth assignment) that makes 
+the formula true? Formally, given a seto of clauses \( S \) in propositional logic, determine whether \( S \) is satisfiable.
+\end{definition}
+\subsection{Propositional Logic Basics}
+To understand SAT, we must first establish the basic elements of propositional logic:
+\begin{itemize}
+    \item \textbf{Propositional variables}: Let \( \mathcal{X} \) be a finite set of propositional variables, where each variable can assume one of two values: \texttt{true}(1) or \texttt{false}(0)
+    \item \textbf{Atom (Atomic formula)}: A single propositional variable \( x \in \mathcal{X} \)    
+    \item \textbf{Literal}: Either an atom \( x \) or its negation \( \lnot x \)     
+    \item \textbf{Clause}: A disjunction of literals: \( L_1 \vee L_2 \vee, \ldots, \vee L_n \) where each \( L_i \) is a literal
+\end{itemize}
+\subsection{Interpretation and Truth Assignments}
+\begin{definition}{Interpretation}{Interpretation}
+An \textbf{interpretation} (or \textbf{truth assignment}) is a function:
+\[
+  v: \mathcal{X} \rightarrow \left\{ 0,1 \right\}
+\]
+that assign a Boolean value to each propositional variable
+\end{definition}
+\textbf{Number of interpretations}: If \( \;|\;\mathcal{X}\;|\; = n \) (i.e., we have $n$ propositional variables), then there are exactly 
+\( 2^n \) possible interpretations.
+\subsection{Satisfiability of Clauses}
+\begin{definition}{Satisfaction}{Satisfaction}
+A clause \( C = L_1 \vee L_2 \vee \ldots \vee L_n \) is \textbf{satisfied} by an interpretation \( v \) if there 
+exists at least one literal \( L_i \) such that \( v(L_i) = \text{ true} \) for some \( i \in \left\{ 1,2, \ldots, n \right\} \).
+\vspace{1em}
+\noindent
+\newline
+We write: \( v \models C \). 
+\vspace{1em}
+\noindent
+\newline
+A set of clauses \( S = \left\{ C_1, C_2, \ldots, C_m \right\} \) is \textbf{satisfiable} if there exists an interpretation 
+\( v \) that satisfies all clauses in \( S \):
+\[
+  v \models S \quad \Leftrightarrow \quad v \models C_i \text{ for all } i \in \left\{1,2, \ldots, m \right\} 
+\]
+\end{definition}
+\subsection{SAT Decision Procedure}
+The SAT problem can be viewed as a decision procedure with the following input-output specification:
+\fbox{%
+    $\displaystyle 
+    S\ \text{(set of clauses)}
+    \;\xrightarrow{\;\text{SAT Solver}\;}\;
+    \left\{
+        \begin{array}{l}
+            \textbf{YES (Satisfiable)}\\[2pt]
+            \exists v : v \models S\\[10pt]
+            \textbf{No (Unsatisfiable)}\\[2pt]
+            \text{Proof: } S \vdash \square
+        \end{array}
+    \right.
+    $%
+}
+\textbf{Output cases}:
+\begin{itemize}
+    \item \textbf{YES (Satisfiable)}: There exists an interpretation \( v \) such that \( v \models S \). The SAT solver typically returns this satisfying assignment.
+    \item \textbf{NO (Unsatisfiable)}: No interpretation satisfies \( S \). The solver may provide a proof of unsatisfiability, showing that \( S \) derives a contradiction (denoted \( S \vdash \square \), where \( \square \) represents the empty clause).
+\end{itemize}
+\subsection{The Empty Clause}
+\begin{definition}{Empty Clause}{Empty Clause}
+The \textbf{empty clause}, denoted \( \square \) (or \( \square \)), is a clause with no literals. It is \textbf{false in all interpretation}
+and therefore represents a contradiction.
+\end{definition}
+\textbf{Significance}: If a SAT solver derives the empty clause from the input formula \( S \), this constitutes a proof that \( S \) is unsatisfiable, 
+since deriving a contradiction means no interpretation can satisfy all clauses.
+\section{Planning Problem Formalization}
+We formalized the planning problem with:
+\[
+  P = \langle \Sigma, s_o, S_g \rangle
+\]
+where \( \Sigma = \langle S, A, \gamma \rangle \)
+\begin{itemize}
+    \item \( s_0 \) is the initial state 
+    \item \( S_g \) is the set of goal states: \( S_g = \left\{ s \;|\; s \models G \right\} \)    
+    \item \( G \) is the goal formula (a conjuction of atoms) 
+\end{itemize}
+\subsection{States and Interpretations}
+States correspond to interpretations in propositional logic:
+\begin{itemize}
+    \item \( \texttt{at}(r_1, l_1) \): ground positive literal 
+    \item \( \lnot \texttt{loaded}(r_1) \): ground negative literal
+\end{itemize}
+\textbf{Abstraction}: From ground first-order literals to propositional literals. With finitely many ground atoms (literals) in the planning 
+problem, we obtain finitely many variables \( \;|\; X \;|\; = n \).
+\section{Bounded Planning Problem}
+\begin{definition}{Bounded Planning Problem}{Bounded Planning Problem}
+Does there exists a plan \( \pi \) that solves planning problem \( P \) and has length \( k \) (i.e., $\pi = k$, where $\pi$ is a sequence of $k$ actions)?
+\end{definition}
+\subsection{Iterative Deepening on Plan Length}
+We use iterative deepening to find the shortest plan by increasing the bound \( k \):
+\fbox{%
+    $\displaystyle
+    P\      
+    \; \xrightarrow{\;\text{translation}\;}\;
+    \Phi\       
+    \; \xrightarrow{\;\text{SAT}\;}\;
+    \left\{      
+        \begin{array}{l}
+            \textbf{YES}: \text{ interpretation } v \models \Phi 
+            \text{ encodes plan } \pi \text{ of length } k\\[10pt]
+            \textbf{No}: \text{ no plan of length } k \text{ solves } P
+        \end{array}
+    \right.
+    $%
+}
+The process iterates \( k := k + 1 \) until a solution is found. 
+\vspace{1em}
+\noindent
+\newline
+\textbf{Key Insight}: The SAT encoding \( \Phi \) includes:
+\begin{itemize}
+    \item Initial state constraints at time 0 
+    \item Goal constraints at time \( k \)     
+    \item Action precodinitions and effects for each time step 
+    \item Frame axioms ensuring persistence of unchanged literals
+\end{itemize}
+\subsection{Temporal Encoding of Literals}
+A key aspect of the SAT encoding for planning is the \textbf{temporal instantiation} of literals. Since a plan of length \( k \) requires tracking 
+state changes over time, each literal is indexed by time steps.
+\begin{itemize}
+    \item \textbf{Plan length} \( k \) we have \( 0 \leq i \leq k - 1 \) time steps (transitions)
+    \item Each literals \( f \) becomes \( f\symbol{64}t \) where \( t \) ranges from \( 0 \) to \( k \)     
+    \item State \( i \) is the state after executing \( i \) actions (before the \( i \)-th action)
+\end{itemize}
+\subsubsection{Temporal Instantiation}
+Consider the literal \( \texttt{at}(r_1, l_1) \) ("robot \( r_1 \) is at location \( l_1 \)"):
+\[
+  \texttt{at}(r_1, l_1) \xrightarrow{\text{temporal encoding}} \texttt{at}(r_1, l_1, i)
+\]
+Similarly, the negative literal \( \lnot \texttt{loaded}(r_1) \) becomes \( \lnot \texttt{loaded}(r_1, i) \), meaning "robot" \( r_1 \) is not 
+loaded at stage \( i \)".
 RIPRENDERE APPUNTI FINO A SLIDE 46
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
