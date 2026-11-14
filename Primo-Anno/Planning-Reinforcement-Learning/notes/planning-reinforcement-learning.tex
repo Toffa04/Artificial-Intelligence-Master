@@ -255,7 +255,7 @@ and operate efficiently under resource constraints.
 The mathematical foundation of planning rests on the concept of state transition system, which provides a formal model of 
 how actions transform states.
 
-\begin{definition}{State Transition System}
+\begin{definition}{State Transition System}{State Transition System}
 A state transition system is a tuple \( \Sigma = (S,A,\gamma) \) where:
 \begin{itemize}
     \item \( S \) is a finite or countably infinite set of \textbf{states}
@@ -281,7 +281,7 @@ State transition systems can be characterized by serveral important properties:
 \subsection{Classical Planning: Foundamental Assumptions}
 Classical planning makes several simplyfying assumptions that restrict the class of the problems
 considered but enable efficient algorithmic solutions.
-\begin{definition}{Classical Planning Framework}
+\begin{definition}{Classical Planning Framework}{Classical Planning Framework}
 The classical planning framework relies on six key assumptions:
 \begin{enumerate}
     \item Finitely many states
@@ -352,7 +352,7 @@ Modern planning research has devoloped extensions that relax these assumptions:
 \subsection{The Planning Problem}
 Given a state transition system \( \Sigma = (S,A,\gamma) \) we can now formally define
 the planning problem.
-\begin{definition}{Planning Problem}
+\begin{definition}{Planning Problem}{Planning Problem}
 A planning problem is a tuple \( P = (\Sigma, s_0, G) \) where:
 \begin{itemize}
     \item \( \Sigma = (S,A,\gamma) \) is a state transition system
@@ -376,7 +376,7 @@ Goals can be specified in several ways:
     \item \textbf{Utility functions}: In optimization settings, goals may be specified as utility 
         functions to maximize or cost functions to minimize.
 \end{itemize}
-\begin{definition}{Solution Plan}
+\begin{definition}{Solution Plan}{Solution Plan}
 A \textbf{solution} to a planning problem \( P = (\Sigma,s_0,G) \) is a 
 sequence of actions \( \pi = (a_1,a_2,\ldots,a_n) \) such that:
 \[
@@ -408,7 +408,7 @@ spaces. For example:
     \item A domain with \( k \) objects and \( m \) binary relations has up to \( 2^{mk^2} \) states
     \item Enumerating all states and transitions explicitly is infeansible for even moderately-sized problems
 \end{itemize}
-\begin{example}{Blocks World Complexity}
+\begin{example}{Blocks World Complexity}{Blocks World Complexity}
 Consider a Blocks World domain with \( n \) blocks. The number of possible 
 configurations grows super-exponentially with \( n \). For \( n = 10 \) blocks,
 there are more than \( 10^13 \) possible configurations. Explicitly representing the transition 
@@ -419,7 +419,7 @@ in the domain to represent large state spaces and transition functions implicitl
 \subsection{Action Schemas: Structured Representation}
 The classical approach to compact representation uses \textbf{action schemas} (also called action 
 template or operators). An action schema is a prametrized description of a family of related actions.
-\begin{definition}{Action Schema}
+\begin{definition}{Action Schema}{Action Schema}
 An action schema consists of:
 \begin{itemize}
     \item \textbf{Name and parameters}: A symbolic name and typed parameters, e.g., \( Move(x,y) \).
@@ -451,7 +451,7 @@ The representation allows:
     \item Use of logical inference techniques for plan generation
 \end{itemize}
 \subsubsection{State Update Semantics}
-\begin{example}{STRIPS Assumption}
+\begin{example}{STRIPS Assumption}{STRIPS Assumption}
 When an action is executed, the state is updated according to the action's effects:
 \begin{itemize}
     \item \textbf{Add list}: Atoms that become true after the action 
@@ -471,7 +471,7 @@ The Blocks World consists of:
     \item A table with unlimited space
     \item A robot arm that can pick up and put down blocks
 \end{itemize}
-\begin{example}{Blocks World State Representation}
+\begin{example}{Blocks World State Representation}{Blocks World State Representation}
 \textbf{State predicates}:
 \begin{itemize}
     \item \( \texttt{On}(x,y) \): Block \( x \) is directly on top of blocks \( y \).
@@ -531,7 +531,7 @@ We continue our discussion of the formalization and representation of planning p
 A fundamental technique in automated planning is to \textbf{reduce the planning problem to the 
 stisfiability problem of propositional logic}. This reduction allows us to leverage powerful SAT
 solvers to find plans efficently.
-\begin{definition}{Reduction to SAT}
+\begin{definition}{Reduction to SAT}{Reduction to SAT}
 The key idea is to encode:
 \begin{itemize}
     \item The initial state as a propositional formula
@@ -1224,6 +1224,113 @@ Consider the literal \( \texttt{at}(r_1, l_1) \) ("robot \( r_1 \) is at locatio
 \]
 Similarly, the negative literal \( \lnot \texttt{loaded}(r_1) \) becomes \( \lnot \texttt{loaded}(r_1, i) \), meaning "robot" \( r_1 \) is not 
 loaded at stage \( i \)".
+\begin{definition}{State Transition}{State Transition}
+Step \( i \) (where $0 \leq i \leq k - 1$) takes us from state \( i \) to state \( i + 1 \) by executing one action.
+\end{definition}
+\subsection{Encoding the Initial State}
+The initial state \( s_0 \) is encoded as a conjuction of constraints at time \( t = 0 \):
+\[
+  \Phi_{s_0} = \bigwedge_{f \in s_0} f\symbol{64}0 \quad \wedge \quad \bigwedge_{f \notin s_0} \lnot f\symbol{64}0
+\]
+Where \( f \) represents ground literals.
+\subsubsection{From Literals to Propositional Variables}
+Each temporally indexed literal corresponds to a propositional variable:
+\begin{itemize}
+    \item \( \texttt{at}(r_1,l_1,0) \) correspond to variable \( x_{\texttt{at}(r_1,l_1)}\symbol{64}0 \)
+    \item \( \lnot \texttt{loaded}(r_1,0) \) correspond to \( \lnot x_{\texttt{loaded}(r_1)}\symbol{64}0 \)
+\end{itemize}
+\subsubsection{Example: Complete Initial State Encoding}
+Consider an initial state containing \( \texttt{at}(r_1,l_1) \) but not \( \texttt{laoded}(r_1) \):
+\begin{align*}
+    & \text{Literals in } s_0: & \texttt{at}(r_1,l_1) & \wedge \lnot \texttt{loaded}(r_1)\wedge \ldots \\
+    & \text{Temporal encoding }: & \texttt{at}(r_1,l_1,0) & \wedge \lnot \texttt{loaded}(r_1,0) \wedge \ldots \\
+    & \text{SAT variables }: & x_{\texttt{at}(r_1,l_1)}\symbol{64}0 & \wedge \lnot x_{\texttt{loaded}(r_1)}\symbol{64}0\wedge \ldots \\
+\end{align*}
+For literals not in the initial state (e.g., $\texttt{at}(r_1,l_2), \texttt{at}(r_1,l_3$)), these are assigned false:
+\[
+  \lnot \texttt{at}(r_1,l_2,0), \quad \lnot \texttt{at}(r_1,l_3,0)
+\]
+\textbf{Alternative notation}: The initial state encoding can also be written using set notation:
+\[
+  \Phi_{s_0} = \bigwedge_{x \in S_0^+} x_0 \wedge \bigwedge_{x \in S_0^-} \lnot x_0
+\]
+where \( S_0^+ \) is the set of positive literals in \( s_0 \) and \( S_0^- \) is the set of negative literals in \( s_0 \).
+\subsection{Encoding the Goal State}
+The goal conditions must be satisfied at the final time step \( k \).
+\begin{definition}{Goal Encoding}{Goal Encoding}
+The goal states are encoded at time \( k \) as:
+\[
+  \Phi_G = \bigwedge_{x \in G^+} x_k \wedge \bigwedge_{x \in G^-} \lnot x_k
+\]
+where \( G^+ \) is the set of positive literals in the goal \( G \) and \( G^- \) is the set of negative literals in \( G \).
+\end{definition}
+\textbf{Interpretation}: This formula ensures that all positive goal conditions are true and all negative goal conditions are false 
+i nthe final state after executing \( k \) actions.
+\subsection{Encoding Actions}
+The planning problem is defined as \( \Sigma = \langle S, A, \gamma \rangle \) where \( A \) is the set of all ground instances of 
+the action schemas.
+\subsubsection{Action Preconditions}
+For each action \( a \in A \) at each time step \( i \) (where $0 \leq i \leq k - 1$), we encode the constraint that 
+if the action is executed, its preconditions must hold:
+\begin{definition}{Action Precondition Encoding}{Action Precondition Encoding}
+\[
+  \forall a \in A, \forall i \in \left\{0, \ldots, k - 1 \right\}: \quad a_i \rightarrow \bigwedge_{p \in \text{prec}(a)}p_i
+\]
+where \( \text{prec}(a) \) denotes the set of preconditions of action \( a \).
+\end{definition}
+\textbf{Interpretation}: This formula states that if action \( a \) is executed at time \( i \), then all of its preconditions 
+must be satisfied at time \( i \). The implication can be rewritten in CNF as:
+\[
+  \lnot a_i \vee \bigwedge_{p \in \text{prec}(a)} p_i
+\]
+\subsubsection{Mutual Exclusion of Actions}
+At each time step, at most one action can be executed. This constraints is encoded as follows:
+\begin{definition}{Action Mutual Exclusion}{Action Mutual Exclusion}
+For all pairs of distinct actions $(a,b) \in A \times A$ where \( a \neq b \), and for all time steps \( i \) where \( 0 \leq i \leq k - 1 \):
+\[
+  \lnot a_i \vee \lnot b_i
+\]
+\end{definition}
+This formula ensures that actions \( a \) and \( b \) cannot both be executed at the same time step \( i \).
+\vspace{1em}
+\noindent 
+\newline
+\textbf{Equivalent formulas}:
+\begin{itemize}
+    \item \( a_i \rightarrow \lnot b_i \): If action \( a \) is executed at time \( i \), then action \( b \) is not executed 
+    \item \( b_i \rightarrow \lnot a_i \): If action \( b \) is executed at time \( i \), the action \( a \) is not executed
+\end{itemize} 
+\subsection{Complete SAT Encoding}
+The complete SAT encoding \( \Phi \) for a bounded planning problem with plan length \( k \) is the conjunction of the following sets of propositional fromulas:
+\[
+  \Phi = \Phi_{s_0} \wedge \Phi_G \wedge \Phi_{\text{actions}} \wedge \Phi_{\text{mutex}} \wedge \Phi_{\text{frame}}
+\]
+where: 
+\begin{itemize}
+    \item \( \Phi_{s_0} \): Initial state constraints 
+    \item \( \Phi_G \): Goal state constraints 
+    \item \( \Phi_{\text{actions}} \): Action precondition and effect constraints 
+    \item \( \Phi_{\text{mutex}} \): Mutual exclusion constraints between actions 
+    \item \( \Phi_{\text{frame}} \): Frame axioms (persistence of unchanged literals)
+\end{itemize}
+\subsection{Plan Extraction from SAT Model}
+Once the SAT solver returns a satisfying assignment, we can extract the corresponding plan.
+\begin{definition}{Plan Extraction}{Plan Extraction}
+Let \( v \) be a satisfying interpretation (model) returned by the SAT solver, represented as a set of literals. The plan \( \pi \) is extracted as follows:
+\[
+  \pi = \langle a_0, a_1, \ldots, a_{k - 1} \rangle
+\]    
+where \( a_i \) is the unique action such that \( v \models a_i \) (i.e., $a_i$ is assigned \texttt{true} in the model $v$) for each time 
+step \( i \in \left\{ 0,1,\ldots,k-1 \right\} \).
+\end{definition}
+\textbf{Extraction procedure}:
+\begin{enumerate}
+    \item Filter the model \( v \) to obtain only the action literals: \( \left\{ a_i \;|\; a \in A, 0 \leq i \leq k - 1, v \models a_i \right\} \)     
+    \item For each time step \( i \), identify the action \( a \) such that \( a_i \) is true in \( v \)      
+    \item Construct the sequence \( \pi = \langle a_0, a_1, \ldots, a_{k - 1} \rangle \)    
+\end{enumerate}
+\textit{Remark}. Due to the mutual exclusion constraints, at most one action is true at each time step. If no action is true at some time step 
+\( i \), this correspond to a "no-op" (no operation) action.
 RIPRENDERE APPUNTI FINO A SLIDE 46
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
@@ -1232,8 +1339,8 @@ to efficently solve large satisfiability problems.
 \subsection{CDCL Algorithm Overview}
 CDCL implements \textbf{depth-first search strategy} with intelligent backjumping (undo one or  more decision) 
 and clause learning:
-\begin{definition}{CDCL Components}
-\centering \textbf{CDCL} combines several key techniques:
+\begin{definition}{CDCL Components}{CDCL Components}
+\textbf{CDCL} combines several key techniques:
 \begin{itemize}
     \item \textbf{Unit propagation}: Efficient inference of forced assignments
     \item \textbf{Conflict analysis}: Learning from failures to guide future search 
@@ -1244,8 +1351,8 @@ and clause learning:
 \subsection{Backjumping: Generalized Backtracking}
 Backjumping is a generalization of the basic backtracking (undo one decison) mechanism that allows 
 the solver to jump back to erlier decision levels, not just the immediately preceding one.
-\begin{definition}{Backjumping vs Backtracking}
-\centering In \textbf{backjumping}, when a conflict occurs, the solver 
+\begin{definition}{Backjumping vs Backtracking}{Backjumping vs Backtracking}
+In \textbf{backjumping}, when a conflict occurs, the solver 
 analyzes the conflict cause to determine the earliest decisione level that contributed to conflict.
 It then jumps back to that level, rather than just the immediately preceding decision.
 \vspace{1em}
@@ -1267,8 +1374,8 @@ levels that did not contribute to the conflict.
 \section{Binary Resolution}
 The theoretical foundation of conflict analysis relies on \textbf{binary resolution}, a foundamental inference rule in propositional logic
 \subsection{Resolution Rule}
-\begin{definition}{Binary Resolution}
-\centering Given two clauses containing complementary literals:
+\begin{definition}{Binary Resolution}{Binary Resolution}
+Given two clauses containing complementary literals:
 \[
   \frac{C \vee L \quad D \vee \lnot L}{(C \vee D)}
 \]
@@ -1277,8 +1384,8 @@ The \textbf{resolvent} \( C \vee D \) is logically entailed by the two premises.
 clauses that preserve satisfiability.
 \subsection{Soundness of Resolution}
 Binary resolution is \textbf{sound}, the resolvent is logically entailed by the permise.
-\begin{theorem}{Resolution Soundness}
-\centering \( If {C \vee L, D \vee \lnot L} \models R where R is any formula, then {C \vee
+\begin{theorem}{Resolution Soundness}{Resolution Soundness}
+\( If {C \vee L, D \vee \lnot L} \models R where R is any formula, then {C \vee
 L, D \vee \lnot L} \models (C \vee D) \).
 \vspace{1em}
 \noindent
@@ -1303,8 +1410,8 @@ decision levels are responsible:
 \section{Explanation Mechanism}
 The explanation mechenism in CDCL traces the implications that led to a conflict,
 allowing the solver to learn more general constraints.
-\begin{theorem}{Explanation rule}
-\centering \[ \langle S \Vert \varGamma \Vert C \rangle \rightarrow \langle S \Vert \varGamma \Vert C \vee D \rangle \]
+\begin{theorem}{Explanation rule}{Explanation rule}
+\[ \langle S \Vert \varGamma \Vert C \rangle \rightarrow \langle S \Vert \varGamma \Vert C \vee D \rangle \]
 if \( \lnot L \in \varGamma \) where \( \lnot L \) was propagated using the clause \( D \vee \lnot L \).
 \end{theorem}
 \subsection{Explanation Process}
@@ -1389,8 +1496,8 @@ This organization enables efficient backjumping by allowing the solver to quickl
 return to relevant decision levels during conflict analysis.
 
 \subsection{Illustrative example}
-\begin{example}{Instance}
-\centering \( S = \left\{ P, \lnot P \vee Q \vee R, T \vee \lnot Q, \lnot R \vee Q \right\} \)
+\begin{example}{Instance}{Instance}
+\( S = \left\{ P, \lnot P \vee Q \vee R, T \vee \lnot Q, \lnot R \vee Q \right\} \)
 \end{example}
 The inital propagation and decision sequence proceeds as follows·
 \[
