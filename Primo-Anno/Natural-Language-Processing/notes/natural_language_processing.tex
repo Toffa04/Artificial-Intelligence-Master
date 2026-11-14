@@ -4,7 +4,7 @@
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{textcomp}
-\usepackage[italian]{babel}
+\usepackage[english]{babel}
 \renewcommand{\familydefault}{\sfdefault}
 \emergencystretch=1.5em
 \usepackage{enumitem}   % nel preambolo
@@ -160,393 +160,201 @@
 \tableofcontents
 \pagebreak
 
-\section{Introduction}
-Language is a structured system of conventional signs used by agents to represent,
-express and communicate meanings.
-
-\subsection{How did language emerge?}
-Two question must be distinguished:
-\begin{itemize}
-    \item \textbf{fThe evolutionary origin of the human capacity for language:} how biological, cognitive and 
-        social evolution made language possibile.
-    \item \textbf{The historical development of particular language:} how language changes, differentiate, interact
-        and give rise to language families
-\end{itemize}
-The origin of language itself is not directly documented. Spoken and signed languages existed long before
-writing, so their early history must be reconstructured indirectly using evidence from:
-\begin{itemize}
-    \item human biology and cognition
-    \item archaeology
-    \item comparative linguistic
-    \item animal comunication
-\end{itemize}
-
-\subsection{What is language?}
-Language is a structured system of conventional signs used by agents to represent, express and communicate meanings.
-\begin{itemize}
-    \item Spoken sound
-    \item Signed gesture
-    \item Written symbols
-    \item Tactile signs, such as Braille
-    \item Haptic signs, conveyed through touch or movement
-\end{itemize}
-
-\subsection{Who does use language?}
-\begin{itemize}
-    \item \textbf{Human agents}
-    \item \textbf{Non-human animal agents}
-        \begin{itemize}
-            \item some non-human animals use structured communication system, although their classification
-                as languages is disputed
-        \end{itemize}
-    \item \textbf{Artificial agents}
-        \begin{itemize}
-            \item artificial agents process and generate linguistic expressions, while the nature of their understanding remains an open theoretical question.
-        \end{itemize}
-\end{itemize}
-\subsection{Level of linguistic representation}
-
-\rowcolors{2}{rowgray}{white}
-\begin{tabularx}{\textwidth}{>{\bfseries}p{3.6cm} Y Y}
-    \rowcolor{head}
-    \color{white}\bfseries Level &
-    \color{white}\bfseries Principal units &
-    \color{white}\bfseries Central question \\
-    \toprule
-    Signal & Sounds, gestures, written or tactile signs & How is language physically conveyed? \\
-    Phonological or graphemic & Phonemes, syllables, graphemes & How are elementary signs organized and distinguished? \\
-    Morphological & Morphemes and word forms & How are meaningful components combined into words? \\
-    Lexical & Words, lemmas and senses & What words exist, and what can they mean? \\
-    Syntactic & Phrases, clauses and sentences & How are words combined into structured expressions? \\
-    Semantic & Concepts, entities, predicates, arguments and propositions & What does the expression mean? \\
-    Discourse & Sentences, utterances and discourse relations & How does an expression connect with the surrounding text or conversation? \\
-    Pragmatic & Speakers, hearers, intentions and context & What does an agent want to obtain by using the expression in this situation? \\
-    \bottomrule
-\end{tabularx}
-
-\subsection{Typology based on writing system}
-Languages should be distinguished based on their features. We may start by their writing system to step 
-onto four further basic features:
-\begin{itemize}
-    \item Morphology
-    \item Syntax
-    \item Semantics
-    \item Pragmatics
-\end{itemize}
-
-\subsection{IPA}
-The international phonetic alphabet (IPA) is a standardized system for representing the sounds of spoken language.
-Ideally, each symbol identifies a particular speech sound independently of the ordinary spelling conventions of a laguage.
+\part{String Similarity and Edit Distance}
+\section{Minimum Edit Distance}
+We are going to deal with this main driving point: the definition of Minimum Edit Distance.
 \vspace{1em}
 \noindent
 \newline
-We can present three languages as a progression in the relationship between \textbf{written form and pronounciation}.
-This is not a progression from a \textit{simple language} to a \textit{complex language}, it concerns the complexity
-of their orthographic systems and form-sound correspondences. 
-
-\subsection{Ambiguity}
-Ambiguity occurs when the same linguistic expression permits two or more distinct analyses or interpretations.
-\textbf{RECUPERARE FINO A SLIDE 66 NLP.pdf}
-\part{Language Modeling}
-\section{Introduction to N-grams}
-\subsubsection{Probabilistic Language Models}
-A \textbf{Language Model} (LM) is a model that assigns probabilities to sequences of words.
+\textbf{The question: are this 2 texts the same?}
 \vspace{1em}
 \noindent
 \newline
-\textbf{Goal}: Compute the probability of a sentence or sequence of words:
-\[
-  P(W) = P(w_1,w_2,w_3,w_4,w_5, \ldots, w_n)
-\]
-\textbf{Related task}: Probability of an upcoming word:
-\[
-  P(w_5 \;|\; w_1,w_2,w_3,w_4)
-\]
-A model that computes either of these is called a \textbf{language model}.
+When is the case when 2 texts are the same? Of course when every single character is the same.
+What if we would like to understand if 2 texts are pretty close (not the same)?
 \vspace{1em}
 \noindent
 \newline
-\textbf{Terminology note}: Better term would be "the grammar" but \textbf{language model} or 
-\textbf{LM} is standard.
-\subsubsection{Why Probabilistic Language Models?}
-Language models are fundamental for many NLP applications.
-\subsubsection{Machine Translation}
-A language model helps choose the most natural translation.
-\begin{example}{Natural translation}{Natural translation}
-\begin{itemize}
-    \item P(high winds tonite) > P(large winds tonite)
-\end{itemize}
-"High winds" is a more common collocation than "large winds"
-\end{example}
+Single characters in the text could be different in position.
+\subsection{How similar are two strings?}
+The fundamental question in edit distance is: how can we measure the similarity between two 
+strings? This problem appears in many different applications across various domains of computer 
+science and computational linguistics.
 \subsubsection{Spell Correction}
-\begin{example}{Spell Correction}{Spell Correction}
-"The office is about fifteen minutes from my house"
-\[
-  P(\text{about fifteen \textbf{minutes} from }) > P(\text{about fifteen \textbf{minutes} from})
-\]
-Both "minutes" and "minutes" are valid words, but the context makes "minutes" much more likely.
-\end{example}
-\subsubsection{Speech Recognition}
-Many word sequences sound similar when spoken.
-\begin{example}{Speech Recognition}{Speech Recognition}
-\[
-  P(I \text{saw a van }) \gg P(\text{eyes awe of an})
-\]
-The labguage model helps disambiguate between phonetically similar sequences
-\end{example}
+In spell correction systems, we need to find the closest valid word to a misspelled input. For 
+example, if the user typed "graffe", we need to determine which word in our dictionary is most similar.
+\vspace{1em}
+\noindent
+\newline
+Possible candidates:
+\begin{itemize}
+  \item graf 
+  \item graft 
+  \item grail 
+  \item giraffe
+\end{itemize}
+By computing the edit distance between "graffe" and each candidate, we can identify that "giraffe" is likely the intended 
+word (requiring only one deletion).
+\subsubsection{Computational Biology}
+In bioinformatics, sequence alignment is crucial for comparing DNA, RNA, or protein sequences.
+By aligning sequences, we can identify regions of similarity that may indicate functional, structural, or evolutionary relationships.
+\vspace{1em}
+\noindent
+\newline
+Example: Align two sequences of nucleotides:
+\vspace{1em}
+\noindent
+\newline
+\texttt{AGGCTATCACCTGACCTCCAGGCCGATGCCC}
+\vspace{1em}
+\noindent
+\newline
+\texttt{TAGCTATCACGACCGCGGTCGATTTGCCCGAC}
+\vspace{1em}
+\noindent
+\newline
+Resulting alignment (dashes represent insertions/deletions):
+\vspace{1em}
+\noindent
+\newline
+\texttt{-AGGCTATCACCTGACCTCCAGGCCGA--TGCCC---}
+\newline
+\texttt{TAG-CTATCAC--GACCGC--GGTCGATTTGCCCGAC}
+\vspace{1em}
+\noindent
+\newline
+The alignment reveals matching regions (shown in the same positions) and differences between the sequences.
 \subsubsection{Other Applications}
+String similarity and edit distance algorithms are fundamental tools in many NLP tasks:
 \begin{itemize}
-    \item \textbf{Summarization}
-    \item \textbf{Question-answering}
-    \item \textbf{Dialogue systems}
-    \item \textbf{Text generation}
-    \item And many more!
+  \item \textbf{Machine Translation}: Comparing source and target language phrases, finding similar translations in translation memories.
+  \item \textbf{Information Extraction}: Matching entity names with variations (e.g., "IBM" vs "I.B.M." vs "International Business Machines")
+  \item \textbf{Speech Recognition}: Correcting recognition errors by finding the closest valid word or phrase to the acoustic model output
 \end{itemize}
-\subsection{How to Compute P(W)}
-How do we compute the probability of a word sequence?
-\begin{example}{How to compute}{How to compute}
-How to compute this joint probability:
-\[
-  P(\text{its, water, is, so, transparent, that})
-\]
-\end{example}
-\subsubsection{Naive approach: Counting}
-We could how many times this exact sequence appears in a corpus:
-\[
-    P(W) = \frac{\text{Count}(w_1,w_2,\ldots,w_n)}{\text{Total number of word sequences of lenght } n}
-\]
-\textbf{Problems}:
+\subsection{Edit Distance}
+The \textbf{minimum edit distance} between two strings is defined as the minimum number of editing operations needed to transform 
+one string into the other
+\subsubsection{Edit Operations}
+\begin{definition}{Three Basic Edit Operations}{Three Basic Edit Operation}
+There are three basic editing operations:
 \begin{itemize}
-    \item \textbf{Data sparsity}: Most sequences never appear in any corpus
-    \item \textbf{Combinatorial explosion}: Number of possible sequences grows exponentially 
-    \item \textbf{No generalization}: Can't handle novel sequences
+  \item \textbf{Insertion}: Add a character at any position in the string 
+  \begin{itemize}
+    \item Example: cat \( \rightarrow \) cart (insert 'r')
+  \end{itemize}
+  \item \textbf{Deletion}: Remove a character from any position in the string 
+  \begin{itemize}
+    \item Example: cart \( \rightarrow \) cat (delete 'r')
+  \end{itemize}
+  \item \textbf{Substitution}: Replace one character with another 
+  \begin{itemize}
+    \item Example: cat \( \rightarrow \) bat (substitute 'c' with 'b')
+  \end{itemize}
 \end{itemize}
-\subsubsection{Chain Rule of Probability}
-\textbf{Reminder}: Recall the definition of conditional probabilities:
-\[
-  p(B \;|\; A) = \frac{P(A,B)}{P(A)}
-\]
-Rewriting this: \( P(A \;|\; B) = P(A) \cdot P(B \;|\; A) \)
+\subsubsection{Key Concept}
+The edit distance measures the \textit{minimum} number of these operations required to transform one 
+string into another. This metric provides a quantitative measure of string similarity: the smaller 
+the edit distance, the more similar the strings are.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Important note}: Each operation has a cost (typically 1), and we seek the sequence of operations
+that minimizes the total cost. Different variants of edit distance may assign different costs 
+to different operations (e.g., Levenshtein distance uses unfirom costs, while other variants may weight substitutions differently)
+\end{definition}
+\subsubsection{Example: Alignment of Two Strings}
+To better understand edit distance, let's examine how two strings can be aligned to show their differences.
+Consider the string "INTENTION" and "EXECUTION":
+\begin{center}
+  \setlength{\tabcolsep}{7pt}   % spazio tra le colonne
+  \begin{tabular}{*{10}{c}}
+    I & N & T & E & $*$ & N & T & I & O & N \\
+    $|$ & $|$ & $|$ & $|$ & $|$ & $|$ & $|$ & $|$ & $|$ & $|$ \\
+    $*$ & E & X & E & C & U & T & I & O & N
+  \end{tabular}
+\end{center}
+In this alignment:
+\begin{itemize}
+  \item The asterisk (*) represents a gap, indicating an insertion or deletion operation 
+  \item Vertical bars (|) connect corresponding positions between the two strings 
+  \item Characters that match are aligned vertically (E, T, I, O, N)
+  \item Characters that differ indicate a substitution operations
+\end{itemize}
+\textbf{Operations needed to transform "INTENTION" to "EXECUTION"}
+\begin{enumerate}
+  \item Delete 'I' at position 1 
+  \item Substitute 'N' with 'E' at position 2 
+  \item Substitute 'T' with 'X' at position 3
+  \item Keep 'E' (match)
+  \item Insert 'C' at position 5
+  \item Substitute 'N' with 'U' at position 6 
+  \item Keep 'T' (match)
+  \item Keep 'I' (match)
+  \item Keep 'O' (match)
+  \item Keep 'N' (match)
+\end{enumerate}
+This gives us a total edit distance of \textbf{5 operations} (1 deletion + 3 substitution + 1 insertion)
+\subsubsection{Cost variants: Standard vs Levenshtein}
+The total distance depends on how we assign costs to each operation:
+\begin{definition}{Standard Edit Distance (uniform cost)}{Standard Edit Distance (uniform cost)}
+\begin{itemize}
+  \item Each operation (insertion, deletion, substitution) costs 1 
+  \item Total distance for INTENTION \( \rightarrow \) EXECUTION: \( \mathbf{5} \)   
+  \item Calculation: 1 (deletion) + 3 \( \times \) 1 (substitutions) + 1 (insertion) = 5
+\end{itemize}
+\end{definition}
+\begin{theorem}{Levenshtein Distance (weighted substitution)}{Levenshtein Distance (weighted substitution)}
+\begin{itemize}
+  \item Insertion costs 1 
+  \item Deletion costs 1 
+  \item Substitution costs 2 (considered as a deletion + insertion, hence a "double error")
+  \item Total distance for INTENTION \( \rightarrow \) EXECUTION: \( \mathbf{8} \)    
+  \item Calculation: 1 (deletion) + 3 \( \times \) 2 (substitution) + 1 (insertion) = 8
+\end{itemize}
+\end{theorem}
+\textbf{Why the difference?} In the Levenshtein variant, a substitution is viewed as conceptually 
+equivalent to deleting a character and then inserting a different one, thus costing twice as much.
+This distinction is important when choosing which distance metric to use for a particular relationships.
+\subsection{Alignment in Computational Biology}
+In computation biology, sequence alignment is a fundamental technique for comparing DNA, RNA, or protein sequences.
+The goal is to identify regions of similarity and understand evolutionary relationships.
+\subsubsection{The alignment problem}
+\textbf{Given a sequence of bases:}
+\vspace{1em}
+\noindent 
+\newline 
+\texttt{AGGCTATCACCTGACCTCCAGGCCGATGCCC}
 \vspace{1em}
 \noindent 
 \newline
-\textbf{Generalizing to more variables}:
-\[
-  P(A,B,C,D) = P(A) \cdot P(B \;|\; A) \cdot P(C \;|\; A,B) \cdot P(D \;|\; A,B,C)  
-\]
-\textbf{The chain rule in general}:
-\[
-  P(x_1,x_2,x_3,\ldots,x_n) = P(x_1) \cdot P(x_2 \;|\; x_1) \cdot P(x_3 \;|\; x_1,x_2) \ldots P(x_n \;|\; x_1, \ldots, x_{n - 1})
-\]
-\textbf{Intuition}: Break down the joint probability into conditional probabilities.
+\texttt{TAGCTATCACGACCGCGGTCGATTTGCCCCGAC}
 \vspace{1em}
-\noindent
+\noindent 
 \newline
-The \textbf{chain rule} decomposes a joint probability:
-\[
-  P(w_1,w_2,\ldots,w_n) = P(w_1) \cdot P(w_2 \;|\; w_1) \cdot P(w_3 \;|\; w_1, w_2) \ldots P(w_n \;|\; w_1, \ldots, w_{n - 1})
-\]
-Or more compactly:
-\[
-  P(W) = \prod_{i = 1}^{n} P(w_1 \;|\; w_1,\ldots,w_{i - 1})
-\]
-\textbf{Example}: For "its water is so transparent that":
-\begin{center}
-    \begin{align*}
-        &P(\text{its, water, is, so, transparent, that}) & = P(\text{its}) \\
-        & & \times P(\text{water} \;|\; \text{its}) \\
-        & & \times P(\text{its} \;|\; \text{its, water}) \\
-        & & \times P(\text{so} \;|\; \text{its, water, is}) \\
-        & & \times P(\text{transparent} \;|\; \text{its, water, is, so}) \\
-        & & \times P(\text{that} \;|\; \text{its, water, is, so, transparent}) \\
-    \end{align*}
-\end{center}
-\textbf{Why this helps}: Conditional probabilities like \( P(\text{water} \;|\; \text{its}) \) are easier to estimate from data.
-\subsubsection{How to Estimate These Probabilities}
-\textbf{Could we just count and divide?}
+\textbf{An alignment}:
 \vspace{1em}
-\noindent
+\noindent 
 \newline
-\textbf{No!} The problem remains:
-\begin{itemize}
-    \item \textbf{Too many possible sentences}: The number of possible word sequences is astronomical 
-    \item \textbf{Insufficient data}: We'll never see enough data to estimate probabilities for all possible sequences 
-    \item Even with the Chain Rule, long contexts like \( P(\text{transparent} \;|\; \text{its, water, is, so}) \) are still extremely rare
-\end{itemize}
-\subsection{Neural Language Models}
-While N-gram models are simple and interpretable, they suffer from funamental limitations.
-Neural language models address these issues using deep learning to capture complex 
-patterns in language.
-\subsubsection{Limitations of N-gram Models}
-N-gram models have several critical limitations:
-\begin{itemize}
-    \item \textbf{Curse of dimensionality}: The number of parameters grows exponentially with \( n \)   
-    \item \textbf{Data sparsity}: Most N-grams never appear in training data 
-    \item \textbf{Lack of generalization}: Cannot handle unseen combinations of words 
-    \item \textbf{Fixed context}: Limited by the Markov assumption 
-    \item \textbf{No semantic understanding}: Treats words as discrete symbols
-\end{itemize}
-\subsubsection{From N-grams to Neural Networks}
-Neural language models use continuous vector representation (embeddings) instead of discrete symbols:
-\begin{definition}{Key innovation: Word Embeddings}{Key innovation: Word Embeddings}
-\textbf{Dense vector representations} capture semantic and syntactic relationship between words. 
-\newline
-\textbf{Example}: Words like "cat", "dog", "kitten" have similar vector representations because they are semantically related.
-\end{definition}
-\subsubsection{Feedforward Neural Language Models}
-The first neural language models used feedforward netwroks to predict the next word.
+\texttt{-AGGCTATCACCTGACCTCCAGGCCGA---TGCCC---}
+\newline 
+\texttt{TAG-CTATCAC--GACCGC--GGTCGATTTGCCCCGAC}
+\subsubsection{Alignment Objective}
+\textbf{Given two sequences, align each letter to a letter or gap}
 \vspace{1em}
-\noindent
+\noindent 
 \newline
-\textbf{Architecture}:
-\begin{enumerate}
-    \item \textbf{Input}: Concatenated embeddings of context words 
-    \item \textbf{Hidden layers}: Learn complex transformations 
-    \item \textbf{Output}: Probability distribution over vocabulary
-\end{enumerate}
-\textbf{Mathematica formulation}:
-\[
-  P(w_i \;|\; w_{i - n + 1}, \ldots, w_{i - 1}) = \text{softmax}(W \cdot \tanh(U \cdot \mathbf{x} + b) + c)
-\]
-Where \( \mathbf{x} \) is the concatenated embedding vector of the context words.
-\subsubsection{Recurrent Neural Language Models}
-\begin{definition}{RNN Language Models}{RNN Language Models}
-RNNs process sequeces by maintaining a \textbf{hidden state} that captures information 
-from previous timesteps:
-\[
-  h_t = \tanh(W_{hh}h_{t-1} + W_{xh}x_t + b)
-\]
-\[
-  P(w_t \;|\; w_{1:t - 1}) = \text{ softmax}(W_{hy}h_t + c)
-\]
-\end{definition}
-\textbf{Advantages}:
+The alignment process involves:
 \begin{itemize}
-    \item \textbf{Variable length}: Can handle sequences of any length 
-    \item \textbf{Memory}: Hidden state captures long-range dependencies 
-    \item \textbf{Shared parameters}: Same network process entire sequence
+  \item \textbf{Matching}: Aligning identical bases (e.g., A with A, G with G)
+  \item \textbf{Mismatches}: Aligning different bases (substitutions)
+  \item \textbf{Gaps}: Represented by dashes (-), indicating insertions or deletions (indels)
 \end{itemize}
-\subsubsection{Long Short-Term Memory (LSTM)}
-Standard RNNs suffer from \textbf{vanishing gradients}, making it difficult to learn long-range dependencies. LSTMs solve this 
-problem.
-\begin{theorem}{LSTM Architecture}
-LSTMs use \textbf{gates} to control information flow:
+\textbf{Key considerations}:
 \begin{itemize}
-    \item \textbf{Forget gate}: Decides what information to discard 
-    \item \textbf{Input gate}: Decides what new information to store 
-    \item \textbf{Output gate}: Decides what to output based on current state
+  \item The alignment should maximize the number of matches 
+  \item Minimize the number of mismatches and gaps 
+  \item Gaps are penalized because schemes can be used: match scores, mismatch penalties, and gap penalites
 \end{itemize}
-\textbf{LSTM equations}:
-\[
-  \mathbf{f}_t = \sigma(W_f \cdot [h_{t - 1}, x_t] + b_f)
-\]
-\[
-  \mathbf{i}_t = \sigma(W_i \cdot [h_{t - 1}, x_t] + b_i)
-\]
-\[
-  \widetilde{C_t} = \tanh(W_C \cdot [h_{t - 1}, x_t] + b_C) 
-\]
-\[
-  C_t = \mathbf{f}_t \odot C_{t - 1} + \mathbf{i}_t \odot \widetilde{C_t} 
-\]
-\[
-  \mathbf{o}_t = \sigma(W_o \cdot [h_{t - 1},x_t] + b_o)
-\]
-\[
-  h_t = \mathbf{o}_t \odot \tanh(C_t)
-\]
-\end{theorem}
-\subsubsection{Transformers: The modern Era}
-The transformer architecture revolutionized NLP by eliminating recurrence entirely and using 
-\textbf{self-attention} mechanisms.
-\begin{definition}{Attention Mechanism}{Attention Mechanism}
-\textbf{Self-Attention} allows the model to weigh the importance of different words in the context when 
-predicting the next word.
-\newline
-\textbf{Key idea}: Instead of processing words sequentially, attend to all words simultaneously.
-\end{definition}
-\subsubsection{Self-Attention Details}
-The attention mechanism computes three vectors for each word:
-\begin{itemize}
-  \item \textbf{Query (Q)}: What we're looking for 
-  \item \textbf{Key (K)}: What we can offer 
-  \item \textbf{Value (V)}: The actual content
-\end{itemize}
-\textbf{Attention weights}:
-\[
-  \text{Attention}(Q,K,V) = \text{softmax}(\frac{QK^T}{\sqrt{d_k}})V
-\]
-\subsubsection{Multi-Head Attention}
-Transformers use multiple attention heads to capture different types of realtionships:
-\[
-  \text{MutilHead}(Q,K,V) = \text{Concat}(\text{head}_1, \ldots, \text{head}_h)W^O
-\]
-\[
-  \text{where} \text{head}_i = \text{Attention}(QW_{i}^{Q}, KW_{i}^{K}, VW_{i}^{V})
-\]
-\subsubsection{Transformer Architecture}
-The complete Transformer consists of:
-\begin{enumerate}
-  \item \textbf{Positional encoding}: Adds position information since attention is permutation-invariant 
-  \item \textbf{Multi-head attention}: Captures realtionships between all words
-  \item \textbf{Feedforward networks}: Processes each position independently 
-  \item \textbf{Layer normalization and residual connection}: For stable training
-\end{enumerate}
-\subsubsection{BERT: Bidrectional Encoder Representations from Transformers}
-BERT revolutionized NLP by introducing bidirectional context understanding.
-\begin{definition}{BERT Key Innovation}{BERT Key Innovation}
-\begin{itemize}
-  \item \textbf{Bidirectional}: Unlike previous models, BERT sees both left and right context 
-  \item \textbf{Masked Language Modeling}: Predicts randomly masked words in a sentence
-  \item \textbf{Next Sentence Prediction}: Learns relationships between sentences 
-\end{itemize}
-\end{definition}
-\subsubsection{GPT: Generative Pre-Trained Transformer}
-The GPT series popularized autoregressive language modeling with transformer.
-\vspace{1em}
-\noindent
-\newline
-\textbf{Key features}
-\begin{itemize}
-  \item \textbf{Left-to-right generation}: Predicts next word given all previous words 
-  \item \textbf{Scale}: GPT-3 has 175 billion parameters 
-  \item \textbf{Few-shot learning}: Can perform tasks with minimal examples
-\end{itemize}
-\subsubsection{Language Model Evaluation}
-Modern language models are evaluated on:
-\begin{itemize}
-  \item \textbf{Perplexity}: Measures how well the model predicts test data 
-  \item \textbf{Downstream tasks}: Question answering, translation, summarization 
-  \item \textbf{Zero-shot performance}: Performance on unseen tasks
-\end{itemize}
-\subsubsection{Perplexity}
-Perplexity measures how "surprised" a language model is by new text:
-\[
-  \text{Perplexity}(W) = 2^{-\frac{1}{N}log_2P(W)} = (\prod_{i = 1}^{N} P(w_i \;|\; w_{1:i - 1}))^{-\frac{1}{N}}
-\]
-\textbf{Lower perplexity} indicates a better language model.
-\subsubsection{From Language Models to Applications}
-Neural language models power many modern NLP applications:
-\begin{itemize}
-  \item \textbf{Machine translation}: Neural machine translation systems 
-  \item \textbf{Text generation}: Creative writing, code generation, chatbots 
-  \item \textbf{Summarization}: Extractive and abstractive summarization 
-  \item \textbf{Question answering}: Reading comprehension systems 
-  \item \textbf{Sentiment analysis}: Understanding emotional content
-\end{itemize}
-\subsubsection{The future of Language Models}
-Current research directions include:
-\begin{itemize}
-  \item \textbf{Larger models}: Scaling beyond GPT-3
-  \item \textbf{Efficiency}: Making models faster and more memory-efficient 
-  \item \textbf{Multimodal}: Combining text with images, audio, video 
-  \item \textbf{Interpretability}: Understanding what models learn 
-  \item \textbf{Ethics}: Bias mitigation and responsible AI
-\end{itemize}
-\textbf{Key insight}: The field moved from simple statistical models to sophisticated nerual architectures 
-that can understand and generate human-like language with remarkable fluency.
-\part{Advanced Topics in NLP}
-\section{Transformer Applications}
-Beyond language modeling, transformers have revolutionized many NLP tasks.
-\subsection{Machine Translation}
+This alignment problem is directly related to edit distance: finding the optimal alignment is equivalent 
+to finding the minimum edit distance between the two sequences.
 \end{document}
