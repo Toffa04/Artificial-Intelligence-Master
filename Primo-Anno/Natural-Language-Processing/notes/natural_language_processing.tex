@@ -357,4 +357,44 @@ The alignment process involves:
 \end{itemize}
 This alignment problem is directly related to edit distance: finding the optimal alignment is equivalent 
 to finding the minimum edit distance between the two sequences.
+\subsection{Other uses of Edit distance in NLP}
+Edit distance is versatile tool used across many NLP applications beyond spell correction and 
+sequence alignment.
+\subsubsection{Evaluating Machine Translation and Speech Recognition}
+Edit distance can be used to evaluate the quality of machine translation and speech recognition 
+systems by comparing the system output with a reference (correct) translation or transcription.
+\vspace{1em}
+\noindent 
+\newline
+\textbf{Example}:
+\vspace{1em}
+\noindent 
+\newline
+\textbf{R} (Reference): Spokesman confirms senior government adviser was appointed 
+\vspace{1em}
+\noindent 
+\newline
+\textbf{H} (Hypothesis): Spokesman said the senior adviser was appointed 
+\[
+  \text{S} \quad \text{I} \quad \text{D} \quad \text{I}
+\]
+Where:
+\begin{itemize}
+  \item \textbf{S} = Substitution ("confirms" $\rightarrow$ "said")
+  \item \textbf{I} = Insertion ("the" inserted)
+  \item \textbf{D} = Deletion ("government" deleted)
+  \item \textbf{I} = Insertion (extra word)
+\end{itemize}
+The edit distance provides a quantitative measure of how different the hypothesis is from the 
+reference, which is crucial for evaluating system performance.
+\subsubsection{Named Entity Extraction and Entity Coreference}
+Edit distance helps identify when different text strings refer to the same entity, even when they 
+are written differently.
+\vspace{1em}
+\noindent 
+\newline
+\textbf{Examples}:
+\begin{itemize}
+  \item
+\end{itemize}
 \end{document}
