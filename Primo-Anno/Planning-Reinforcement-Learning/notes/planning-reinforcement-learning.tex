@@ -1396,6 +1396,38 @@ For action \( a_2 = \texttt{move}(r_1,l_2,l_1) \) at time step 0:
 \[
   \texttt{move}(r_1,l_2,l_1)\symbol{64}0 \rightarrow (\texttt{at}(r_1,l_2)\symbol{64}0 \wedge \texttt{at}(r_1,l_1)\symbol{64}1 \wedge \lnot \texttt{at}(r_1,l_2)\symbol{64}1)
 \]
+\subsubsection{Explanatory Frame Axioms}
+The \textbf{explanatory frame axioms} (also called \textbf{explanation axioms}) state that if a literal changes its truth
+value between time steps, then some action causing that change must have been executed.
+\vspace{1em}
+\noindent
+\newline
+\textbf{If} \( \texttt{at}(r_1,l_1) \) \textbf{becomes false}:
+\[
+  \texttt{at}(r_1,l_1)\symbol{64}0 \wedge \lnot \texttt{at}(r_1,l_1)\symbol{64}1 \rightarrow \texttt{move}(r_1,l_1,l_2)\symbol{64}0
+\]
+\textbf{If} \( \texttt{at}(r_1,l_2) \) \textbf{becomes false}:
+\[
+  \texttt{at}(r_1,l_2)\symbol{64}0 \wedge \lnot \texttt{at}(r_1,l_2)\symbol{64}1 \rightarrow \texttt{move}(r_1,l_2,l_1)\symbol{64}0
+\]
+\textbf{If} \( \texttt{at}(r_1,l_1) \) \textbf{becomes true}:
+\[
+  \lnot \texttt{at}(r_1,l_1)\symbol{64}0 \wedge \texttt{at}(r_1,l_1)\symbol{64}1 \rightarrow \texttt{move}(r_1,l_2,l_1)\symbol{64}0
+\]
+\textbf{If} \( \texttt{at}(r_1,l_2) \) \textbf{becomes true}:
+\[
+  \lnot \texttt{at}(r_1,l_2)\symbol{64}0 \wedge \texttt{at}(r_1,l_2)\symbol{64}1 \rightarrow \texttt{move}(r_1,l_1,l_2)\symbol{64}0
+\]
+\subsection{Solution Extraction}
+Given the constraints, the SAT solver will find a satisfying assignment that includes:
+\[
+  \texttt{move}(r_1,l_1,l_2)\symbol{64}0 = \text{ true}
+\]
+The extracted plan is:
+\[
+  \pi = \langle \texttt{move}(r_1,l_1,l_2) \rangle
+\]
+This plan has length 1 and achieves the goal of moving the robot from \( l_1 \) to \( l_2 \).
 RIPRENDERE APPUNTI FINO A SLIDE 46
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
