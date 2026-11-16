@@ -1331,6 +1331,71 @@ step \( i \in \left\{ 0,1,\ldots,k-1 \right\} \).
 \end{enumerate}
 \textit{Remark}. Due to the mutual exclusion constraints, at most one action is true at each time step. If no action is true at some time step 
 \( i \), this correspond to a "no-op" (no operation) action.
+\part{SAT Encoding Examples}
+\section{Detailed SAT Encoding Example}
+\subsection{Simple Robot Navigation Domain}
+To illustrate the complete SAT encoding process, we present a simple example with a single 
+robot ad two locations.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Example} (Robot Navigation). Consider a minimal planning domain with the following components:
+\vspace{1em}
+\noindent
+\newline
+\textbf{Objects}:
+\begin{itemize}
+    \item One robot: \( r_1 \)    
+    \item Two locations: \( l_1, l_2 \) 
+\end{itemize}
+\textbf{Action schema}: \( \texttt{move}(r,l,l') \)    
+\begin{align*}
+    &\text{Parameters:} & r(\text{robot}), l(\text{robot}),l(\text{source location}),l'(\text{destination location})\\
+    &\text{Preconditions:} & \texttt{at}(r,l)\\
+    &\text{Effect:} & \texttt{at}(r,l') \wedge \lnot \texttt{at}(r,l)
+\end{align*}
+\subsubsection{Ground actions}
+With one robot and two locations, we obtain two ground actions:
+\begin{enumerate}
+    \item \( a_1 = \texttt{move}(r_1,l_1,l_2) \): Move robot \( r_1 \) from location \( l_1 \) to location \( l_2 \)    
+    \item \( a_2 = \texttt{move}(r_1,l_2,l_1) \): Move robot \( r_1 \) from location \( l_2 \) to location \( l_1 \)
+\end{enumerate}
+\subsubsection{Problem Instance}
+\textbf{Initial state} (at time step $t = 0$):
+\[
+  s_0 = \left\{\texttt{at}(r_1,l_1) \right\}
+\]
+The robot starts at location \( l_1 \). This is encoded temporally as:
+\[
+  \texttt{at}(r_1,l_1)\symbol{64}0
+\]
+\textbf{Goal state} (at time step $t = 1$):
+\[
+  G = \left\{ \texttt{at}(r_1,l_2) \right\}
+\]
+The goal is for the robot to be at location \( l_2 \) after one action. This is encoded as:
+\[
+  \texttt{at}(r_1,l_2)\symbol{64}1
+\]
+\subsection{Complete SAT Encoding}
+For this problem with plan length $k = 1$, we construct the following propositional formulas:
+\subsubsection{Initial State COnstraints}
+\[
+  \Phi_{s_0} = \texttt{at}(r_1,l_1)\symbol{64}0 \wedge \lnot \texttt{at}(r_1,l_2)\symbol{64}0
+\]
+\subsubsection{Goal state Constraints}
+\[
+  \Phi_G = \texttt{at}(r_1,l_2)\symbol{64}1
+\]
+\subsubsection{Action Preconditions and Effect}
+For action \( a_1 = \texttt{move}(r_1,l_1,l_2) \) at time step 0:
+\[
+  \texttt{move}(r_1,l_1,l_2)\symbol{64}0 \rightarrow (\texttt{at}(r_1,l_1)\symbol{64}0 \wedge \texttt{at}(r_1,l_2)\symbol{64}1 \wedge \lnot \texttt{at}(r_1,l_1)\symbol{64}0)
+\]
+For action \( a_2 = \texttt{move}(r_1,l_2,l_1) \) at time step 0:
+\[
+  \texttt{move}(r_1,l_2,l_1)\symbol{64}0 \rightarrow (\texttt{at}(r_1,l_2)\symbol{64}0 \wedge \texttt{at}(r_1,l_1)\symbol{64}1 \wedge \lnot \texttt{at}(r_1,l_2)\symbol{64}1)
+\]
 RIPRENDERE APPUNTI FINO A SLIDE 46
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
