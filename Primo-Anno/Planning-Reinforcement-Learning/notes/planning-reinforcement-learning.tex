@@ -1554,7 +1554,60 @@ and \( v_F \in \mathcal{V} \) is a fresh propositional variable uniquely associa
 \noindent
 \newline
 \textbf{Intuition}: Each complex subformula is represented by a new auxiliary variable. This avoids the need 
-to duplicate subformulas during the transformation. 
+to duplicate subformulas during the transformation.
+\subsubsection{The Encoding Function}
+\begin{definition}{Encoding Function}{Encoding Function}
+The \textbf{Encoding function} is defined as:
+\[
+  \text{En } : \text{ PL } \rightarrow \text{ PL}
+\]
+\[
+  \text{En}(F) = F \leftrightarrow \text{ Rep}(F)
+\]
+\end{definition} 
+This encoding function creates a biconditional formula stating that formula \( F \) is logically equivalent to its 
+representative.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Interpretation}: \( \text{En}(F) \) encodes the constraint that the auxiliary variable \( \text{Rep}(F) \) must have the same 
+truth value as the formula \( F \) itself.
+\subsubsection{Complete ECNF Construction}
+\begin{definition}{ECNF via Tseitin Encoding}{ECNF via Tseitin Encoding}
+Given an input formula \( F \), let \( S_F \) denote the set of all subformulas of \( F \) (including $F$ itself).
+The \textbf{Equisatisfiable CNF} of \( F \) is:
+\[
+  \text{ECNF}(F) = \text{ Rep}(F) \bigwedge_{G \in S_F} \text{ En}(G)
+\]
+\end{definition}
+\textbf{Components}:
+\begin{itemize}
+    \item \( \text{Rep}(F) \): The representative variable for the entire formula (must be true)
+    \item \( \bigwedge_{G \in S_F} \text{En}(G) \): Conjunction of encoding constraints for all subformulas
+\end{itemize}
+\textbf{Why "Equisatisfiable"?}
+\vspace{1em}
+\noindent
+\newline
+The transformation from \( F \) to \( \text{ECNF}(F) \) does \textbf{not} preserve logical equivalence, but it \textbf{does}
+preserve satisfiability:
+\begin{theorem}{Equisatisfiability Theorem}{Equisatisfiability Theorem}
+\textit{Formula F is satisfiable if and only ig ECNF(F) is satisfiable}
+\end{theorem}
+\textit{Proof Sketch}. \textbf{Forward direction} ($F$ satifiable $\Rightarrow \text{ECNF}(F)$ satisfiable): If $F$ is satisfiable,
+we can extend the satisfying assignment to include the auxiliary variables by setting each \( v_G = \text{value}(G) \) under 
+the original assignment. This satisfies all encoding constraints.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Backward direction} ($\text{ECNF}(F)$ satisfiable $\Rightarrow F$ satisfiable): If $\text{ECNF}(F)$ is satisfiable, the encoding 
+constraints ensure that \( \text{Rep}(F) \) has the same truth value as \( F \). Since \( \text{Rep}(F) \) must be 
+true (it appears as a conjunct), \( F \) must also be true under the restriction of the assignment to the original variable \( \square \).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Key insight}: The ECNF introduces auxiliary variables but maintains the same satisfiability status as the original formula,
+while keeping the formula size linear.
 RIPRENDERE APPUNTI FINO A SLIDE 46
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
