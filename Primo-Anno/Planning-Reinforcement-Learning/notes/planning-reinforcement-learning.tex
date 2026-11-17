@@ -1428,6 +1428,133 @@ The extracted plan is:
   \pi = \langle \texttt{move}(r_1,l_1,l_2) \rangle
 \]
 This plan has length 1 and achieves the goal of moving the robot from \( l_1 \) to \( l_2 \).
+\section{Conversion to Conjunctive Normal Form}
+\subsection{CNF definition and Structure}
+To use a SAT solver, we must convert all formulas to \textbf{Conjunctive Normal Form (CNF)}.
+\begin{definition}{Conjunctive Normal Form (CNF)}{Conjunctive Normal Form (CNF)}
+A \textbf{clause} is a disjunction of literals: \( L_1 \vee L_2 \vee \ldots \vee L_k \) where 
+each \( L_i \) is a literal (an atom or its negation)
+\vspace{1em}
+\noindent
+\newline
+A formula is in \textbf{Conjunctive Normal Form} if it is a conjunction of clauses:
+\[
+  \text{CNF } = (L_1^1 \vee L_2^1 \vee \ldots \vee L_k^1) \wedge (L_1^2 \vee L_2^2 \vee \ldots \vee L_k^2) \wedge \ldots \wedge (L_1^m \vee L_2^m \vee \ldots \vee L_k^m)
+\]
+\end{definition}
+A set of clauses is logically equivalent to a conjunction of those clauses, which is precisely the CNF representation 
+required by SAT solvers.
+\subsection{Standard CNF Transformation}
+THe standard transformation to CNF involves applying logical equivalences to eliminate implications and biconditionals,
+push negations inward, and distribute disjunctions over conjunctions.
+\subsubsection{Logical Equivalences}
+The following logical equivalences are used in this transformation:
+\vspace{1em}
+\noindent
+\newline
+\textbf{Biconditional elimination}:
+\[
+  F \leftrightarrow G \equiv (F \rightarrow G) \wedge (G \rightarrow F)
+\]
+\vspace{1em}
+\noindent
+\newline
+\textbf{Implication elimination}:
+\[
+  F \rightarrow G \equiv \lnot F \wedge G 
+\]
+\vspace{1em}
+\noindent
+\newline
+\textbf{De Morgan's laws}:
+\begin{align*}
+    & \lnot(F \vee G) & \equiv & \lnot F \wedge \lnot G \\
+    & \lnot(F \wedge G) & \equiv & \lnot F \vee \lnot G \\
+\end{align*}
+\subsubsection{Negation Normal Form (NNF)}
+After applying the above equivalences, we obtain a formula in \textbf{Negation Normal Form (NNF)}, where negations appear only 
+directly in front of atoms (not in front of complex formulas).
+\subsubsection{Distribution to Obtain CNF}
+To convert NNF to CNF, we apply the \textbf{distributive law}:
+\[
+  F \vee (G \wedge H) \equiv (F \vee G) \wedge (F \vee H)
+\]
+This distributes disjunctions over conjunctions, eventually producing a conjunction of disjunctions (CNF).
+\subsection{The Exponential Blowup Problem}
+\textbf{Critical issue}: The standard CNF transformation cna cause a \textbf{combinatorial explosion} in formula size.
+\begin{theorem}{Exponential Blowup Problem}{Exponential Blowup Problem}
+\textit{Observation} (Exponential Blowup). In the wrost case, the standard transformation into CNF produces a formula 
+whose size is \textbf{exponential} in the size of the original formula:
+\newline
+\( O(2^n) \) where \( n \) is the size of the input formula.
+\end{theorem}
+This exponential blowup makes the standard transformation \textbf{impratical} fro large planning problems, as 
+the resulting CNF formula becomes too large to handle efficiently.
+\subsection{Equisatisfiable CNF (ECNF)}
+To avoid the exponential blowup, we use a different approach that produces an \textbf{Equisatisfiable CNF (ECNF)}.
+\begin{definition}{Equisatisfiable CNF (ECNF)}{Equisatisfiable CNF (ECNF)}
+An \textbf{Equisatisfiable CNF (ECNF)} is a CNF formula that is not logically equivalent to the original formula, but is 
+\textbf{Equisatisfiable} -- it has the same satisfiability status:
+\begin{itemize}
+    \item The original formula is satisfiable if and only if the ECNF is satisfiable 
+    \item The ECNF may contain additional auxiliary variables not present in the original formula
+\end{itemize}
+\end{definition}
+\subsubsection{Tseitin Encoding}
+The standard technique for producing ECNF is the \textbf{Tseitin encoding} (also called \textbf{Tseitin transformation}),
+named after Grigori Tseitin.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Key idea:} Introduce auxiliary variables to represent subformulas, avoiding the need for distribution.
+\begin{theorem}{Tseitin Encoding Complexity}{Tseitin Encoding Complexity}
+\textit{The Tseitin encoding produces an ECNF formula whose size is \textbf{linear} in the size of the original formula: 
+O(n) where n is the size of the input formula}
+\end{theorem}
+\textbf{Advantages of ECNF}:
+\begin{itemize}
+    \item \textbf{Linear size}: Avoid exponential blowup 
+    \item \textbf{Preserves satisfiability}: The ECNF is satisfiable if and only if the original formula is satisfiable 
+    \item \textbf{Efficient encoding}: Can be computed in polynomial time 
+    \item \textbf{Practical for planning}: Makes SAT-based planning feasible for large problems
+\end{itemize}
+\textbf{Trade-off}:
+\begin{itemize}
+    \item The ECNF introduces additional variables (one for each subformula)
+    \item The ECNF is not logically equivalent to the original formula (only equisatisfiable)
+    \item However, the satisfying assignments to the original variables correspond to solutions of the original formula
+\end{itemize}
+\subsection{Tseitin Encoding: Formal Construction}
+The Tseitin encoding is based on two key functions that work together to produce the ECNF.
+\subsubsection{The Representative function}
+\begin{definition}{Representative function}{Representative function}
+Let PL denote the language of propositional formulas over a set of propositional variables \( \mathcal{X} \), and 
+let \( \mathcal{V} \) be a set of fresh (new) propositional variables. The \textbf{representative function} is defined as:
+\[
+  \text{Rep } : \text{ PL } \rightarrow \mathcal{V} \cup \left\{ \bot, \top \right\}
+\]
+\end{definition}
+The function Rep assigns to each formula a representative variabe (or constant). It is defined inductively:
+\vspace{1em}
+\noindent
+\newline
+\textbf{Base Case} (atomic formulas):
+\begin{align*}
+    & \text{Rep}(x) & = & x \text{ for all } x \in \mathcal{X} \\
+    & \text{Rep}(\bot) & = & \bot \\
+    & \text{Rep}(\top) & = & \top \\
+\end{align*}
+\textbf{Inductive Case} (complex formulas):
+\[
+  \text{Rep}(F) = v_{F}
+\]
+where \( F \in \text{ PL} \) is a non-atomic formula (i.e., \( F \) is neither a propositional variable nor \( \bot \) nor \( \top \)),
+and \( v_F \in \mathcal{V} \) is a fresh propositional variable uniquely associated with $F$.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Intuition}: Each complex subformula is represented by a new auxiliary variable. This avoids the need 
+to duplicate subformulas during the transformation. 
 RIPRENDERE APPUNTI FINO A SLIDE 46
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
