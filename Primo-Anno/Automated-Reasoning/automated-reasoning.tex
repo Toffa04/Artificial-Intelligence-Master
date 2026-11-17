@@ -2325,4 +2325,84 @@ These optimiazions have significant practical impact:
 \end{itemize} 
 These improvements make congruence closure practical for real-world applications in automated theorem proving,
 program verification, and satisfiability modulo theories (SMT) solvers.
+\part{Advanced Topics in Congruence Closure}
+\section{Congruence Closure Implementation}
+\subsection{DAG-Based Implementation}
+The congruence closure algorithm is implemented on a Directed Acyclic Graph (DAG) representation of the terms.
+We previously presented the pseudocode for this implementation.
+\subsection{Bradley-Miller Algorithm (2007)}
+We also studied the Bradley-Miller algorithm from 2007, which appears in a paper by Nelson and Oppen. This 
+algorithm has complexity \( \mathcal{O}(e^2) \) assuming \( \mathcal{O}(n) \) calls to \texttt{MERGE}, where:
+\begin{itemize}
+	\item \( n \) is the number of vertices (nodes) in the DAG 
+	\item \( e \) is the number of edges in the DAG
+\end{itemize}
+\subsection{Downey-Sethi-Tarjan Improvements (1980)}
+We also discussed the Downey-Sethi-Tarjan paper from 1980, which achieves improved complexity of \( \mathcal{O}(e \log e) \) under 
+the same assumptions.
+\vspace{1em}
+\noindent
+\newline
+The two key ingredients for achieving this improved complexity are:
+\begin{itemize}
+	\item A non-recursive version of the \texttt{FIND} operation 
+	\item Selection of the representative of the new class in \texttt{UNION} based on the size of \texttt{n.ccpar}
+\end{itemize}
+\subsection{Forbidden Set Optimization}
+The forbidden set feature was implemented in 2005 by Oppen, Detlefs, and Saxe in the context of the "Simplify" theorem prover.
+\subsubsection{Problem Structure}
+During congruence closure, we solve problems of the form:
+\[
+  F = \underbrace{\left\{s_i = t_i\right\}}_{F^+} \cup \underbrace{\left\{s_i \neq t_i\right\}}_{F^-}
+\]
+where \( i \) ranges from 1 to \( n \) for positive equalities and from \( n + 1 \) to \( n + m \) for negative equalities.
+\vspace{1em}
+\noindent
+\newline
+The process involves:
+\begin{enumerate}
+	\item Constructing the set of terms \( S_F \)    
+	\item Building the DAG representation 
+	\item Computing the congruence closure of \( F^+ \)    
+	\item For each disequality \( s_i \neq t_i \) (where $n + 1 \leq i \leq n + m$), checking if the nodes representing \( s_i \) and \( t_i \) are in the same equivalence class
+\end{enumerate}
+Let \( u_i \) be the node representing \( s_i \) and \( v_i \) be the node representing \( t_i \). If 
+\( \texttt{FIND}(u_i) = \texttt{FIND}(v_i) \), then return \textbf{UNSATISFIABLE} 
+\subsubsection{Forbidden Set Mechanism}
+The forbidden set mechanism enhances the basic algorithm by addig early detection of unsatisfiability:
+\begin{definition}{Forbidden Set Implementation}{Forbidden Set Implementation}
+\textbf{Algorithm enhancement}:
+\begin{enumerate}
+	\item Extend the node data structure with an additional field:
+	\begin{lstlisting}[style=ocamlpseudo]
+		forbidden: Id set
+	\end{lstlisting}
+	\item For each disequality \( s_i \neq t_i \) (where $n + 1 \leq i \leq n + m$):
+	\begin{itemize}
+		\item Add the node representing \( s_i \) to the forbidden set of the node representing \( t_i \)   
+		\item Add the node representing \( t_i \) to the forbidden set of the node representing \( s_i \)
+	\end{itemize}
+	\item Modify the \texttt{MERGE} function:
+	\begin{lstlisting}[style=ocamlpseudo]
+		MERGE i_1 i_2:
+			if FIND i_1 =/= FIND i_2 then 
+				... (standard merge operations)
+				if i_1 in n_1.forbidden or i_2 in n_2.forbidden then 
+					return UNSATISFIABLE
+	\end{lstlisting}
+	where \( n_1 \) is the node for \( i_1 \) and \( n_2 \) is the node for \( i_2 \).
+\end{enumerate}
+\end{definition}
+This optimization allows for early termination when a merge operation would violate a disequality constraint, potentially 
+avoiding unnecessary computation.
+\subsection{Summary of Congruence Closure}
+The congruence closure algorithm provides a complete and sound decision procedure for the quantifier-free 
+fragment of the theory of equality. The algorithm:
+\begin{itemize}
+	\item Constructs the smallest congruence relation containing all positive equalities 
+	\item Checks whether any negative equality is violated by this congruence 
+	\item Returns \textbf{SATISFIABLE} if no violations are found, \textbf{UNSATISFIABLE} otherwise
+\end{itemize}
+The various optimizations (Bradley-Miller, Downey-Sethi-Tarjan, forbidden sets) improve the practical efficiency 
+while maintaing correctness.
 \end{document}
