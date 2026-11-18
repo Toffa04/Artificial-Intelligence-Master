@@ -3754,6 +3754,46 @@ Consider the relationship between tree size and accuracy:
     \item The optimal tree size is around 30-40 nodes 
     \item Larger trees overfit to the training data
 \end{itemize}
+\subsection{Techniques to Prevent Overfitting}
+Standard machine learning techniques apply to decision trees:
+\begin{enumerate}
+    \item \textbf{Early stopping}: Stop growing the tree before it perfectly fits the training data 
+    \begin{itemize}
+        \item Set a maximum depth 
+        \item Require a minimum number of samples to split 
+        \item Require a minimum information gain to split 
+    \end{itemize}
+    \item \textbf{Pruning}: Build a full tree, then remove branches that don't improve validation performance 
+    \item \textbf{Regularization}: Add penalties for tree complexity 
+    \item \textbf{Data augmentation}: Increase training data 
+    \item \textbf{Ensemble methods}: Combine multiple trees (Random Forest, boosting)
+\end{enumerate}
+\subsection{Pruning (Post-processing)}
+Prunings is a technique to reduce complexity \textit{after} tree building:
+\begin{enumerate}
+    \item \textbf{Build the full tree}: Grow the tree until each leaf node is pure or stopping criterion is met 
+    \item \textbf{Evaluate nodes from botton to top}: Starting from the bottom, evaluate each node to see if pruning it would improve performance on a validation set 
+    \item \textbf{Define cost-complexity measure}: Consider both the accuracy of the node and the size of the subtree rooted at that node
+    \item \textbf{Prune nodes iteratively}: Identify the node with the smallest cost-complexity mesure and prune its subtree (turn it into a leaf labeled with the majority class)
+    \item \textbf{Repeat until done}: Continue until a suitable tree is achieved or further pruning doesn't improve performance
+\end{enumerate}
+\section{Decision Trees for Different Data Types}
+\subsection{Continuous Attribute}
+So far, we have focused on categorical attributes, but decision trees can also handle continuous attributes.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Strategy}: Pick a treshold to create a binary split.
+\vspace{1em}
+\noindent
+\newline
+For example, for a continuous attribute like temperature:
+\[
+  \Phi(\text{temperature }) = \begin{cases}
+    L & \text{if temperature } > 77.8 \\
+    R & \text{else}
+  \end{cases}
+\]
 \part{Linear Discriminant Functions and Classification Methods}
 \section{Linear Discriminant functions}
 The objective of this lecture is to present methods for learning \textbf{linear discriminant} functions 
