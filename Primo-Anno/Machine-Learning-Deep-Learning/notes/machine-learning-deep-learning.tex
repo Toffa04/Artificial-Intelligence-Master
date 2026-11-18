@@ -76,6 +76,14 @@
 }
 \lstset{style=mystyle}
 
+\lstdefinestyle{ocamlpseudo}{
+  basicstyle=\ttfamily\small,
+  columns=fullflexible,
+  keepspaces=true,
+  showstringspaces=false,
+  xleftmargin=0pt
+}
+
 % ---------- Teoremi, definizioni, esempi (tcolorbox) ----------
 \usepackage[most]{tcolorbox}
 \tcbuselibrary{theorems}
@@ -2386,7 +2394,7 @@ bandwidth in kernel density estimation), but they don't assume a specific parame
     \textbf{Key Idea}\\[0.5em]
     The simplest form of nonparametric density estimation is the \textbf{histogram}.
 \end{tcolorbox}
-\section{Histogram-Based Density Estimation}
+\subsection{Histogram-Based Density Estimation}
 The histogram is the most intuitive nonparametric density estimator.
 \subsubsection{How Histogram Work}
 \begin{definition}{Histogram Density Estimator}{Histogram Density Estimator}
@@ -2466,7 +2474,7 @@ increases eponentially.
     \item 10D: 10 bins per dimension \( \rightarrow \) 10,000,000,000 bins total
 \end{itemize}
 \end{example}
-\subsubsection{Mitigatin the Curse of Dimensionality}
+\subsubsection{Mitigating the Curse of Dimensionality}
 To mitigate the curse of dimensionality, various techniques are employed:
 \begin{itemize}
     \item \textbf{Feature selection}: Choose only the most relevant features 
@@ -3635,8 +3643,118 @@ Where:
     \item We want to \textbf{maximize information gain}
     \item Higher gain = better attribute for splitting
 \end{itemize}
-
-\part{Linear Discriminant Functions and Classiification Methods}
+\subsection{Using information Gain for Attribute Selection}
+The ID3 algorithm uses information gain to decide which attribute to pick:
+\begin{enumerate}
+    \item For every attribute in your data, compute the information gain 
+    \item Select the attribute with the \textbf{highest information gain}
+    \item This attribute reduces uncertainty the most and leads to the purest possible split.
+\end{enumerate}
+\textbf{Note}: We consider one level split at a time, but the procedure is recursive. After splitting on an attribute,
+we recursively apply the same process to each resulting subset.
+\subsection{Problems with Information Gain}
+Information gain has a significant problem: it favors attributes with many values.
+\vspace{1em}
+\noindent 
+\newline
+\textbf{Example}: Consider the "Day" attribute (D1, D2, $\ldots$, D14) in the tennis dataset:
+\begin{itemize}
+    \item Each day is unique, so splitting on "Day" creates 14 subsets 
+    \item Each subset contains exactly one example 
+    \item All subset contains exactly one example 
+    \item All subsets are perfectly pure (optimal split according to infromation gain!)
+    \item But this is useless! It won't generalize to new data
+\end{itemize}
+If we encounter a new example "D15: Rain, High, Weak", the tree cannot classify it because it only knows about days D1-D14.
+\vspace{1em}
+\noindent 
+\newline
+\textbf{The problem}: Information gain can lead to overfitting by favoring attributes that perfectly separate the training data 
+but generalize poorly to test data.
+\subsection{Gain Ratio: A Solution}
+One solution is to use \textbf{Gain Ratio} instead of information gain:
+\[
+  \text{GainRatio}(S, A) = \frac{\text{Gain}(S, A)}{\text{SplitInfo}(S, A)}
+\]
+Where:
+\[
+  \text{SplitInfo}(S, A) = - \sum_{v \in \text{Values}(A)} \frac{|S_v|}{|S|} \log_2 \frac{|S_v|}{|S|}
+\]
+\textbf{Effect}:
+\begin{itemize}
+    \item SplitInfo measure how broadly and uniformly the attribute splits the data 
+    \item Diving by SplitInfo \textbf{penalize attributes with many values}
+    \item This helps prevent overfitting to attributes like "Day"
+\end{itemize}
+\subsection{Advantages of Information Gain}
+Despite its limitations, information gain (and decision tree in general) has important advantages:
+\begin{itemize}
+    \item \textbf{Interpretability}: Decision trees are easy to understand 
+    \item \textbf{Readable rules}: It's possible to extract concise rules describing classification decisions
+    \item \textbf{No "black box"}: The decision-making process is transparent 
+    \item \textbf{Important for users}: Explainability is crucial in many applications (medical diagnosis, loan approval, etc.)
+\end{itemize}
+\textbf{Example rule from a decision tree}:
+\begin{lstlisting}[style=ocamlpseudo]
+IF Outlook = Overcast THEN PlayTennis = Yes 
+IF Outlook = Sunny AND Humidity = High THEN PlayTennis = No
+\end{lstlisting}
+\section{Alternative Splitting Criteria}
+Besides entropy and information gain, there are other measures for selecting splits.
+\subsection{Gini Impurity}
+The \textbf{CART algorithm} uses Gini impurity instead of entropy.
+\begin{definition}{Gini Impurity Formula}{Gini Impurity Formula}
+For a set \( S \) with \( C \) classes:
+\[
+  \text{Gini}(S) = 1 - \sum_{i = 1}^{C} p_i^2
+\]
+where \( p_i \) is the proportion of samples belonging to class \( i \)
+\end{definition}
+\textbf{Properties}:
+\begin{itemize}
+    \item Gini impurity = 0 for a pure set (all samples from one class)
+    \item Gini impurity = 0.5 for a binary classification with 50/50 split 
+    \item When building a decision tree, we choose features with the \textbf{least Gini index} as the root node 
+\end{itemize}
+\subsection{Comparison of Splitting Criteria}
+\begin{table}
+    \centering 
+    \begin{tabular}{|l|l|l|p{5.5cm}|}
+        \hline 
+        \textbf{Crietion} & \textbf{Task} & \textbf{Formula} & \textbf{Description}\\
+        \hline
+        Entropy & Classification & \( - \sum_{i = 1}^{C} p_i \log_2(p_i) \) & \( p_i \) is the frequency of label \( i \) at a node, \( C \) is the numbe rof unique labels. Maximize the Gain \\
+        \hline
+        Gini Impurity & Classification & \( 1 - \sum_{i = 1}^{C} p_i^2 \) & \( p_i \) is the frequency of label \( i \) at a node, \( C \) is the number of unique labels. Minimize the Gini \\
+        \hline
+        Variance & Regression & \( \frac{1}{N} \sum_{i = 1}^{N} (y_i - \mu)^2 \) & \( p_i \) is the label for instance \( i \), \( N \) is the number of instance, \( \mu = \frac{1}{N} \sum_{i = 1}^N y_i \). Minimize the variance \\
+        \hline 
+    \end{tabular}
+\end{table}
+\section{Decision Trees and Overfitting}
+\subsection{Why Decision Trees Overfit}
+Decision trees are \textbf{non-parametric models} with a structure determined by the data. As a result:
+\begin{itemize}
+    \item They are very \textbf{flexible} and can easily fit the training set
+    \item They have a \textbf{high risk of overfitting} 
+    \item Without constraints, they can create a leaf for every training example
+\end{itemize}
+\subsection{Overfitting Examples}
+Consider the relationship between tree size and accuracy:
+\begin{center}
+    \begin{figure}[H]
+        \centering
+        \includegraphics[width=0.8\textwidth]{images/overfittingExample.png}
+    \end{figure}
+\end{center}
+\textbf{Observations}:
+\begin{itemize}
+    \item Training accuracy continues to increase with tree size 
+    \item Test accuracy initially increases, then decreases
+    \item The optimal tree size is around 30-40 nodes 
+    \item Larger trees overfit to the training data
+\end{itemize}
+\part{Linear Discriminant Functions and Classification Methods}
 \section{Linear Discriminant functions}
 The objective of this lecture is to present methods for learning \textbf{linear discriminant} functions 
 of the form:
