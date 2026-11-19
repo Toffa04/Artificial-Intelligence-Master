@@ -3972,6 +3972,206 @@ Bagging works best with:
     \item Models that are sensitive to small changes in training data 
     \item Situations where you want to reduce overfitting
 \end{itemize}
+\section{Boosting}
+Boosting is a different ensemble strategy that trains models \textbf{sequentially}, with each new model focusing on the errors of 
+previous models.
+\subsection{Key Differences from Bagging}
+\begin{table}
+    \centering
+    \begin{tabular}{|c|c|c|}
+        \hline 
+        \textbf{Aspects} & \textbf{Bagging} & \textbf{Boosting}\\
+        \hline 
+        Training & Parallel (Independent) & Sequential (dependent) \\
+        \hline 
+        Sampling & Uniform (with replacement) & Weighted (focus on errors)\\
+        \hline 
+        Model weights & Equal & Based on performance \\
+        \hline 
+        Goal & Reduce variance & Reduce bias and variance \\
+        \hline
+    \end{tabular}
+\end{table}
+\subsection{Boosting Intuition}
+\begin{itemize}
+    \item Trained models are \textbf{weighted based on their performance}
+    \item Weak classifiers are learned \textbf{sequentially}
+    \item Then more mistakes the previous classifier makes on a dataset, the more those misclassified examples are \textbf{weighted for the next classifier}
+    \item Each new model focuses on the "hard" examples that previous models got wrong
+\end{itemize}
+\subsection{Weak learners}
+Ensemble methods often use \textbf{weak learners} rather than complex models.
+\begin{definition}{Weak Learner}{Weak Learner}
+A weak learner is a classification model that performs \textbf{slightly better than random guessing}.
+\end{definition}
+For binary classification with balanced classes:
+\begin{itemize}
+    \item Random guessing: \( 50\% \) accuracy 
+    \item Weak learner: slightly better than \( 50\% \) (e.g., $55\%$)
+\end{itemize}
+\textbf{Examples of weak learners}:
+\begin{itemize}
+    \item \textbf{Decision stump}: A decision tree with only one split (depth = 1)
+    \item \textbf{1-Nearest Neighbor}: k-NN with k = 1 on a subset of features 
+    \item Simple linear classifiers on a single feature
+\end{itemize}
+\textbf{Why use weak learners?}
+\begin{itemize}
+    \item Fast to train 
+    \item Less likely to overfit individually 
+    \item Ensemble of many weak learners can create a strong classifier
+    \item "Two heads are better than one" principle
+\end{itemize}
+\subsection{AdaBoost (Adaptive Boosting)}
+\begin{definition}{AdaBoost Algorithm}{AdaBoost Algorithm}
+\textbf{Step 1}: Initialize weights uniformly for all training samples:
+\[
+  w_i^{(1)} = \frac{1}{n} \quad \text{for } i = 1, \ldots, n 
+\]
+\textbf{Step 2}: For \( t = 1 \) to \( T \):
+\begin{enumerate}
+    \item Train a weak classifier \( h_t \) using the current weights \( w^{(t)} \)   
+    \item Compute the weighted error:
+    \[
+      \epsilon_t = \sum_{i:h_t(\mathbf{x_i}) \neq y_i} w_i^{(t)}
+    \]
+    \item Compute classifier weight:
+    \[
+      \alpha_t = \frac{1}{2}ln(\frac{1 - \epsilon_t}{\epsilon_t})
+    \]
+    \item Update sample weights:
+    \[
+      w_i^{(t + 1)} = w_i^{(t)} \cdot \text{exp}(- \alpha_t y_i h_t(\mathbf{x_i}))
+    \]
+    (Increase weight for misclassified samples, decrease for correctly classified)
+    \item Normalize weights: \( w^{(t + 1)} \leftarrow w^{(t + 1)} \diagup \sum_i w_i^{(t + 1)} \)
+\end{enumerate}
+\textbf{Step 3}: Final classifier:
+\[
+  H(\mathbf{x}) = \text{sign}(\sum_{t = 1}^{T} \alpha_t h_t(\mathbf{x}))
+\]
+(Weighted vote of all weak classifiers)
+\end{definition}
+\subsection{AdaBoost: Key Steps Explained}
+\textbf{Step 1: Initialize with equal weights}
+\begin{itemize}
+    \item All training samples start with equal importance 
+    \item Build the first weak classifier on this uniformly weighted dataset 
+    \item Check which samples are correctly classified and which are not
+\end{itemize}
+\textbf{Step 2: Increase weights for misclassified samples}
+\begin{itemize}
+    \item Samples that were misclassified get higher Weights
+    \item This makes classifying them correctly more important for the next model 
+    \item The next weak classifier will focus more on these "hard" examples 
+\end{itemize}
+\textbf{Step 3: Iterate until convergence}
+\begin{itemize}
+    \item Repeat until all data points are correctly classified 
+    \item OR until a maximum number of iterations is reached 
+    \item Each iteration focueses on the remaining difficult examples
+\end{itemize}
+\subsection{AdaBoost Properties}
+\begin{itemize}
+    \item \textbf{Adaptive}: Adapts to the errors of previous weak learners 
+    \item \textbf{Reduces bias and variance}: Combines weak learners to create a stronger learner 
+    \item \textbf{Sensitive to noisy data}: Can overfit if there are many outliers (keeps increasing their weights)
+    \item \textbf{No need for feature selection}: Weak learners can be based on individual features 
+    \item \textbf{Fast training}: Each weak learner is simple and fast to train
+\end{itemize}
+\section{Stacking}
+Stacking (stacked generalization) is a more sophisticated ensemble method taht uses a \textbf{meta-model} to combine base models.
+\subsection{What is Stacking?}
+Stacking combines predictions of multiple ML models (called \textbf{base models}) to improve overall performance.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Key differences from bagging and boosting}:
+\begin{itemize}
+    \item Base models are typically \textbf{heterogeneous} (different types of models)
+    \item Uses a \textbf{meta-model} to learn how to combine base model predictions 
+    \item Can be used for both regression and classification 
+    \item Often more powerful than bagging or boosting alone
+\end{itemize}
+\subsection{The stacking process}
+\begin{definition}{Stacking Algorithm}{Stacking Algorithm}
+\textbf{Level 0 (Base Models)}:
+\begin{enumerate}
+    \item Train multiple diverse base models on the training set:
+    \begin{itemize}
+        \item Model 1 e.g., Decision Tree 
+        \item Model 2 e.g., Logistic Regression 
+        \item Model 3 e.g., Support Vector Machine 
+        \item Model 4 e.g., Neural Network
+    \end{itemize}
+    \item Generate predictions from each base model on the training set
+\end{enumerate}
+\textbf{Level 1 (Meta-Model)}:
+\begin{enumerate}
+    \item Use the predictions from base models as \textbf{features}
+    \item Train a \textbf{meta-model} that learns how to combine these predictions 
+    \item The meta-model learns which base models to trust for which types of inputs
+\end{enumerate}
+\textbf{Prediction}:
+\begin{enumerate}
+    \item For a new input \( \mathbf{x} \):
+    \begin{itemize}
+        \item Get predictions from all base models 
+        \item Feed these predictions to the meta-model 
+        \item Meta-model outputs the final prediction
+    \end{itemize}
+\end{enumerate}
+\end{definition}
+\subsection{Why Stacking Works}
+\begin{itemize}
+    \item \textbf{Diversity}: Different models capture different patterns in the data 
+    \item \textbf{Complementary strengths}: Each model excel in different regions of the input space 
+    \item \textbf{Learned combination}: The meta-model learns the optimal way to combine predictions (better than simple averaging)
+    \item \textbf{Flexibility}: Can combine any types of models
+\end{itemize}
+\subsection{Stacking Best Practices}
+\begin{itemize}
+    \item \textbf{Use diverse base models}: Different model types, different hyperparameters 
+    \item \textbf{Avoid data leakage}: Use cross-validation to generate training predictions for the meta-model 
+    \item \textbf{Keep meta-model simple}: Often a simple linear model or logistic regression works well 
+    \item \textbf{Regularization}: Add regularization to prevent the meta-model from overfitting
+\end{itemize}
+\subsection{Comparison of Ensemble methods}
+\begin{tabular}{|l|p{3.4cm}|p{3.6cm}|p{3.4cm}|}
+    \hline
+    \textbf{Method} & \textbf{Base Models} & \textbf{Training} & \textbf{Combination} \\
+    \hline
+    \textbf{Bagging}
+      & Same type (homogeneous), trained on bootstrap samples
+      & Parallel, independent
+      & Equal weight voting/averaging \\
+    \hline
+    \textbf{Boosting}
+      & Same type (weak learners), trained sequentially
+      & Sequential, each focuses on previous errors
+      & Weighted voting based on model performance \\
+    \hline
+    \textbf{Stacking}
+      & Different types (heterogeneous)
+      & Parallel for base models, then meta-model
+      & Meta-model learns optimal combination \\
+    \hline
+\end{tabular}
+\subsection{Key Takeaways}
+\begin{definition}{Main Lessons}{Main Lessons}
+\begin{enumerate}
+    \item \textbf{Single models vs. Ensembles}: Ensembles generally outperform single models 
+    \item \textbf{Bias-Variance tradeoff}: Different ensemble methods address different asppects 
+    \begin{itemize}
+        \item Bagging reduces variance 
+        \item Boosting reduces both bias and variance 
+        \item Stacking leverages diverse model stranghts
+    \end{itemize}
+    \item \textbf{Interpretability vs. Performance}: Trade-off between understanding and accuracy 
+    \item \textbf{Computational cost}: Ensembles are slower to train and predict than a single models 
+    \item \textbf{Real-world impact}: Random forests and boosting (e.g., XGBoost, LightGBM) are among the most successful ML methods in practice
+\end{enumerate}
+\end{definition}
 \part{Linear Discriminant Functions and Classification Methods}
 \section{Linear Discriminant functions}
 The objective of this lecture is to present methods for learning \textbf{linear discriminant} functions 
