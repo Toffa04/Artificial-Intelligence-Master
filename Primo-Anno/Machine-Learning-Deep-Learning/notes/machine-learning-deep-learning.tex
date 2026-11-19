@@ -3794,6 +3794,184 @@ For example, for a continuous attribute like temperature:
     R & \text{else}
   \end{cases}
 \]
+\textbf{How to choose the threshold?}
+\begin{itemize}
+    \item Consider all possible split points (or a sample of them)
+    \item For each candidate threshold, compute the information gain (or Gini impurity reduction)
+    \item Choose the threshold that maximizes information gain
+\end{itemize}
+\textbf{Geometric interpretation}:
+\begin{itemize}
+    \item Each split create an axis-aligned boundary in feature space 
+    \item For 2D data with continuous features \( x_1 \) and \( x_2 \), splits create rectangular regions 
+    \item Example splits: \( x_1 > \theta_1, x_2 < \theta_2, x_2 > \theta_3, x_1 < \theta_4 \)  
+\end{itemize}
+\subsection{Multi-class Classification}
+Decision trees naturally extend to multi-class problems ($k$ different classes):
+\begin{itemize}
+    \item At each leaf, predict the \textbf{most frequent class} in that subset 
+    \item Entropy for multi-class:
+    \[
+      H(S) = - \sum_{c = 1}^{k} p(c)\log_2 p(c)
+    \]
+    Where \( p(c) \) is the proportion of examples of class \( c \) in subset \( S \)
+    \item Information gain and Gini impurity formulas extend naturally to \( k \) classes
+\end{itemize}
+\section{Decions Trees: Summary}
+\subsection{Advantages (Pros)}
+\begin{itemize}
+    \item \textbf{Interpretable}: Humans can understand the reason for decisions
+    \item \textbf{Handles irrelevant data}: Irrelevant features have Gain = 0 and won't be selected 
+    \item \textbf{Handles missing data}: Can be adapted to deal with missing values 
+    \item \textbf{Very compact}: After pruning, \( \# \text{ nodes } \ll \# \text{ training data} \)
+    \item \textbf{Fast at test time}: \( O(\text{depth}) \), where depth \( \ll \# \) training data
+    \item \textbf{No feature scaling needed}: Works with features on different scales
+\end{itemize}
+\subsection{Disadvantages (Cons)}
+\begin{itemize}
+    \item \textbf{Greedy algorithm}: May not find the globally optimal tree (locally optimal choices at each split)
+    \item \textbf{NP-hard problem}: Finding the optimal tree is exponentially difficult (exponentially many possible trees)
+    \item \textbf{Only axis-aligned splits}: Cannot naturally capture diagonal decion boundaries 
+    \begin{itemize}
+        \item Linear classifier can have diagonal boundaries 
+        \item Decion trees create rectangular partitions 
+        \item This limits expressiveness for some problems
+    \end{itemize}
+    \item \textbf{High variance}: Small changes in training data can lead to very different trees
+    \item \textbf{Prone to overfitting}: Especially with deep trees
+\end{itemize}
+\subsection{Key Takeaways}
+\begin{itemize}
+    \item \textbf{ID3 algorithm}: Grows decision tree from root down, greedily selecting the next best attribute using information gain 
+    \item \textbf{Entropy}: Measures uncertainty (impurity) in a set 
+    \item \textbf{Information Gain}: Measures the reduction in uncertainty following a split 
+    \item \textbf{Complete hypothesis space}: Searches the entire space of possible trees 
+    \item \textbf{Preference}: Prefers smaller trees and high information gain at the root 
+    \item \textbf{Overfitting}: Addressed by post-pruning (remove nodes while accuracy increases on validation set)
+    \item \textbf{Performance}: Fast, compact, and interpretable
+\end{itemize}
+\section{Random Forests}
+Random forests address many limitations of individual decision trees by combining multiple trees into an ensemble.
+\subsection{What is a Random Forest?}
+\textbf{Random forests are ensembles of decision trees}.
+\begin{itemize}
+    \item Each tree is trained on a \textbf{bootstrapped version} of the training set (sampled with replacement)
+    \item This creates diversity among the trees 
+    \item Different trees make different errors 
+    \item Combining their predictions reduces overall error
+\end{itemize}
+\subsubsection{Sampling with Replacement (Bootstrapping)}
+Given a dataset \( \mathcal{D} = \left\{ (\mathbf{x}_1, y_1), \ldots, (\mathbf{x}_n, y_n) \right\} \):
+\begin{enumerate}
+    \item For each tree \( t_i \), create a new dataset \( \mathcal{D}_i \) by:
+    \begin{itemize}
+        \item Randomly sampling \( n \) examples from \( \mathcal{D} \) \textbf{with replacement}
+        \item Some examples may appear multiple times 
+        \item Some examples may not appear at all (approximately \( 37\% \) are left out)
+    \end{itemize}
+    \item Train tree \( t_i \) on dataset \( \mathcal{D}_i \)    
+    \item Repeat for all \( T \) trees in the forest
+\end{enumerate}
+\subsection{Random Feature Selection}
+In addition to bootstrap sampling, random forests introduce randomness in feature selection:
+\begin{itemize}
+    \item At each node, insted of considering all features for splitting, only a \textbf{random subset} of features is considered 
+    \item Typical choices:
+    \begin{itemize}
+        \item For classification: \( \sqrt{d} \) features, where \( d \) is the total number of features 
+        \item For regression: \( d/3 \) features 
+    \end{itemize}
+    \item This helps to \textbf{decorrelate} decision trees 
+    \item \textbf{Extremely randomized trees} take this further by sampling split thresholds randomly instead of optimizing them 
+\end{itemize}
+\subsection{Random Forest Preciction}
+The final prediction of a random forest is obtained by \textbf{aggregating} the predictions of all trees:
+\begin{definition}{Random Forest Prediction}{Random Forest Prediction}
+\textbf{For classification}:
+\[
+  \hat{y}_{\text{RF}}(\mathbf{x}) = \text{ mode}\left\{ f_{t_1}(\mathbf{x}, \ldots, f_{t_T}(\mathbf{x})) \right\} 
+\]
+(Majority vote across all trees)
+\vspace{1em}
+\noindent
+\newline
+\textbf{For regression}:
+\[
+  \hat{y}_{\text{RF}}(\mathbf{x}) = \frac{1}{T} \sum_{i = 1}^{T} f_{t_i}(\mathbf{x})
+\]
+(Average of all tree predictions)
+\end{definition}
+\subsection{Why Random Forests Work}
+Random forests work well because of several key principles:
+\begin{enumerate}
+    \item \textbf{Variance reduction}: Averaging multiple models reduces variance without increasing bias 
+    \item \textbf{Decorrelation}: Random feature selection ensures trees make different types of errors 
+    \item \textbf{Robustess}: Errors of individual trees tend to cancel out 
+    \item \textbf{Overfitting resistance}: Individual trees may overfit, but ensemble typicall does not
+\end{enumerate}
+\textbf{Bias-Variance Trade-off}:
+\begin{itemize}
+    \item Individual deep trees have low bias but high variance 
+    \item Averaging many trees keeps bias low while reducing variance 
+    \item Result: Better generalization performance 
+\end{itemize}
+\section{Ensemble Methods}
+Random forests are one example of a broader class of techniques called \textbf{ensemble methods}.
+\subsection{What are Ensemble Methods?}
+\textbf{Ensemble learning} combines different models to obtain more accurate predictions than any individual model.
+\begin{definition}{Ensemble Learning Principle}{Ensemble Learning Principle}
+"Wisdom of crowds": Aggregating predictions from multiple models often yields better performance that using a single model
+\end{definition}
+\subsection{Types of Ensemble Methods}
+There are three main types of ensemble methods:
+\begin{enumerate}
+    \item \textbf{Bagging} (Bootstrap Aggregating)
+    \item \textbf{Boosting}
+    \item \textbf{Stacking}
+\end{enumerate}
+\section{Bagging (Boostrap Aggregating)}
+\subsection{The Bagging Algorithm}
+Bagging is a technique where we train \( T \) models on \( T \) different samplings of the dataset.
+\vspace{1em}
+\noindent
+\newline
+\textbf{Procedure}:
+\begin{enumerate}
+    \item Take the original dataset \( \mathcal{D} \)   
+    \item Create \( T \) bootstrap samples:
+    \begin{itemize}
+        \item \( \mathcal{D}_1 \): Sample \( n \) examples from \( \mathcal{D} \) with replacement 
+        \item \( \mathcal{D}_2 \): Sample \( n \) examples from \( \mathcal{D} \) with replacement 
+        \item \( \ldots \)   
+        \item \( \mathcal{D}_T \): Sample \( n \) examples from \( \mathcal{D} \) with replacement
+    \end{itemize}
+    \item Train a model on each bootstrap sample:
+    \begin{itemize}
+        \item Model 1 trained on \( \mathcal{D}_1 \)    
+        \item Model 2 trained on \( \mathcal{D}_2 \)    
+        \item \( \ldots \)    
+        \item Model \( T \) trained on \( \mathcal{D}_T \)
+    \end{itemize}
+    \item \textbf{Aggregate} predictions:
+    \begin{itemize}
+        \item Classification: Majority vote
+        \item Regression: Average
+    \end{itemize}
+\end{enumerate}
+\subsection{Benefits of Bagging}
+\begin{itemize}
+    \item \textbf{Reduces variance}: Different bootstrap samples lead to different models; averaging reduces variance 
+    \item \textbf{Doesn't increase bias}: Each model is trained on a dataset of the same size as the original 
+    \item \textbf{Robust to overfitting}: Individual models may overfit to their bootstrap samples, but averaging helps 
+    \item \textbf{Parallel training}: All models can be trained independently and in parallel
+\end{itemize}
+\subsection{When to Use Bagging}
+Bagging works best with:
+\begin{itemize}
+    \item \textbf{High-variance, low-bias models}: e.g., deep decision trees 
+    \item Models that are sensitive to small changes in training data 
+    \item Situations where you want to reduce overfitting
+\end{itemize}
 \part{Linear Discriminant Functions and Classification Methods}
 \section{Linear Discriminant functions}
 The objective of this lecture is to present methods for learning \textbf{linear discriminant} functions 
