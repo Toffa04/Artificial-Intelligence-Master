@@ -1608,6 +1608,118 @@ true (it appears as a conjunct), \( F \) must also be true under the restriction
 \newline
 \textbf{Key insight}: The ECNF introduces auxiliary variables but maintains the same satisfiability status as the original formula,
 while keeping the formula size linear.
+\subsection{Example: Equisatisfiability vs. Logical Equivalence}
+To illustrate the difference between equisatisfiability and logical equivalence, consider a concrete example.
+\begin{example}{Tseitin Encoding of Disjunction}{Tseitin Encoding of Disjunction}
+Consider the formula:
+\[
+  T = A \vee (B \wedge C)
+\]
+where \( A, B \), and \( C \) are propositional variables.
+\end{example}
+Using the standard CNF transformation (distribution), we would obtain:
+\[
+  F_{\text{CNF}} = (A \vee B) \wedge (A \vee C)
+\]
+This is \textbf{logically equivalent} to \( F \), but for larger formulas, this approach leads to exponential blowup.
+\subsubsection{Tseitin Encoding Approach}
+Instead, we apply the Tseitin encoding by introducing an auxiliary variable \( v \) to represent the subformula \( B \wedge C \):
+\vspace{1em}
+\noindent
+\newline 
+\textbf{Step 1}: Define the encoding constraint:
+\[
+  v \leftrightarrow (B \wedge C)
+\]
+\textbf{Step 2}: Replace the subformula in the original formula:
+\[
+  A \vee v 
+\]
+\textbf{Step 3}: Convert the biconditional to CNF. The biconditional \( v \leftrightarrow (B \wedge C) \) expands to:
+\[
+  (v \rightarrow (B \wedge C)) \wedge ((B \wedge C) \rightarrow v) 
+\]
+Converting each implication:
+\begin{align*}
+    & v \rightarrow (B \wedge C) \equiv \lnot v \vee (B \wedge C) \equiv (\lnot v \vee B) \wedge (\lnot v \vee C) \\
+    & (B \wedge C) \rightarrow v \equiv \lnot(B \wedge C) \vee v \equiv \lnot B \vee \lnot C \vee v \\
+\end{align*}
+\textbf{Final ECNF}: The complete set of clauses is:
+\[
+  S = \left\{(A \vee v), (\lnot v \vee B), (\lnot v \vee C), (\lnot B \vee \lnot C \vee v) \right\}
+\]
+Numbering the clauses:
+\begin{align*}
+    & (1) & A \vee v \\
+    & (2) & \lnot v \vee B \\
+    & (3) & \lnot v \vee C \\
+    & (4) & \lnot B \vee \lnot C \vee v \\
+\end{align*}
+\subsubsection{Demonstrating Equisatisfiability}
+Consider the interpreation:
+\[
+  I = \left\{ A \mapsto \text{ true}, B \mapsto \text{ false}, C \mapsto \text{ false} \right\}
+\]
+\textbf{Evaluating \( F \) under \( I \)}:
+\[
+  F = A \vee (B \wedge C) = \text{ true } \vee (\text{false } \wedge \text{ false }) = \text{ true } \vee \text{ false } = \text{ true}
+\]
+Therefore \( I \models F \) (Interpretation $I$ satisfies $F$).
+\vspace{1em}
+\noindent
+\newline 
+\textbf{Evaluating \( S \) under \( I \)}:
+\vspace{1em}
+\noindent
+\newline 
+We need to extend \( I \) to assign a value to the auxiliary variable \( v \). Let's first try without extending;
+\begin{itemize}
+    \item Clause (1): \( A \vee v \) = true \( \vee v \) = true \( \quad \) (satisfied regardless of $v$)
+    \item Clause (2): \( \lnot v \vee B = \lnot v \vee \) false = \( \lnot v \) \( \quad \) (satisfied only if $v =$ false)
+    \item Clause (3): \( \lnot v \vee C = \lnot v \vee v \vee \) false = \( \lnot v \quad \) (satisfied only if $v =$ false)
+    \item Clause (4): \( \lnot B \vee \lnot C \vee v = \) true \( \vee \) true \( \vee v \) = true \( \quad \) (satisfied regardless of $v$) 
+\end{itemize}
+For \( I \) to satisfy \( S \), we must set \( v = \) false (to satisfy clauses (2) and (3)). With this extension:
+\[
+  I' = \left\{ A \mapsto \text{ true}, B \mapsto \text{ false}, C \mapsto \text{ false}, v \mapsto \text{ false} \right\}
+\]
+Now \( I' \models S \) (all clause are satisfied).
+\begin{definition}{Equisatisfiability vs Logical Equivalence}{Equisatisfiability vs Logical Equivalence}
+\textit{Observation} (Not Logically Equivalent). The original interpretation \( I \) (without the auxiliary variable) satisfies 
+\( F \) but does \textbf{not} satisfy all clauses in \( S \) unless extended with the appropriate value for \( v \). 
+This demonstrates that \( F \) and \( S \) are \textbf{not logically equivalent}. However, \( F \) is satisfiable 
+if and only if \( S \) is satisfiable (by appropriately choosing the value of $v$). Therefore, \( F \) and \( S \) are \textbf{equisatisfiable}.
+\end{definition}
+\textbf{Conclusion}: The Tseitin encoding produces a formula that is equisatisfiable with the original but not logically equivalent.
+This is acceptable for SAT-based planning because we only care about whether a solution exists, not about preserving all logical properties.
+\subsection{Detailed Definition of the Encoding Function}
+We now provide the complete formal definition of the encoding function En for all cases.
+\begin{definition}{Encoding Function - Complete Definition}{Encoding Function - Complete Definition}
+The encoding function \( \text{En } : \text{ PL } \rightarrow \text{ PL} \) is defined inductively as follows:
+\vspace{1em}
+\noindent
+\newline 
+\textbf{Base cases} (atomic formulas):
+\begin{align*}
+    &\text{En}(\bot) = \top \\
+    &\text{En}(\top) = \top \\
+    &\text{En}(x) = \top \quad \text{ for all } x \in X 
+\end{align*}
+\textbf{Inductive case for negation}:
+\begin{align*}
+    & \text{En}(\lnot F) & = \text{ let } v = \text{ Rep}(\lnot F) \text{ in } v \leftrightarrow \lnot \text{Rep}(F) \\
+    & & = (v \rightarrow \lnot \text{Rep}(F)) \wedge (\lnot \text{Rep}(F) \rightarrow v)\\
+    & & = (\lnot v \vee \lnot \text{Rep}(F)) \wedge (\text{Rep}(F) \vee v)\\
+\end{align*}
+\textbf{Inductive cases for binary connectives}:
+\vspace{1em}
+\noindent
+\newline 
+For all binary connectives \( \circ \in \left\{ \wedge, \vee, \rightarrow, \leftrightarrow \right\} \):
+\[
+  \text{En}(F_1 \circ F_2) = \text{ let } v = \text{ Rep}(F_1 \circ F_2) \text{ in } v \leftrightarrow (\text{Rep}(F_1) \circ \text{ Rep}(F_2))
+\]
+\end{definition}
 RIPRENDERE APPUNTI FINO A SLIDE 46
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
