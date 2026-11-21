@@ -1720,6 +1720,41 @@ For all binary connectives \( \circ \in \left\{ \wedge, \vee, \rightarrow, \left
   \text{En}(F_1 \circ F_2) = \text{ let } v = \text{ Rep}(F_1 \circ F_2) \text{ in } v \leftrightarrow (\text{Rep}(F_1) \circ \text{ Rep}(F_2))
 \]
 \end{definition}
+\textbf{Base cases} (atomic formulas):
+\begin{align*}
+    & \text{En}(\bot) & = & \top \\
+    & \text{En}(\top) & = & \top \\
+    & \text{En}(x) & = & \top \quad \text{for all } x \in \mathcal{X} \\
+\end{align*}
+\textbf{Inductive case for negation}:
+\begin{align*}
+    & \text{En}(\lnot F) & = \text{ let } v = \text{ Rep}(\lnot F) \text{ in } v \leftrightarrow \lnot \text{Rep}(F)\\
+    & & = (v \rightarrow \lnot Rep(F)) \wedge (\lnot\text{Rep}(F) \rightarrow v)\\
+    & & = (\lnot v \vee \lnot \text{Rep}(F)) \wedge (\text{Rep}(F) \vee v)\\
+\end{align*}
+\textbf{Inductive case for binary connectives}:
+\vspace{1em}
+\noindent 
+\newline
+For all binary connectives \( \circ \in \left\{ \wedge, \vee, \rightarrow, \leftrightarrow \right\} \):
+\[
+    \text{En}(F_1 \circ F_2) = \text{ let } v = \text{ Rep}(F_1 \circ F_2) \text{ in } v \leftrightarrow (\text{Rep}(F_1) \circ \text{ Rep}(F_2))
+\]
+\subsubsection{Example: Conjunction Encoding}
+\begin{example}{Conjunction Encoding}{Conjunction Encoding}
+Consider the encoding of \( F_1 \wedge F_2 \):
+\begin{align*}
+    & \text{En}(F_1 \wedge F_2) & = \text{ let } v = \text{ Rep}(F_1 \wedge F_2) \text{ in } v \leftrightarrow (\text{Rep}(F_1) \wedge \text{ Rep}(F_2)) \\
+    & & = (v \rightarrow (\text{Rep}(F_1) \wedge \text{ Rep}(F_2))) \wedge ((\text{Rep}(F_1) \wedge \text{ Rep}(F_2)) \rightarrow v) \\
+    & & = (\lnot v \vee (\text{Rep}(F_1) \wedge \text{ Rep}(F_2))) \wedge ((\text{Rep}(F_1) \wedge \text{ Rep}(F_2)) \vee v) \\
+\end{align*}
+Distributing to obtain CNF:
+\[
+  (\lnot v \vee \text{ Rep}(F_1)) \wedge (\lnot v \vee \text{ Rep}(F_2)) \wedge (\text{Rep}(F_1) \vee v) \wedge (\text{Rep}(F_2) \vee v)
+\]
+This produces \textbf{4 clauses} in CNF.
+\subsection{Complexity Analysis of Tseitin Encoding}
+\end{example}
 RIPRENDERE APPUNTI FINO A SLIDE 46
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
