@@ -9,6 +9,8 @@
 \usepackage{algpseudocode}
 \renewcommand{\familydefault}{\sfdefault}
 \emergencystretch=1.5em
+\newcommand{\Rep}{\mathrm{Rep}}
+\newcommand{\En}{\mathrm{En}}
 
 % ---------- Colori (UNA sola volta, prima di tikz/tcolorbox) ----------
 \usepackage[dvipsnames,table]{xcolor}
@@ -1753,8 +1755,222 @@ Distributing to obtain CNF:
   (\lnot v \vee \text{ Rep}(F_1)) \wedge (\lnot v \vee \text{ Rep}(F_2)) \wedge (\text{Rep}(F_1) \vee v) \wedge (\text{Rep}(F_2) \vee v)
 \]
 This produces \textbf{4 clauses} in CNF.
-\subsection{Complexity Analysis of Tseitin Encoding}
 \end{example}
+\subsection{Complexity Analysis of Tseitin Encoding}
+We now analyze the size of the resulting ECNF formula to prove linear complexity.
+\begin{theorem}{Linear Size of ECNF}{Linear Size of ECNF}
+\textit{Let F be a propositional formula with size |F| = n. The Tseitin encoding produces an ECNF formula:}
+\[
+  F' = Rep(F) \wedge \bigwedge_{G \in S_F} En(G)
+\]
+\textit{where \( S_F \) is the set of all subformulas of F (including F itself). The size of F' is |F'| = O(n)}.
+\end{theorem}
+\subsubsection{Worst Case Analysis: Biconditional}
+The worst case for the encoding function occurs with the biconditional connective. Let us analyze:
+\begin{example}{Biconditional Encoding - Complete Derivation}{Biconditional Encoding - Complete Derivation}
+We show the complete step-by-step conversion of the biconditional encoding to CNF
+\noindent\textbf{Step 1: Start with the encoding}
+\[
+\En(F_1 \leftrightarrow F_2) = \textbf{let } v = \Rep(F_1 \leftrightarrow F_2) \textbf{ in } v \leftrightarrow (\Rep(F_1) \leftrightarrow \Rep(F_2))
+\]
+
+\noindent\textbf{Step 2: Expand the inner biconditional}
+\[
+= v \leftrightarrow \big[(\Rep(F_1) \to \Rep(F_2)) \land (\Rep(F_2) \to \Rep(F_1))\big]
+\]
+
+\noindent\textbf{Step 3: Expand the outer biconditional}
+\begin{align*}
+= \;& v \to \big[(\Rep(F_1) \to \Rep(F_2)) \land (\Rep(F_2) \to \Rep(F_1))\big] \\
+\land\; & \big[(\Rep(F_1) \to \Rep(F_2)) \land (\Rep(F_2) \to \Rep(F_1))\big] \to v
+\end{align*}
+
+\noindent\textbf{Step 4: Convert implications to disjunctions}
+\begin{align*}
+= \;& \neg v \lor \big[(\Rep(F_1) \to \Rep(F_2)) \land (\Rep(F_2) \to \Rep(F_1))\big] \\
+\land\; & \neg\big[(\Rep(F_1) \to \Rep(F_2)) \land (\Rep(F_2) \to \Rep(F_1))\big] \lor v
+\end{align*}
+
+\noindent\textbf{Step 5: Expand inner implications}
+\begin{align*}
+= \;& \neg v \lor \big[(\neg\Rep(F_1) \lor \Rep(F_2)) \land (\neg\Rep(F_2) \lor \Rep(F_1))\big] \\
+\land\; & \neg\big[(\neg\Rep(F_1) \lor \Rep(F_2)) \land (\neg\Rep(F_2) \lor \Rep(F_1))\big] \lor v
+\end{align*}
+
+\noindent\textbf{Step 6: Distribute $\neg v$ over the conjunction (first part)}
+\[
+= (\neg v \lor \neg\Rep(F_1) \lor \Rep(F_2)) \land (\neg v \lor \neg\Rep(F_2) \lor \Rep(F_1))
+\]
+
+\noindent\textbf{Step 7: Apply De Morgan's law to the second part}
+\[
+\land\; \big[\neg(\neg\Rep(F_1) \lor \Rep(F_2)) \lor \neg(\neg\Rep(F_2) \lor \Rep(F_1)) \lor v\big]
+\]
+
+\noindent\textbf{Step 8: Apply De Morgan's law again}
+\[
+\land\; \big[(\Rep(F_1) \land \neg\Rep(F_2)) \lor (\Rep(F_2) \land \neg\Rep(F_1)) \lor v\big]
+\]
+
+\noindent\textbf{Step 9: Distribute disjunction over conjunction}
+\begin{align*}
+\land\;& (\Rep(F_1) \lor \Rep(F_2) \lor v) \land (\Rep(F_1) \lor \neg\Rep(F_1) \lor v) \\
+\land\;& (\neg\Rep(F_2) \lor \Rep(F_2) \lor v) \land (\neg\Rep(F_2) \lor \neg\Rep(F_1) \lor v)
+\end{align*}
+
+\noindent\textbf{Step 10: Simplify (remove tautologies)}
+
+\noindent The clauses $(\Rep(F_1) \lor \neg\Rep(F_1) \lor v)$ and $(\neg\Rep(F_2) \lor \Rep(F_2) \lor v)$ are tautologies and can be removed.
+
+\bigskip
+\noindent\textbf{Final CNF:} The encoding produces the following clauses:
+\begin{align*}
+& (\neg v \lor \neg\Rep(F_1) \lor \Rep(F_2)) \\
+& (\neg v \lor \neg\Rep(F_2) \lor \Rep(F_1)) \\
+& (\Rep(F_1) \lor \Rep(F_2) \lor v) \\
+& (\neg\Rep(F_2) \lor \neg\Rep(F_1) \lor v)
+\end{align*}
+This produces \textbf{4 clauses} after simplification (or up to 8 clauses before removing tautologies).
+\vspace{1em}
+\noindent
+\newline
+\textbf{Proof of Linear Complexity}. \textbf{Key observations}:
+\begin{enumerate}
+    \item The number of subformulas \( |S_F| \) is at most \( n \) (the size of $F$)
+    \item Each subformula \( G \in S_F \) contributes at most a constant number of clauses (at most 8 for biconditional)
+    \item Therefore, the total number of clauses is at most \( 8n \)    
+    \item Each clause has at most 3 literals 
+    \item Total size: \( |F'| \leq 8n \times 3 = 24n = O(n) \)    
+\end{enumerate}
+More precisely, we can bound the size as \( |F'| = O(30n + 2) \), which is still linear in \( n \)     
+\vspace{1em}
+\noindent
+\newline
+\textbf{Conclusion}: The Tseitin encoding achieves linear size \( O(n) \) instead of the exponential size \( O(2^n) \) of the standard 
+CNF transformation, making it practical for large planning problems.
+\end{example}
+\part{SAT Decision Procedures}
+\section{Decision Procedures for Satisfiability}
+We now present a \textbf{decision procedure} for determining the satisfiability of a set clauses. This procedure is fundamental to understanding 
+how SAT solvers work and forms the algorithmic foundation for planning via SAT encoding.
+\begin{definition}{SAT Decision Problem}{SAT Decision Problem}
+Given a set of clauses \( S \) over a set of Boolean variables \( \mathcal{X} \), determine whether tehre exists a model (satisfying assignment)
+\( v : \mathcal{X} \rightarrow \left\{ \text{true, false} \right\} \) such that \( v \models S \).
+\end{definition}
+\subsection{Relation to Constraint Solving}
+The SAT problem is closely related to \textbf{Constraint Solving Problems (CSP)} with Boolean variables. It represent 
+one of the most fundamental problems in algorithmic theory and was the first problem proven to be \textbf{NP-complete}.
+\fbox{%
+    $\displaystyle 
+    S\ \text{(set of clauses)}
+    \;\xrightarrow{\;\text{SAT Decision Procedure}\;}\;
+    \left\{
+        \begin{array}{l}
+            \textbf{YES (Satisfiable)}\\[2pt]
+            \exists v : v \models S\\[10pt]
+            \textbf{No (Unsatisfiable)}\\[2pt]
+            \text{Proof: } S \vdash \square
+        \end{array}
+    \right.
+    $%
+}
+\section{State Representation and Search Models}
+\subsection{Trail-Based State Representation}
+The state of the SAT decision procedure is represented using a \textbf{trail} of literals, which maintains 
+the current partial assignement of truth values to variables.
+\begin{definition}{Trail}{Trail}
+A \textbf{trail} \( \varGamma \) is a sequence of literals representing the current partial assignment in the search process.
+The empty trail is denoted \( \varepsilon \).
+\newline
+\noindent
+(Search State). A search state is represented as a pair \( \langle S, \varGamma \rangle \) where:
+\begin{itemize}
+    \item \( S \) is the current set of clauses 
+    \item \( \varGamma \) is the current trail (partial assignment)
+\end{itemize}
+\end{definition}
+\subsection{Literal Status in Trails}
+Given a trail \( \varGamma \) and a literal \( L \), the status of \( L \) is determined as follows:
+\begin{itemize}
+    \item \( L \) is \textbf{true} if \( L \in \varGamma \)     
+    \item \( L \) is \textbf{false} if \( \lnot L \in \varGamma \) 
+    \item \( L \) is \textbf{undefined} if neigher \( L \) nor \( \lnot L \) appears in \( \varGamma \) 
+\end{itemize}
+\section{Transition Rules}
+The SAT decision procedure operates as a \textbf{transition system} with specific rules that transform the search state. There 
+are two main types of transitions:
+\subsection{Decision Rule}
+The \textbf{decision rule} extends the trail by choosing an undefined literal and adding it to the current assignment.
+\begin{definition}{Decision Rule}{Decision Rule}
+\[
+  \langle S \parallel \varGamma \rangle \rightarrow \langle S \parallel \varGamma, L \rangle
+\]
+where the decision is applicable if:
+\begin{itemize}
+    \item \( L \notin \varGamma \) (literal not already assigned)
+    \item \( \lnot L \notin \varGamma \) (negation not already assigned)
+\end{itemize}
+\end{definition}
+The decision rule represent a \textbf{choice point} in the search process where the algorithm guesses a truth value for an undefined variable.
+\subsection{Propagation Rule}
+The \textbf{propagation rule} (also called \textbf{unit propagation}) adds literals that are logically implied by the current assignment.
+\begin{definition}{Propagation Transition}{Propagation Transition}
+\[
+  \langle S \parallel \varGamma \rangle \rightarrow \langle S \parallel \varGamma, L \rangle
+\]
+where the propagation is applicable if there exists a clause \( C = L_1 \vee L_2 \vee \ldots \vee L_{k - 1} \in S \) such that:
+\begin{itemize}
+    \item \( D = L_1 \vee L_2 \vee \ldots L_{k - 1} \)     
+    \item \( \varGamma \models \lnot D \) (all literal in $D$ are false under current assignment)
+    \item \( L = L_k \) (the remaining literal becomes implied)
+    \item \( L \notin \varGamma \) and \( \lnot L \notin \varGamma \)   
+\end{itemize}
+\end{definition}
+\subsubsection{Justification for implied Literals}
+When literal \( L_k \) is propagated with justification clause \( C \), it means:
+\begin{itemize}
+    \item The clause \( C = L_1 \vee L_2 \vee \ldots \vee L_{k - 1} \vee L_k \) must be satisfied 
+    \item All others literals \( L_1, L_2, \ldots, L_{k - 1} \) are currently false under $\varGamma$
+    \item Therefore, \( L_k \) must be true to satisfy the clause
+\end{itemize}
+This is called the \textbf{justification} for the propagation: the clause \( C \) forces \( L_k \) to be true.
+\subsubsection{Logical Foundation of Propagation}
+The propagation rule is based on the following logical principle:
+\vspace{1em}
+\noindent
+\newline
+If we have a clause \( D \vee L \) where \( D = L_1 \vee L_2 \vee \ldots \vee L_{k - 1} \), and we know that \( \lnot D \) (i.e., 
+$\lnot L_1 \wedge \lnot L_2 \wedge \ldots \wedge \lnot L_{k - 1}$), then: 
+\[
+  \lnot D \models L
+\]
+Because if all the alternative literals are false, the remaining literal must be true to satisfy the disjunction.
+\section{Solution States}
+The search process terminates when it reaches specific terminal states:
+\begin{definition}{Solution States}{Solution States}
+\begin{itemize}
+    \item \textbf{Success}: The state \( \langle S, \varGamma \rangle \) where all clauses in \( S \) are satisfied by the assignment represented by \( \varGamma \)     
+    \item \textbf{Failure}: The state where a conflict is detected (e.g., the empty clause $\square$ is derived)
+\end{itemize}
+\end{definition}
+The decision procedure systematically explores the space of possible assignments using these transition rules until it either finds a satisfying assignment 
+or proves that no such assignment exists.
+\section{Conflict Analysis and Learning}
+When the propagation rule leads to a conflict (derivation of the empty clause $\square$), the SAT solver enters \textbf{conflic analysis mode}
+to learn from the conflict and guide future search.
+\subsubsection{Conflict-Solving Mode}
+\begin{definition}{Conflict State Representation}{Conflict State Representation}
+A state in conflict-solving mode is represented as a triple \( \langle S \parallel \varGamma \parallel C \rangle \) where:
+\begin{itemize}
+    \item \( S \) is the current set of clauses 
+    \item \( \varGamma \) is the current trail (partial assignment)
+    \item \( C \) is the \textbf{conflict clause} that caused the conflict
+\end{itemize}
+\end{definition}
+The conflict clause \( C \) represents a learned constraint that explains why the current partial assignment leads to a contradiction. This clause 
+can be added to the formula to prevent the same conflict in future seach branches.
+\subsection{Search Space Complexity}
+The SAT decision procedure explores a search space that grows exponentially with the number of variables.
 RIPRENDERE APPUNTI FINO A SLIDE 46
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
