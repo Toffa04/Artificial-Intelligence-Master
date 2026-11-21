@@ -1971,7 +1971,84 @@ The conflict clause \( C \) represents a learned constraint that explains why th
 can be added to the formula to prevent the same conflict in future seach branches.
 \subsection{Search Space Complexity}
 The SAT decision procedure explores a search space that grows exponentially with the number of variables.
-RIPRENDERE APPUNTI FINO A SLIDE 46
+\begin{definition}{Search Space Size}{Search Space Size}
+Given a SAT problem with \( n \) Boolean variables, the total number of possible assignments is:
+\[
+  2^n
+\]
+where each variable can be assigned either true or false.
+\end{definition}
+\subsubsection{Search Tree Structure}
+The search process forms a binary tree where each level corresponds to a variable assignment. For two variables \( p \) and \( Q \), the search space has the following structure:
+\begin{itemize}
+    \item \textbf{Level 0}: Start state
+    \item \textbf{Level 1}: Variable \( p \) can be assigned 1 or 0
+    \item \textbf{Level 2}: For each assignment of \( p \), variable \( Q \) can be assigned 1 or 0
+\end{itemize}
+This creates four possible complete assignments:
+\begin{itemize}
+    \item \( p = 1, Q = 1 \)    
+    \item \( p = 1, Q = 0 \)    
+    \item \( p = 0, Q = 0 \)    
+    \item \( p = 0, Q = 1 \)    
+\end{itemize}
+For \( n \) variables, this creates a complete binary tree of depth \( n \) with \( 2^n \) leaves, representing all possible assignments.
+\section{Backtracking Mechanism}
+When a conflict is detected or a dead-end is reached, the solver uses \textbf{backtracking} to explore alternative assignments.
+\subsection{Backtracking Rule}
+\begin{definition}{Backtracking Transition}{Backtracking Transition}
+\[
+  \langle S \parallel M L^d N \parallel C \rangle \rightarrow \langle S \parallel M \lnot L^d \rangle 
+\]
+where:
+\begin{itemize}
+    \item \( M \) is the sequence of literals before the decision 
+    \item \( L^d \) is the most recente \textbf{decided literal} (marked with $d$)
+    \item \( N \) is the sequence of literals after the decision 
+    \item The transition is only applicable if \( N \) contains no decided literals 
+\end{itemize}
+\end{definition}
+Backtracking implements a \textbf{depth-first search strategy} that:
+\begin{itemize}
+    \item Explores one branch of the search tree completely before trying alternatives 
+    \item When a conflict occurs, backtracks to the most recent decision point 
+    \item Flips the dicsion (from $L^d$ to $\lnot L^d$) and continues search from there
+\end{itemize}
+\subsection{Decision vs. Propagated Literals}
+The distinction between decided and propagated literals is crucial for backtracking:
+\begin{itemize}
+    \item \textbf{Decided literals} \( (L^d) \): Choosen by the decision rule, can be flipped during backtracking 
+    \item \textbf{Propagated literals}: Forced by unit propagation, cannot be flipped (would immediately cause conflict)
+\end{itemize}
+The backtracking rule only flips decided literals, ensuring that propagated assignments remain consistent.
+\section{Termination and Results}
+The search process terminates when it reaches one of two possible outcomes:
+\subsection{Success state}
+\begin{definition}{Satisfiable Instance}{Satisfiable Instance}
+\[
+  \langle S \parallel \varGamma \rangle \quad \text{ returns } \quad (\text{"sat"}, \varGamma)
+\]
+if and only if \( \varGamma \models S \) (i.e., the assignment represented by train $\varGamma$ satisfies all clauses in $S$).
+\end{definition} 
+When a satisfying assignment is found, the solver returns:
+\begin{itemize}
+    \item Status: \texttt{"sat"} (satisfiable)
+    \item Model: The complete assignment \( \varGamma \) that satisfies the formula
+\end{itemize}
+\subsection{Failure State}
+\begin{definition}{Unsatisfiable Instance}{Unsatisfiable Instance}
+\[
+  \langle S \parallel \varGamma \parallel C \rangle \quad \text{ returns } \quad \text{"unsat"}
+\]
+if and only if \( \varGamma \) contains no decision literals (i.e., all literals in the trail were propagated, not decided).
+\end{definition}
+when the formula is proven unsatisfiable, the solver returns:
+\begin{itemize}
+    \item Status: \texttt{"unsat"} (unsatisfiable)
+    \item The empty clause \( \square \) serves as a certificate of unsatisfiability
+\end{itemize}
+This occurs when the solver has exhausted all possible assignments without finding a satisfying one, meaning the formula 
+is logically inconsistent.
 \section{Conflict-Driven Clause Learning (CDCL)}
 Modern SAT solvers use \textbf{Conflict -Driven Clause Learning (CDCL)}, an advanced 
 technique that combines depth-first search with intelligence learning from conflicts 
