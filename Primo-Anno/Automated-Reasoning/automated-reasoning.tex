@@ -107,6 +107,12 @@
     overlay middle and last={\tikzset{external/export=false}},
   }
 }
+\newcommand{\eq}{\mathrel{\backsimeq}}
+\newtcolorbox{axbox}[1]{
+	colback=blue!4, colframe=blue!50!black,
+	fonttitle=\bfseries, title={#1},
+	left=4pt, right=4pt, top=4pt, bottom=4pt
+}
 
 \newtcbtheorem[number within=section]{theorem}{Teorema}{thmstyle=thmcol}{thm}
 \newtcbtheorem[use counter from=theorem]{lemma}{Lemma}{thmstyle=lemcol}{lem}
@@ -2405,4 +2411,112 @@ fragment of the theory of equality. The algorithm:
 \end{itemize}
 The various optimizations (Bradley-Miller, Downey-Sethi-Tarjan, forbidden sets) improve the practical efficiency 
 while maintaing correctness.
+\section{The Theory of Lists}
+The theory of lists represent a special case of parametric theories of recursive data structures, providing a formal 
+framework for reasoning about list structures and operations.
+\subsection{Signatures for List Theories}
+\begin{definition}{List Theory Signatures}{List Theory Signatures}
+The theory of lists can be formalized using two different signatures:
+\begin{itemize}
+	\item \textbf{Signature} \( \Sigma_{CONS} \) (non-empty lists):
+	\[
+	  \Sigma_{CONS} = \left\{ \texttt{cons, car, cdr}, \simeq, \texttt{atom} \right\}
+	\]
+	\item \textbf{Signature} \( \Sigma_{NIL} \) (possibly empty lists):
+	\[
+	  \Sigma_{NIL} = \left\{ \texttt{cons, car, cdr} \simeq, \texttt{nil} \right\}
+	\]
+\end{itemize}
+Note: We will return to the \( \Sigma_{NIL} \) signature later in our discussion
+\end{definition}
+\subsection{Axioms of the List Theory}
+The axioms for the \( \Sigma_{CONS} \) theory are denoted \( A_{CONS} \) and consist of congruence axioms together with selector-over-constructor axioms.
+\subsubsection{Congruence Axioms}
+The congruence axioms establish that equality is preserved under list operations:
+\begin{axbox}{Congruence Axioms}
+\begin{align*}
+	& \forall x\; (x \eq x) && \text{(Reflexivity)}\\
+	& \forall x\; \forall y\; (x \eq y \rightarrow y \eq x) && \text{(Symmetry)}\\
+	& \forall x\; \forall y\, \forall z\; \bigl((x \eq y \land y \eq z) \rightarrow x \eq z\bigr) && \text{(Transitivity)}
+\end{align*}
+\end{axbox}
+
+\begin{axbox}{Function Congruence Axioms}
+\begin{gather*}
+	\forall x\, \forall y\; \bigl(x \eq y \rightarrow \mathit{car}(x) \eq \mathit{car}(y)\bigr)\\
+	\forall x\, \forall y\; \bigl(x \eq y \rightarrow \mathit{cdr}(x) \eq \mathit{cdr}(y)\bigr)\\
+	\forall x_1\, \forall x_2\, \forall y_1\, \forall y_2\;
+	\bigl((x_1 \eq x_2 \land y_1 \eq y_2) \rightarrow
+	\mathit{cons}(x_1,y_1) \eq \mathit{cons}(x_2,y_2)\bigr)
+\end{gather*}
+\end{axbox}
+
+\begin{axbox}{Predicate Congruence Axiom}
+\[
+  \forall x\, \forall y\; \bigl(x \eq y \rightarrow (\mathit{atom}(x) \leftrightarrow \mathit{atom}(y))\bigr)
+\]
+\end{axbox}
+
+\subsubsection{Selector-over-Constructor Axioms}
+These axioms define the fundamental properties of the list constructors and selectors:
+
+\begin{axbox}{Constructor-Selector Axioms}
+\begin{gather*}
+	\forall x\, \forall y\; \bigl(\mathit{car}(\mathit{cons}(x,y)) = x\bigr)\\
+  	\forall x\, \forall y\; \bigl(\mathit{cdr}(\mathit{cons}(x,y)) = y\bigr)\\
+  	\forall x\, \forall y\; \bigl(\lnot \mathit{atom}(\mathit{cons}(x,y))\bigr)\\
+  	\forall x\; \bigl(\mathit{cons}(\mathit{car}(x),\mathit{cdr}(x)) = x\bigr)
+  	\quad \text{(provided } \lnot \mathit{atom}(x)\text{)}
+\end{gather*}
+\end{axbox}
+These axioms formalize the basic operations on lists:
+\begin{itemize}
+	\item \( \texttt{cons}(x,y) \) constructs a new list with head \( x \) and tail \( y \)     
+	\item \( \texttt{car}(x) \) returns the head (first element) of list \( x \)     
+	\item \( \texttt{cdr}(x) \) returns the tail (remaining elements) of list \( x \)     
+	\item \( \texttt{atom}(x) \) tests whether \( x \) is an atomic element (not a list)
+\end{itemize}
+The final axiom states that applying \texttt{car} and \texttt{cdr} to anon-atomic lilst and then reconstructing 
+with \texttt{cons} recovers the original list, provided the list is not atomic.
+\subsection{Validity Examples in List Theory}
+Consider the following formula in the theory \( \mathcal{T}_{CONS} = \langle \Sigma_{CONS}, A_{CONS} \rangle \):
+\begin{example}{Validity in List Theory}{Validity in List Theory}
+\textbf{Input formula}:
+\[
+  F: \texttt{car}(x) = y \wedge \texttt{cdr}(x) = z \rightarrow x = \texttt{cons}(y,z)
+\]
+\textbf{Question}: Is \( F \mathcal{T}_{CONS} \)-valid?
+\vspace{1em}
+\noindent
+\newline
+\textbf{Answer}: No, because \( x \) could be interpreted as an atom.
+\vspace{1em}
+\noindent
+\newline
+However, we can modify the formula to ensure validity:
+\[
+	F' : \lnot \texttt{atom}(x) \wedge \texttt{car}(x) = y \wedge \texttt{cdr}(x) = z \rightarrow x = \texttt{cons}(y,z)
+\]
+By the selector-over-constructor axioms, we have \( \texttt{cons}(\texttt{car}(x),\texttt{cdr}(x)) = x \), which implies 
+\( \texttt{cons}(y,z) = x \). Therefore, \( F' \) is \( \mathcal{T}_{CONS} \)-valid.
+\end{example}
+\subsection{The Theory of Possibly Empty Lists}
+We now consider the theory of possibly empty lists, which extends the previous theory to handle the empty list case.
+\begin{definition}{Theory of Possibly Empty Lists}{Theory of Possibly Empty Lists}
+\textbf{Signature}:
+\[
+  \Sigma_{NIL} = \left\{ \texttt{cons, car, cdr}, \simeq, \texttt{nil} \right\}
+\]
+\textbf{Axioms} \( A_{NIL} \):
+\vspace{1em}
+\noindent
+\newline
+The axiom set includes the congruence axioms from \( A_{CONS} \) plus additioanl axioms for the empty list:
+\begin{align*}
+	& n_1 : & \forall x \forall y (\texttt{cons}(x,y) \neq \texttt{nil})\\
+	& n_2 : & \forall x (x \neq \texttt{nil} \rightarrow \texttt{cons}(\texttt{car}(x)\texttt{cdr}(x)) = x) \\
+\end{align*}
+Axioms \( n_1 \) ensures that constructed lists are never empty, while axioms \( n_2 \) states that for non-e,pty lists, the 
+reconstruction property holds.
+\end{definition}
 \end{document}
