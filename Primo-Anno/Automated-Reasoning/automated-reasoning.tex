@@ -2519,4 +2519,26 @@ The axiom set includes the congruence axioms from \( A_{CONS} \) plus additioanl
 Axioms \( n_1 \) ensures that constructed lists are never empty, while axioms \( n_2 \) states that for non-e,pty lists, the 
 reconstruction property holds.
 \end{definition}
+\subsection{Generalization to Recursive Data Structures}
+The theory of lists can be generalized to arbitrary recursive data structures.
+\begin{definition}{Recursive Data Structures (RDS)}
+Consider a signature \( \Sigma_{CONS} = \textbf{RDS}_k \) for a recursive data structure with: 
+\begin{itemize}
+	\item One \textbf{constructor} \( C \) of arity \( k \)     
+	\item \( k \) \textbf{selector} \( s_1, \ldots, s_k \)
+\end{itemize}	
+The corresponding axioms would be:
+\begin{align*}
+	& \forall x_1 \ldots \forall x_k (s_i(C(x_1, \ldots, x_k)) = x_i) & \quad \text{ for each } i = 1, \ldots, k\\
+	& \forall x_1 \ldots \forall x_k (\lnot \texttt{atom}(C(x_1, \ldots, x_k))) \\
+	& \forall x (\lnot \texttt{atom}(x) \rightarrow x = C(s_1(x), ldots, s_k(x)))\\
+\end{align*}
+\end{definition}
+These axioms generalize the lsit theory to arbitrary tree-like recursive data structures where:
+\begin{itemize}
+	\item The constructor creates structured data from components 
+	\item The selectors extract the components from structured data 
+	\item The atom predicate distinguishes between atomic and structured data
+\end{itemize}
+This framework provides a foundation for reasoning about complex recursive data types iin automated reasoning systems.
 \end{document}
