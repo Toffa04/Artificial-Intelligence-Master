@@ -2217,9 +2217,11 @@ return to relevant decision levels during conflict analysis.
 \( S = \left\{ P, \lnot P \vee Q \vee R, T \vee \lnot Q, \lnot R \vee Q \right\} \)
 \end{example}
 The inital propagation and decision sequence proceeds as follows·
-\[
-  \langle S \Vert \epsilon \rangle \xrightarrow{prop} \langle S \Vert P_P \rangle
-\]
+\begin{align*}
+  &\langle S \Vert \epsilon \rangle & \xrightarrow{prop} \langle S \Vert P_P \rangle\\
+  & & \xrightarrow{dec} \langle S \vert P_P, Q^d \rangle \\
+  & & \xrightarrow{prop} \langle S \vert P_P, Q^d, T_{T \vee \lnot Q} \\
+\end{align*}
 
 
 
