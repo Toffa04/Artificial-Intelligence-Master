@@ -2222,9 +2222,92 @@ The inital propagation and decision sequence proceeds as follows·
   & & \xrightarrow{dec} \langle S \vert P_P, Q^d \rangle \\
   & & \xrightarrow{prop} \langle S \vert P_P, Q^d, T_{T \vee \lnot Q} \\
 \end{align*}
-
-
-
+\textit{Remark}. The trail behaves exactly like a \textit{stack}: each decision opens a new level and subsequent propagations 
+are pushed on top of that level.
+\subsection{Conflict Mode}
+When a conflict clause \( C \) becomes false under the current trail, the solver enters conflict mode. Two outcomes are possible:
+\begin{enumerate}
+  \item \textbf{Fail}: The formula is unsatisfiable 
+  \item \textbf{Conflict resolution}: the solver analyzes the conflict, learns a new clause, backjumps, and resume search.
+\end{enumerate}
+\subsubsection{Fail Rule}
+\begin{definition}{Fail Condition}{Fail Condition}
+(Unsat at Level 0).
+\[
+  \langle S \vert \varGamma \vert C \rangle \rightarrow \text{ "unsat"}
+\]
+if maxlevl($\varGamma$) = 0 
+\end{definition}
+\subsubsection{Explanation Rule}
+Assume the conflict clause has the form
+\[
+  C = L_1 \vee L_2 \vee \ldots \vee L_{k - 1} \vee L_k, \quad \text{ all literals false in } \varGamma
+\]
+If \( \lnot L_k \) was propagated by the clause \( D \vee \lnot L_k \), we resolve \( C \) with this justification to obtain a new clause:
+\[
+  C' = L_1 \vee L_2 \vee \ldots \vee L_{k - 1} \vee D
+\]
+\begin{definition}{Explanation Transition}{Explanation Transition}
+\[
+  \langle S \vert \varGamma \vert C \vee L \rangle \rightarrow \langle S \vert \varGamma \vert C \vee D \rangle
+\]
+if \( \lnot L_{D \vee \lnot L} \in \varGamma \)
+\end{definition}
+The resolution step is repeated until the resulting clause contains exactly one literal from the current 
+decision level ($1-UIP$ \textit{clause}).
+\subsubsection{Learning Rule}
+\begin{definition}{Clause Learning}{Clause Learning}
+\[
+  \langle S \vert \varGamma \vert C \rangle \rightarrow \langle S \cup \left\{ C \right\} \vert \varGamma \vert C \rangle 
+\]
+if \( C \notin S \)
+\end{definition}
+The learned clause \( C \) prevents the solver from repeating the same conflicting assignment in the future.
+\subsubsection{Backjumping Rule}
+\begin{definition}{Backjumping}{Backjumping}
+Let \( \varGamma = NL^dM \) where \( L^d \) is the most recent decision literal and \( C \vee L' \) is the learned 
+clause with \( L' \) falsified at level \( k < \) level($L^d$). Then 
+\[
+  \langle S \vert NL^dM \vert C \vee L' \rangle \rightarrow \langle S \vert N \cup \left\{ L_{C \vee L'}^{'} \right\} \rangle
+\]
+\end{definition}
+Backjumping skips irrelevant decision levels, jumping directly to level \( k \), and immediately propagates \( L' \) using 
+the leraned clause
+\subsection{Control Strategy}
+The transition rules of CDCL are governed by specific control policies that determine the order in which rules are applied.
+\subsubsection{Seach Mode Control}
+\begin{definition}{Search Mode Priority}{Search Mode Priority}
+In search mode, \textbf{Propagation} has higher prirority than \textbf{Decision}.
+\end{definition}
+This ensures that all forced assignments (unit propagations) are made before any heuristic decision is taken, maximizing 
+constraint propagation and reducing the search space.
+\subsubsection{Conflict Mode Control}
+\begin{definition}{Conflict Mode Squence}{Conflict Mode Sequence}
+The conflict mode rules are applied in the following order:
+\[
+  \text{Explanation}^* \rightarrow \text{ Learning } \rightarrow \text{ Backjumping}
+\]
+where \( \text{Explanation}^* \) denotes repreated application of the Explanation rule.
+\end{definition}
+\subsection{First Assertion Clause Heuristic}
+The \textbf{First Assertion Clause (FAC)} heuristic is a widely used strategy for determining when to stop 
+the explanation process and perfrom backjumping.
+\begin{definition}{Assertion Clause}{Assertion Clause}
+An \textbf{assertion clause} is a conflict clause \( C \vee L' \) such that exactly one of its literals (the \textbf{assertion literal} $L'$) is made false by the 
+current (highest) decision level in \( \varGamma \), while all other literals are false at earlier decision levels.
+\end{definition}
+\subsubsection{FAC Heuristic Strategy}
+The First Assertion Clause heuristic operates as follows:
+\begin{enumerate}
+  \item Apply the \textbf{Explanation} rule repeatedly until an assertion clause is generated 
+  \item \textbf{Learn} the assertion clause by adding it to the clause set \( S \)     
+  \item \textbf{Backjump} to the smallest decision level where:
+  \begin{itemize}
+    \item The assertion literal \( L' \) is undefined 
+    \item All other literals in the assertion clause are still false
+  \end{itemize}
+  \item Exit conflict mode by placing the assertion literal \( L' \) on the trail with the assertion clause as a justification 
+\end{enumerate}
 !!! DA QUI INIZIA LA PARTE DEL GOAT FARINELLI QUINDI RECUPERARE TUTTA LA PARTE PRECEDENTE
 
 \part{Planning Module}
@@ -2273,7 +2356,7 @@ predictive models, planning problems and techniques.
         \item deliberation resoning techniques
     \end{itemize}
 \end{itemize}
-\subsubsection{PLanning, Acting and Learning}
+\subsubsection{Planning, Acting and Learning}
 \begin{itemize}
     \item Learnining is a very wide concept
     \begin{itemize}
