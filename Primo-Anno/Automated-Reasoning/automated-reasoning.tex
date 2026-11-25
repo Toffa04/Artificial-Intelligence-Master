@@ -2541,4 +2541,81 @@ These axioms generalize the lsit theory to arbitrary tree-like recursive data st
 	\item The atom predicate distinguishes between atomic and structured data
 \end{itemize}
 This framework provides a foundation for reasoning about complex recursive data types iin automated reasoning systems.
+\part{Theory of Lists and Recursive Data}
+\section{Decision Procedures for Equality and Lists}
+We analyse the decision procedure for the union of the quantifier-free fragments of the theories of equality and lists.
+The extensionality axiom states that two constructed lists are equal whenever thei components coincide:
+\[
+  \forall x_1,x_2,y_1,y_2 (x_1 \simeq x_2 \wedge y_1 \simeq y_2 \rightarrow \texttt{cons}(x_1, y_1) \simeq \texttt{cons}(x_2,y_2)).
+\]
+\subsection{Problem Setting}
+Let \( F \) be a quantifier-free formula over the signature \( \Sigma_{CONS} \). We first convert \( F \) into disjunctive normal form:
+\[
+  F \equiv C_1 \vee C_2 \vee \ldots \vee C_k
+\]
+where every \( C_i \) is a conjunction of literals. The satisfiability question is reduced to each conjunction separately:
+for a fixed \( C_i \) we write \( S \) for the associated set of literals over \( \Sigma_{CONS} \).
+\vspace{1em}
+\noindent
+\newline
+\textit{Note}. Reminder: \( P(\overline{t})f_1(\overline{t}) = [\text{dot}] \text{ while } P(\overline{t})f_P(\overline{t}) \neq [\text{dot}] \)    
+\vspace{1em}
+\noindent
+\newline
+Our strategy enriches the standard Congruence Closure (CC) algorithm with the axioms specific to lists, yielding a decision procedure for \( \mathcal{T}_{CONS} \cup \mathcal{T}_{=} \).
+\subsection{Structure of the Literal Set}
+Each conjunction \( S \) can be written as 
+\[
+  S = \left\{ s_i = t_i \right\}_{i = 1}^{n} \cup \left\{ s_i \neq t_i \right\}_{i = n + 1}^{n + m} \cup \left\{ \texttt{atom}(u_i) \right\}_{i = n + m + 1}^{n + m + k} \cup \left\{ \lnot \texttt{atom}(u_i) \right\}_{i = n + m + 1}^{n + m + k}
+\]
+Congruence axioms are already handled by CC. The remaining axioms of the list theory are:
+\begin{align*}
+	&\forall x\; \forall y\; \texttt{car}(\texttt{cons}(x,y)) = x, \\
+	&\forall x\; \forall y\; \texttt{cdr}(\texttt{cons}(x,y)) = y, \\
+	&\forall x\; \forall y\; \lnot \texttt{atom}(\texttt{cons}(x,y)), \\
+	&\forall x\; \lnot \texttt{atom}(x) \rightarrow x = \texttt{cons}(\texttt{car}(x), \texttt{cdr}(x)).
+\end{align*}
+\subsection{Eliminating Negative Atom Literal}
+We preprocess \( S \) by replacing every \( \lnot \texttt{atom}(u_i) \) with the equality
+\[
+  u_i = \texttt{cons}(u_i^{(1)}, u_i^{(2)}),
+\]
+where \( u_i^{(1)} \) and \( u_i^{(2)} \) are fresh free variables. This accounts for the reconstruction axiom directly:
+\newline
+\( \texttt{car}(u_i) = u_i^{(1)} \) and \( \texttt{cdr}(u_i) = u_i^{(2)} \). After preprocessing we obtain
+\[
+  F = \left\{ s_i = t_i \right\}_{i = 1}^{n} \cup \left\{ s_i \neq t_i \right\}_{i = n + 1}^{n + m} \cup \left\{ \texttt{atom}(u_i) \right\}_{i = n + m + 1}^{n + m + k}
+\]
+and denote by \( S_F \) the set of all terms occuring in \( F \).
+\subsection{Extending the Congruence Closure Graph}
+We build the directed acyclic graph (DAG) for \( S_F \) as in the pure equality case and then add the list axioms 
+structurally. For every node whose function symbol is \texttt{cons} we introduce two new nodes, representing \( \texttt{car}(t) \) and 
+\( \texttt{cdr}(t) \), where \( t \) is the term stored in the original node. We enforce the selector 
+axioms by executing.
+\[
+  \texttt{MERGE}(n_1, n.\texttt{args}[0]) \quad \text{ and } \quad \texttt{MERGE}(n_2.\texttt{args}[1]),
+\]
+which merges the newly added nodes with the appropriate arguments. No recursion occurs because the nodes are fresh.
+At this point we run the CC algorithm exactly as we would for the theory of equality.
+\subsection{Post-processing for Atom Constraints}
+The axiom \( \forall x\; \forall y\; \lnot \texttt{atom}(\texttt{cons}(x,y)) \) is handled after CC terminates. For each 
+\( i \) with \( n + m + 1 \leq i \leq n + m + k \), if 
+\[
+  \texttt{FIND}(u_i) = \texttt{FIND}(v)
+\]
+for some node \( v \) representing a \texttt{cons} term, we conclude that \( S \) is unsatisfiable: \( u_i \) would be 
+equal to a constructed list, contradicting the atom predicate.
+\subsection{Example}
+\begin{example}{Example}{Example}
+Consider:
+\[
+	F = \left\{ \texttt{car}(x) = \texttt{car}(y), \texttt{cdr}(x) = \texttt{cdr}(y), f(x) \neq f(y), \lnot \texttt{atom}(x), \lnot \texttt{atom}(y) \right\}
+\]
+From the negative atom literals we derive 
+\[
+  x = \texttt{cons}(\texttt{car}(x), \texttt{cdr}(x)) \quad \text{ and } \quad \texttt{cons}(\texttt{car}(y), \texttt{cdr}(y))
+\]
+Congruence propagates the selector equalities, yielding \( x = y \). This contradicts \( f(x) \neq f(y) \), so \( F \) is unsatisfiable in 
+\( \mathcal{T}_{CONS} \cup \mathcal{T}_{=} \).
+\end{example}
 \end{document}
