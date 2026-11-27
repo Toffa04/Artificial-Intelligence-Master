@@ -2308,6 +2308,186 @@ The First Assertion Clause heuristic operates as follows:
   \end{itemize}
   \item Exit conflict mode by placing the assertion literal \( L' \) on the trail with the assertion clause as a justification 
 \end{enumerate}
+\section{Exercise: CDCL vs. Chronological Backtracking}
+\begin{example}{Exercise}{Exercise}
+Consider the propositional clause set
+\[
+  S = \left\{ \lnot 1 \vee 2, \lnot 3 \vee 4, \lnot 5 \vee \lnot 6, 6 \vee \lnot 5 \vee \lnot 2 \right\}
+\]
+\end{example}
+Perform the following tasks.
+\begin{enumerate}
+  \item \textbf{Explore the search tree}. Starting from an empty trail, show every propagation and decision (in DPLL style)
+    until the first conflict is encountered. Record the decision level of each literal.
+  \item \textbf{Chronological backtracking}. Resolve the conflict by undoing only the last decision. Explain why the solver 
+    believes the conflict is fixed even though the same assignment can re-appear later.
+  \item \textbf{CDCL with First Asertion Clause (FAC)}. Handle the same conflict using CDCL:
+  \begin{itemize}
+    \item[(a)] Apply the \textit{explanation} rule repeatedly until the first assertion clause (1-UIP clause) is obtained 
+    \item[(b)] \textit{Learn} this clause by adding it to \( S \)   
+    \item[(c)] Determine the backjump level implied by the clause and show the exact trail after backjumping and the immediate unit propagation 
+  \end{itemize}
+  \item \textbf{Compare the two approaches}. Discuss why the learned clause prevents the solver from revisiting the conflicting assignment 
+    and how thi prunes the search space more effectively than chronological backtracking
+\end{enumerate}
+\subsubsection{Understanding the Clause Set}
+Before solving, let us interpret the logical constraints encoded in \( S \):
+\begin{itemize}
+  \item \( C_1 = \lnot 1 \vee 2 \): If literal 1 is true, then literal 2 must also be true 
+  \item \( C_2 = \lnot 3 \vee 4 \): If literal 3 is true, then literal 4 must also be true 
+  \item \( C_3 = \lnot 5 \vee \lnot 6 \): Literals 5 and 6 cannot both be true simultaneously 
+  \item \( C_4 = 6 \vee \lnot 5 \vee \lnot 2 \): at least one must hold: 6 is true, OR 5 is false, OR 2 is false.
+\end{itemize}
+(Detailed Solution). Throughout the solution, literals annotated with \( d \) are decisions, subscripts indicate the 
+clause that justified a propagation. Decision levels are shown on the left margin.
+\vspace{1em}
+\noindent 
+\newline
+\textbf{1. Exploring the Seach Tree Until Conflict}
+\vspace{1em}
+\noindent 
+\newline
+\textbf{Starting Configuration (Level 0)}: The solver begins with an empty trail:
+\[
+  \langle S \vert \varepsilon \rangle
+\]
+\textbf{Decision Level 1}: The solver makes it first decision, setting literal 1 to true:
+\[
+  \xrightarrow{\text{dec}} \langle S \vert 1^d \rangle
+\]
+This immediately triggers unit propagation. Since 1 is true, the literal \( \lnot 1 \) in clause \( C_1 = \lnot 1 \vee 2 \) become false,
+making 2 the only literal that can satisfy the clause. Therefore, 2 must be propagated:
+\[
+  \xrightarrow{\text{prop}} \langle S \vert 1^d, 2_{\lnot 1 \vee 2} \rangle
+\]
+\textbf{Decision Level 2:} With no further propagations possible, the solver decides to set literal 3 to true:
+\[
+  \xrightarrow{\text{dec}} \langle S \vert 1^d, 2, 3^d \rangle 
+\]
+By the same reasoning, clause \( C_2 = \lnot 3 \vee 4 \) forces the propagation of literal 4:
+\[
+  \xrightarrow{\text{prop}} \langle S \vert 1^d, 2, 3^d, 4_{\lnot 3 \vee 4} \rangle
+\]
+\textbf{Decision Level 3}: The solver makes another decision, setting literal 5 to true:
+\[
+  \xrightarrow{\text{dec}} \langle S \vert 1^d, 2, 3^d, 4, 5^d \rangle
+\]
+Clause \( C_3 = \lnot 5 \vee \lnot 6 \) now has \( \lnot 5 \) false (since 5 is true), so \( \lnot 6 \) must be propagated:
+\[
+  \xrightarrow{\text{prop}} \langle S \vert 1^d, 2, 3^d, 4, 5^d, \lnot 6_{\lnot 5 \vee \lnot 6} \rangle
+\]
+\textbf{Conflict Detection}: Examining clause \( C_4 = 6 \vee \lnot 5 \vee \lnot 2 \), we find al three literals are false:
+\begin{itemize}
+  \item 6 is false (because $\lnot 6$ is on the trail at level 3)
+  \item \( \lnot 5 \) is false (because 5 is true on the trail at level 3)
+  \item \( \lnot 2 \) is false (because 2 is true on the trail at level 1)
+\end{itemize}
+The clause is violated, triggering a conflict at level 3.
+\textbf{2. Resolving the Conflict: Cronological Backtracking}
+\vspace{1em}
+\noindent 
+\newline
+\textbf{The classical DPLL Approach}: Chronological backtracking simply undoes the most recent decision. The solver performs the following steps:
+\begin{enumerate}
+  \item Remove decision \( 5^d \) and all its consequences ($\lnot 6$) from the trail 
+  \item Return to decision level 2 with trail:
+  \[
+    \langle S \vert 1^d, 2, 3^d, 4 \rangle
+  \]
+  \item Try alternative assignement \( \lnot 5 \) and continue searching
+\end{enumerate}
+\textbf{Why the conflict appears resolved}: After removing \( 5^d \) and \( \lnot 6 \) from the trail, clause \( C_4 \) is no longer violated.
+The literals are now:
+\begin{itemize}
+  \item 6 is undefined (not on the trail)
+  \item \( \lnot 5 \) is undefined 
+  \item \( \lnot 2 \) is still false (but $C_4$ is satisfied by undefined literals)
+\end{itemize}
+The solver can resume search without an immediate conflict 
+\vspace{1em}
+\noindent 
+\newline
+\textbf{The Fatal Flaw}: The clause set \( S \) still does not prevent the combination of 2 and 5 both being true. If the 
+search explores a different path that again assigns both 2 = true and 5 = true, the exact same conflict will occur. The solver 
+learned nothing permanent and may waste significant time re-exploring this futile combination multiple times in different 
+parts of the search tree.
+\textbf{3. CDCL with First Assertion Clause}
+\vspace{1em}
+\noindent 
+\newline
+\textbf{(a) Conflict analysis}: CDCL analyzes the conflict clause \( C_4 = 6 \vee \lnot 5 \vee \lnot 2 \) to understand its root clause. The clause contains 
+three false literals:
+\begin{itemize}
+  \item 6 is false because \( \lnot 6 \) was \textit{propagated} at level 3 (not decided)
+  \item \( \lnot 5 \) is false because 5 was \textit{decided} at level 3 
+  \item \( \lnot 2 \) is false because 2 was \textit{propagated} at level 1
+\end{itemize}
+\textbf{(b) Resolution and Explanation}: The literal \( \lnot 6 \) was not a decision - it was propagated using clause 
+\( C_3 = \lnot 5 \vee \lnot 6 \). To trace back the cause of the conflict, we resolve the conflict clause with its justification 
+clause:
+\[
+  \frac{C_4 = (6 \vee \lnot 5 \vee \lnot 2) \quad C_3 = (\lnot 5 \vee 6)}{C_{learned} = \lnot 5 \vee \lnot 2}
+\]
+The resolvent \( C_{learned} = \lnot 5 \vee \lnot 2 \) is an \textbf{assertion clause} because:
+\begin{itemize}
+  \item Exactly one literal \( (\lnot 5) \) is false at the current decision level 3 (the assertion literal)
+  \item The other literal \( (\lnot 2) \) is false at an earlier level (level 1)
+\end{itemize}
+\textbf{(c) Learning}: The solver adds the learned clause to the clause set:
+\[
+  S \leftarrow S \cup \left\{ \lnot 5 \vee \lnot 2 \right\}
+\]
+This new clause permanently encodes the constraint: \textit{literals} 2 \textit{and} 5 \textit{cannot both be true}.
+\vspace{1em}
+\noindent 
+\newline
+\textbf{(d) Backjumping}: Instead of returning to level 2, CDCL identifies that the conflict was cause by the interaction between:
+\begin{itemize}
+  \item Level 1 (where 2 was propagated)
+  \item Level 3 (where 5 was decided)
+\end{itemize}
+Decision level 2 (the decision $3^d$ and propagation of 4) played no role in the conflict
+\vspace{1em}
+\noindent 
+\newline
+Therefore, the solver \textbf{backjumps} directly to level 1, skipping level 2 entirely:
+\[
+  \langle S \cup \left\{ \lnot 5 \vee \lnot 2 \right\} \vert 1^d, 2 \rangle
+\]
+\textbf{(e) Unit Propagation from Learned Clause}: At level 1, literal 2 is true, making \( \lnot 2 \) false. 
+The learned clause \( \lnot 5 \vee \lnot 2 \) now becomes a unit clause, forcing the immediate propagation:
+\[
+  \langle S \cup \left\{ \lnot 5 \vee \lnot 2 \right\} \vert 1^d, 2, \lnot 5_{\lnot 5 \vee \lnot 2} \rangle 
+\]
+The solver immediately deduces that 5 must be false whenever 2 is true, preventing the conflict from ever occuring again.
+\vspace{1em}
+\noindent 
+\newline
+\textbf{Why the Learned Clause is Powerful}:
+\vspace{1em}
+\noindent 
+\newline
+The clause \( \lnot 5 \vee \lnot 2 \) acts as a \textbf{global constraint} that permanentlu blocks the comination (2,5) throughtout the 
+entire search:
+\begin{itemize}
+  \item Any future branch that tries to set both 2 = true and 5 = true will violate the clause immediately 
+  \item The violation triggers unit propagation, forcing one of the literals to be false before deeper exploration 
+  \item This prevents the solver from wasting time on futile search paths
+\end{itemize}
+CDCL therefore prunes an \textit{entire subtree} of the search space in a single learning step, while chronological 
+backtracking may explore that subtree repeatedly in different parts of the search tree.
+\vspace{1em}
+\noindent 
+\newline
+\textbf{Fundamental Advantages of CDCL}:
+\begin{enumerate}
+  \item \textbf{Non-chronological backjumping}: By analyzing conflict clauses, CDCL can identify and jump directly to the earliest decision level that contributed to the conflict, skipping irrelevant intermediate levels 
+  \item \textbf{Clause learning}: Each conflict generates a new constraint (learned clause) that captures the reason for the failure. This clause remains in the database permanently, preventing the same mistake from happening again 
+  \item \textbf{Seach sapce pruning}: Learned clauses effectively prune exponentially large portions of the search space. A single learned clause can eliminate millions or billions of invalid variable assignments 
+  \item \textbf{Guided search}: The learned clauses provide additional unit propagations that guide the solver away from unproductive regions of the search sapce, focusing effort on more promising areas.
+\end{enumerate}
+These mechanisms make CDCL dramatically more efficient that classical DPLL on real-world SAT instances, enabling modern solvers to handle formulas 
+with millions of variables and clauses.
 !!! DA QUI INIZIA LA PARTE DEL GOAT FARINELLI QUINDI RECUPERARE TUTTA LA PARTE PRECEDENTE
 
 \part{Planning Module}
